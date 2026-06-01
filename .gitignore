@@ -1,0 +1,32 @@
+# C++ Build & Binaries
+collector/build/
+collector/collector
+*.o
+*.out
+
+# Secrets & Authentication
+login/.env
+login/access_token.json
+access_token.json
+nifty_option_symbols.json
+NFO.csv.gz
+
+# Local Sockets & Runtime Files
+*.sock
+*.log
+collector_bg.log
+
+# Python Caches & Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+
+# System Files
+.DS_Store
+.gemini/
+.system_generated/
