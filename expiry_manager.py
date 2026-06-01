@@ -21,8 +21,26 @@ def is_market_open_today():
         configuration = upstox_client.Configuration()
         configuration.access_token = token
         api_instance = upstox_client.MarketHolidaysAndTimingsApi(upstox_client.ApiClient(configuration))
-        
-        api_response = api_instance.get_market_status('NSE')
+        try:
+            api_response = api_instance.get_market_status('NSE')
+        except ApiException as ae:
+            if ae.status == 401:
+                print("⚠️ Expiry Manager API Unauthorized (401). Triggering automated token refresh using auth.py...")
+                # Run auth.py
+                auth_script = "/Users/prana/Desktop/open_source/web/login/auth.py"
+                run_auth = subprocess.run(["python", auth_script], capture_output=True, text=True)
+                if run_auth.returncode != 0:
+                    subprocess.run(["python3", auth_script], capture_output=True, text=True)
+                
+                # Reload token
+                with open(token_path) as f:
+                    token = json.load(f)['access_token']
+                configuration.access_token = token
+                api_instance = upstox_client.MarketHolidaysAndTimingsApi(upstox_client.ApiClient(configuration))
+                api_response = api_instance.get_market_status('NSE')
+            else:
+                raise
+                
         status_data = api_response.get('data', {})
         status = status_data.get('status', 'CLOSED').upper()
         print(f"🔍 Upstox Market Status for NSE today: {status}")
