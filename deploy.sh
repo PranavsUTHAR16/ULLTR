@@ -10,7 +10,7 @@
 set -e
 
 # Configuration
-KEY_PATH="/Users/prana/Desktop/open_source/openalgo/openalgo-aws-key.pem"
+KEY_PATH="/Users/prana/Desktop/open_source/web/openalgo-aws-key.pem"
 LOCAL_WEB_DIR="/Users/prana/Desktop/open_source/web/"
 LOCAL_BORD_DIR="/Users/prana/Desktop/black_box/bord/"
 REMOTE_USER="ubuntu"
