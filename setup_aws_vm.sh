@@ -58,11 +58,15 @@ source venv/bin/activate
 pip install --upgrade pip
 
 # Install required Python packages for ULLTR (redis, requests, aiohttp, pytz, upstox-python-sdk)
-pip install redis requests aiohttp pytz upstox-python-sdk pyotp lightgbm clickhouse-connect pandas numpy
+pip install redis requests aiohttp pytz upstox-python-sdk pyotp lightgbm clickhouse-connect pandas numpy scipy playwright tqdm pyarrow
 # Install ULLTR package in editable mode
 pip install -e .
 
-echo -e "${GREEN}✓ Python packages and ULLTR package installed in editable mode.${NC}"
+# Install Playwright browser and dependencies inside venv
+playwright install chromium
+sudo /Users/prana/Desktop/open_source/web/venv/bin/playwright install-deps
+
+echo -e "${GREEN}✓ Python packages, Playwright Chromium, and ULLTR package installed.${NC}"
 
 # 6. Configure systemd Service for Optimized Redis (Pure In-Memory & Unix Domain Socket)
 echo -e "\n${YELLOW}[6/7] Registering systemd Service: ulltr-redis...${NC}"
@@ -209,14 +213,78 @@ Persistent=true
 WantedBy=timers.target
 EOF
 
+# F. Daily 10y Bond Yield Scraper Service & Timer
+sudo tee /etc/systemd/system/ulltr-yield-scraper.service > /dev/null << EOF
+[Unit]
+Description=ULLTR India 10-Year Bond Yield Scraper
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/Users/prana/Desktop/open_source/Options_data_upstox
+Environment=PATH=/Users/prana/Desktop/open_source/web/venv/bin:/usr/bin
+ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python yield_scraper.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/ulltr-yield-scraper.timer > /dev/null << EOF
+[Unit]
+Description=Run ULLTR India 10-Year Bond Yield Scraper daily at 09:16 AM
+
+[Timer]
+OnCalendar=*-*-* 09:16:00
+Unit=ulltr-yield-scraper.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+# G. EOD Options Data & Greeks Pipeline Service & Timer
+sudo tee /etc/systemd/system/ulltr-eod-pipeline.service > /dev/null << EOF
+[Unit]
+Description=ULLTR EOD Options Greeks Pipeline
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/Users/prana/Desktop/open_source/Options_data_upstox
+Environment=PATH=/Users/prana/Desktop/open_source/web/venv/bin:/usr/bin
+ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python eod_pipeline.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/ulltr-eod-pipeline.timer > /dev/null << EOF
+[Unit]
+Description=Run ULLTR EOD Options Greeks Pipeline daily at 03:35 PM (15:35)
+
+[Timer]
+OnCalendar=*-*-* 15:35:00
+Unit=ulltr-eod-pipeline.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
 sudo systemctl daemon-reload
 sudo systemctl enable ulltr-auth
 sudo systemctl enable ulltr-expiry-manager
 sudo systemctl enable ulltr-health-check
 sudo systemctl enable ulltr-strategy-model7.timer
 sudo systemctl enable ulltr-strategy-twap.timer
+sudo systemctl enable ulltr-yield-scraper.timer
+sudo systemctl enable ulltr-eod-pipeline.timer
 sudo systemctl start ulltr-strategy-model7.timer
 sudo systemctl start ulltr-strategy-twap.timer
+sudo systemctl start ulltr-yield-scraper.timer
+sudo systemctl start ulltr-eod-pipeline.timer
 
 echo -e "\n${GREEN}================================================================${NC}"
 echo -e "✅ ULLTR System VM Bootstrap & Services Installed Successfully!"

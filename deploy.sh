@@ -51,6 +51,7 @@ ssh -i "$KEY_PATH" -o StrictHostKeyChecking=no -o ConnectTimeout=10 "${REMOTE_US
 echo -e "\n${YELLOW}Preparing remote workspace directories...${NC}"
 ssh -i "$KEY_PATH" "${REMOTE_USER}@${VM_IP}" "
     sudo mkdir -p /Users/prana/Desktop/open_source/web
+    sudo mkdir -p /Users/prana/Desktop/open_source/Options_data_upstox
     sudo mkdir -p /Users/prana/Desktop/black_box/bord
     sudo chown -R ubuntu:ubuntu /Users/prana/Desktop
 "
@@ -64,6 +65,13 @@ rsync -avz -e "ssh -i $KEY_PATH" \
     --exclude="*.log" \
     --exclude="collector/build/" \
     "$LOCAL_WEB_DIR" "${REMOTE_USER}@${VM_IP}:/Users/prana/Desktop/open_source/web/"
+
+echo -e "📦 Syncing Options Data Upstox codebase..."
+rsync -avz -e "ssh -i $KEY_PATH" \
+    --exclude="venv/" \
+    --exclude="*.log" \
+    --exclude="eod_data/" \
+    "/Users/prana/Desktop/open_source/Options_data_upstox/" "${REMOTE_USER}@${VM_IP}:/Users/prana/Desktop/open_source/Options_data_upstox/"
 
 echo -e "📦 Syncing Bord client modules..."
 rsync -avz -e "ssh -i $KEY_PATH" \
