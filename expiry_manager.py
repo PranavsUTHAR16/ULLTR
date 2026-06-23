@@ -205,7 +205,7 @@ def main():
                         # Merge newly selected symbols into C++ collector config
                         print("🔄 Merging updated instruments into C++ configuration...")
                         merge_cmd = """
-import json
+import json, redis
 with open('nifty_option_symbols.json') as f:
     opts = json.load(f)
 with open('collector/config.json') as f:
@@ -217,9 +217,18 @@ else:
     for underlying, info in opts.items():
         expected.append(info['index_key'])
         expected.extend(info['symbols'])
+# Append India VIX to the instruments list
+expected.append("NSE_INDEX|India VIX")
 cfg['instruments'] = expected
 with open('collector/config.json', 'w') as f:
     json.dump(cfg, f, indent=2)
+
+# Seed spot:VIX in Redis
+try:
+    r = redis.Redis(unix_socket_path="/Users/prana/Desktop/open_source/web/redis.sock", decode_responses=True)
+    r.set("spot:VIX", "NSE_INDEX|India VIX")
+except:
+    pass
 """
                         run_merge = subprocess.run(
                             [sys.executable, "-c", merge_cmd],

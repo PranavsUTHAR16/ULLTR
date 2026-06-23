@@ -186,6 +186,7 @@ def main():
             try:
                 # Seed spot index mapping
                 r.set(f"spot:{key}", config['index_key'])
+                r.set("spot:VIX", "NSE_INDEX|India VIX")
 
                 # Map Expiry 1 (strike:CE/PE -> instrument_key)
                 exp1_map = {}
