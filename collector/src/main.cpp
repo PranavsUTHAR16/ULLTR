@@ -12,6 +12,7 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/beast/websocket/ssl.hpp>
+#include <boost/beast/http.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl/stream.hpp>
@@ -32,15 +33,12 @@ using json = nlohmann::json;
 class MarketDataIngestor {
 public:
     MarketDataIngestor(const std::string& config_path) 
-        : m_reconnect_attempts(0), m_redis(nullptr), m_mock(false) {
+        : m_reconnect_attempts(0), m_redis(nullptr), m_mock(false), m_last_reconnect_time_ms(0) {
         m_config_path = config_path;
         load_config(config_path);
     }
 
     ~MarketDataIngestor() {
-        if (m_candle_mgr) {
-            m_candle_mgr->stop_reconciliation();
-        }
         if (m_redis) {
             redisFree(m_redis);
         }
@@ -73,6 +71,63 @@ public:
         }
     }
 
+    std::string get_authorized_url() {
+        try {
+            net::io_context ioc;
+            ssl::context ctx{ssl::context::tls_client};
+            ctx.set_verify_mode(ssl::verify_none);
+
+            tcp::resolver resolver{ioc};
+            ssl::stream<tcp::socket> stream{ioc, ctx};
+
+            auto const results = resolver.resolve("api.upstox.com", "443");
+            net::connect(beast::get_lowest_layer(stream), results);
+
+            if (!SSL_set_tlsext_host_name(stream.native_handle(), "api.upstox.com")) {
+                throw boost::system::system_error(
+                    static_cast<int>(::ERR_get_error()),
+                    boost::asio::error::get_ssl_category(),
+                    "Failed to set SNI Hostname for authorization request"
+                );
+            }
+
+            stream.handshake(ssl::stream_base::client);
+
+            http::request<http::string_body> req{http::verb::get, "/v3/feed/market-data-feed/authorize", 11};
+            req.set(http::field::host, "api.upstox.com");
+            req.set(http::field::user_agent, "upstox-cpp-collector/1.0");
+            req.set(http::field::accept, "application/json");
+            req.set(http::field::authorization, "Bearer " + m_token);
+
+            http::write(stream, req);
+
+            beast::flat_buffer buffer;
+            http::response<http::string_body> res;
+            http::read(stream, buffer, res);
+
+            boost::system::error_code ec;
+            stream.shutdown(ec);
+
+            if (res.result() != http::status::ok) {
+                throw std::runtime_error("Authorization API returned status " + std::to_string(static_cast<int>(res.result())) + ": " + res.body());
+            }
+
+            auto response_json = json::parse(res.body());
+            if (response_json.contains("data")) {
+                auto data = response_json["data"];
+                if (data.contains("authorizedRedirectUri")) {
+                    return data["authorizedRedirectUri"].get<std::string>();
+                } else if (data.contains("authorized_redirect_uri")) {
+                    return data["authorized_redirect_uri"].get<std::string>();
+                }
+            }
+            throw std::runtime_error("Response JSON does not contain authorizedRedirectUri. Body: " + res.body());
+        } catch (const std::exception& e) {
+            std::cerr << "Failed to fetch authorized WebSocket URL: " << e.what() << std::endl;
+            throw;
+        }
+    }
+
     void run() {
         connect_redis();
         
@@ -89,18 +144,42 @@ public:
                 m_redis_host, m_redis_port, m_redis_unix_socket,
                 m_token, m_instruments, m_config_path
             );
-            m_candle_mgr->catch_up_historical_candles(m_redis);
+            if (!m_skip_historical_catchup) {
+                m_candle_mgr->catch_up_historical_candles(m_redis);
+            } else {
+                std::cout << "⏩ [Ingestor] Bypassing C++ historical catch-up seeding as requested in config." << std::endl;
+            }
             m_candle_mgr->init_active_candles(m_redis);
-            m_candle_mgr->start_reconciliation();
         }
-        
-        const std::string host = m_host;
-        const std::string port = m_port;
-        const std::string target = m_target;
-        
         while (m_reconnect_attempts < m_max_reconnect_attempts) {
             try {
-                std::cout << "Starting connection to " << host << " (Attempt " << (m_reconnect_attempts + 1) << ")..." << std::endl;
+                std::cout << "Requesting authorized WebSocket URI..." << std::endl;
+                std::string auth_url = get_authorized_url();
+                std::cout << "Authorized URI obtained: " << auth_url << std::endl;
+                
+                std::string ws_host = m_host;
+                std::string ws_port = m_port;
+                std::string ws_target = m_target;
+                
+                if (auth_url.rfind("wss://", 0) == 0) {
+                    std::string temp = auth_url.substr(6);
+                    size_t slash_pos = temp.find('/');
+                    if (slash_pos != std::string::npos) {
+                        ws_host = temp.substr(0, slash_pos);
+                        ws_target = temp.substr(slash_pos);
+                    } else {
+                        ws_host = temp;
+                        ws_target = "/";
+                    }
+                    
+                    size_t colon_pos = ws_host.find(':');
+                    if (colon_pos != std::string::npos) {
+                        ws_port = ws_host.substr(colon_pos + 1);
+                        ws_host = ws_host.substr(0, colon_pos);
+                    }
+                }
+                
+                std::cout << "Starting connection to " << ws_host << ":" << ws_port << ws_target << " (Attempt " << (m_reconnect_attempts + 1) << ")..." << std::endl;
                 
                 net::io_context ioc;
                 ssl::context ctx{ssl::context::tls_client};
@@ -111,13 +190,13 @@ public:
                 tcp::resolver resolver{ioc};
                 websocket::stream<ssl::stream<tcp::socket>> ws{ioc, ctx};
                 
-                auto const results = resolver.resolve(host, port);
+                auto const results = resolver.resolve(ws_host, ws_port);
                 
                 std::cout << "Connecting to server TCP socket..." << std::endl;
                 net::connect(beast::get_lowest_layer(ws), results);
                 
                 // Set SNI Hostname (essential for modern secure endpoints)
-                if (!SSL_set_tlsext_host_name(ws.next_layer().native_handle(), host.c_str())) {
+                if (!SSL_set_tlsext_host_name(ws.next_layer().native_handle(), ws_host.c_str())) {
                     throw boost::system::system_error(
                         static_cast<int>(::ERR_get_error()),
                         boost::asio::error::get_ssl_category(),
@@ -139,7 +218,7 @@ public:
                 std::cout << "Performing WebSocket handshake..." << std::endl;
                 websocket::response_type res;
                 beast::error_code handshake_ec;
-                ws.handshake(res, host, target, handshake_ec);
+                ws.handshake(res, ws_host, ws_target, handshake_ec);
                 
                 if (handshake_ec) {
                     auto status = res.result();
@@ -235,18 +314,13 @@ public:
                 std::cerr << "WebSocket error: " << e.what() << std::endl;
                 
                 // If handshake failed or declined, trigger Playwright token refresh
-                std::cout << "⚠️ WebSocket connection failed. Triggering automated token refresh using auth.py..." << std::endl;
+                std::cout << "⚠️ WebSocket connection failed. Deleting stale token and triggering automated token refresh using auth.py..." << std::endl;
+                std::remove("/Users/prana/Desktop/open_source/web/login/access_token.json");
                 int ret = std::system("python /Users/prana/Desktop/open_source/web/login/auth.py");
                 if (ret == 0) {
                     reload_token();
                 } else {
-                    // Try with python3 if python failed
-                    ret = std::system("python3 /Users/prana/Desktop/open_source/web/login/auth.py");
-                    if (ret == 0) {
-                        reload_token();
-                    } else {
-                        std::cerr << "❌ Automated token refresh failed!" << std::endl;
-                    }
+                    std::cerr << "❌ Automated token refresh failed!" << std::endl;
                 }
                 
                 m_reconnect_attempts++;
@@ -277,6 +351,7 @@ private:
         m_redis_port = cfg.value("redis_port", 6379);
         m_redis_unix_socket = cfg.value("redis_unix_socket", "");
         m_mock = cfg.value("mock", false);
+        m_skip_historical_catchup = cfg.value("skip_historical_catchup", false);
         m_host = cfg.value("host", "api.upstox.com");
         m_port = cfg.value("port", "443");
         m_target = cfg.value("target", "/v3/feed/market-data-feed");
@@ -354,6 +429,14 @@ private:
         int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         ).count();
+        
+        if (m_redis == nullptr) {
+            if (now_ms - m_last_reconnect_time_ms > 5000) {
+                std::cout << "[Ingestor] Redis is offline. Attempting rate-limited reconnect..." << std::endl;
+                m_last_reconnect_time_ms = now_ms;
+                connect_redis();
+            }
+        }
         
         // Loop through all instruments in the feeds map
         for (auto const& [symbol, feed] : response.feeds()) {
@@ -488,16 +571,22 @@ private:
                 
                 redisReply* set_reply = (redisReply*)redisCommandArgv(m_redis, argv.size(), argv.data(), argvlen.data());
                 if (set_reply) {
+                    if (set_reply->type == REDIS_REPLY_ERROR) {
+                        std::cerr << "Redis HSET Error: " << set_reply->str << " | Key: " << key << std::endl;
+                    }
                     freeReplyObject(set_reply);
                 } else {
-                    std::cerr << "Redis HSET command failed! Reconnecting to Redis..." << std::endl;
+                    std::cerr << "Redis HSET command failed (null reply)! Reconnecting to Redis..." << std::endl;
                     connect_redis();
+                    m_last_reconnect_time_ms = now_ms;
                 }
                 
                 // Publish normalized tick to subscriber channel for optional websocket streaming
-                redisReply* pub_reply = (redisReply*)redisCommand(m_redis, "PUBLISH md:stream:all %s", norm_str.c_str());
-                if (pub_reply) {
-                    freeReplyObject(pub_reply);
+                if (m_redis) {
+                    redisReply* pub_reply = (redisReply*)redisCommand(m_redis, "PUBLISH md:stream:all %s", norm_str.c_str());
+                    if (pub_reply) {
+                        freeReplyObject(pub_reply);
+                    }
                 }
             }
             
@@ -524,6 +613,7 @@ private:
     int m_redis_port;
     std::string m_redis_unix_socket;
     bool m_mock;
+    bool m_skip_historical_catchup;
     std::string m_host;
     std::string m_port;
     std::string m_target;
@@ -598,6 +688,7 @@ private:
     // Reconnect properties
     int m_reconnect_attempts;
     const int m_max_reconnect_attempts = 15;
+    int64_t m_last_reconnect_time_ms;
     
     // Redis context
     redisContext* m_redis;

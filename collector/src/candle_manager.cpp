@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <chrono>
+#include <thread>
 #include <cmath>
 #include <stdexcept>
 #include <cstdio>
@@ -97,8 +98,7 @@ CandleManager::CandleManager(
     m_redis_unix_socket(redis_unix_socket),
     m_token(token),
     m_instruments(instruments),
-    m_config_path(config_path),
-    m_stop_reco(false)
+    m_config_path(config_path)
 {
     m_timeframes = {
         {"1m", 60},
@@ -110,7 +110,6 @@ CandleManager::CandleManager(
 }
 
 CandleManager::~CandleManager() {
-    stop_reconciliation();
 }
 
 // --- TOKEN REFRESH FLOW ---
@@ -143,7 +142,7 @@ std::string CandleManager::https_get(const std::string& target) {
     std::string port = "443";
     
     int attempt = 0;
-    while (attempt < 2) {
+    while (attempt < 5) {
         try {
             net::io_context ioc;
             ssl::context ctx{ssl::context::tls_client};
@@ -174,12 +173,17 @@ std::string CandleManager::https_get(const std::string& target) {
             stream.shutdown(ec);
             
             if (res.result() == http::status::unauthorized) {
-                std::cout << "⚠️ CandleManager API Unauthorized (401). Triggering token refresh..." << std::endl;
+                std::cout << "⚠️ CandleManager API Unauthorized (401). Deleting stale token and triggering token refresh..." << std::endl;
+                std::remove("/Users/prana/Desktop/open_source/web/login/access_token.json");
                 int ret = std::system("python /Users/prana/Desktop/open_source/web/login/auth.py");
-                if (ret != 0) {
-                    std::system("python3 /Users/prana/Desktop/open_source/web/login/auth.py");
-                }
                 reload_token();
+                attempt++;
+                continue;
+            }
+            
+            if (res.result() == http::status::too_many_requests) {
+                std::cout << "⚠️ CandleManager API Rate Limited (429). Sleeping 3 seconds..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(3));
                 attempt++;
                 continue;
             }
@@ -311,6 +315,9 @@ void CandleManager::catch_up_historical_candles(redisContext* sync_redis) {
     std::cout << "[CandleManager] Active Query Range: " << from_str << " to " << today_str << std::endl;
     
     for (size_t idx = 0; idx < m_instruments.size(); ++idx) {
+        // Enforce rate limiting delay (150ms) to prevent HTTP 429 errors from Upstox API
+        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        
         const std::string& symbol = m_instruments[idx];
         std::cout << "   [" << (idx + 1) << "/" << m_instruments.size() << "] Catching up history for " << symbol << "..." << std::endl;
         
@@ -527,9 +534,9 @@ void CandleManager::process_tick_candle(
         if (!has_active || symbol_candles[tf].timestamp < ts_candle) {
             // A candle interval has officially closed!
             if (has_active && tf == "1m") {
-                // Add the closed 1m candle to background queue
-                std::lock_guard<std::mutex> lock(m_reco_mutex);
-                m_reco_queue.push_back({symbol, symbol_candles[tf].timestamp});
+                // Publish closed 1m candle to Redis Pub/Sub channel
+                redisReply* r_pub = (redisReply*)redisCommand(sync_redis, "PUBLISH md:reco:trigger %s:%lld", symbol.c_str(), symbol_candles[tf].timestamp);
+                if (r_pub) freeReplyObject(r_pub);
             }
             
             Candle c;
@@ -570,221 +577,4 @@ void CandleManager::process_tick_candle(
 
 // --- SELF-HEALING RECONCILIATION THREAD ---
 
-void CandleManager::start_reconciliation() {
-    m_stop_reco = false;
-    m_reco_thread = std::thread(&CandleManager::reconciliation_loop, this);
-}
 
-void CandleManager::stop_reconciliation() {
-    m_stop_reco = true;
-    if (m_reco_thread.joinable()) {
-        m_reco_thread.join();
-    }
-}
-
-void CandleManager::reconciliation_loop() {
-    std::cout << "🩺 [CandleManager] Native self-healing C++ reconciliation thread started." << std::endl;
-    
-    // Background thread establishes its own distinct, thread-safe Redis connection
-    redisContext* reco_redis = nullptr;
-    if (!m_redis_unix_socket.empty()) {
-        reco_redis = redisConnectUnix(m_redis_unix_socket.c_str());
-    } else {
-        reco_redis = redisConnect(m_redis_host.c_str(), m_redis_port);
-    }
-    
-    if (!reco_redis || reco_redis->err) {
-        std::cerr << "❌ [CandleManager] Background reconciliation Redis connection failed!" << std::endl;
-        if (reco_redis) redisFree(reco_redis);
-        return;
-    }
-    
-    while (!m_stop_reco) {
-        std::pair<std::string, int64_t> item;
-        bool has_item = false;
-        
-        {
-            std::lock_guard<std::mutex> lock(m_reco_mutex);
-            if (!m_reco_queue.empty()) {
-                item = m_reco_queue.front();
-                m_reco_queue.erase(m_reco_queue.begin());
-                has_item = true;
-            }
-        }
-        
-        if (!has_item) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            continue;
-        }
-        
-        // Wait 5 seconds for broker API synchronization
-        for (int i = 0; i < 10 && !m_stop_reco; ++i) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        }
-        
-        if (m_stop_reco) break;
-        
-        std::string symbol = item.first;
-        int64_t ts_closed = item.second;
-        
-        std::string encoded_symbol = url_encode(symbol);
-        std::string target = "/v3/historical-candle/intraday/" + encoded_symbol + "/minutes/1";
-        
-        std::string response = https_get(target);
-        if (response.empty()) continue;
-        
-        try {
-            auto res = json::parse(response);
-            if (res.value("status", "") == "success") {
-                auto candles = res["data"]["candles"];
-                bool matched = false;
-                
-                for (const auto& c : candles) {
-                    std::string ts_str = c[0].get<std::string>();
-                    int64_t ts_api = parse_iso_timestamp(ts_str);
-                    
-                    if (ts_api == ts_closed) {
-                        double api_o = c[1].get<double>();
-                        double api_h = c[2].get<double>();
-                        double api_l = c[3].get<double>();
-                        double api_c = c[4].get<double>();
-                        int64_t api_v = c[5].get<int64_t>();
-                        
-                        // Cross-check
-                        std::string candle_key = "md:candle:" + symbol + ":1m:" + std::to_string(ts_closed);
-                        redisReply* r_check = (redisReply*)redisCommand(reco_redis, "HGETALL %s", candle_key.c_str());
-                        
-                        bool discrepancy = false;
-                        if (!r_check || r_check->type != REDIS_REPLY_ARRAY || r_check->elements == 0) {
-                            discrepancy = true;
-                        } else {
-                            double cur_o = 0, cur_h = 0, cur_l = 0, cur_c = 0;
-                            int64_t cur_v = 0;
-                            for (size_t i = 0; i < r_check->elements; i += 2) {
-                                std::string field = r_check->element[i]->str;
-                                std::string val = r_check->element[i+1]->str;
-                                if (field == "open") cur_o = std::stod(val);
-                                else if (field == "high") cur_h = std::stod(val);
-                                else if (field == "low") cur_l = std::stod(val);
-                                else if (field == "close") cur_c = std::stod(val);
-                                else if (field == "volume") cur_v = std::stoll(val);
-                            }
-                            
-                            if (std::abs(cur_o - api_o) > 0.01 ||
-                                std::abs(cur_h - api_h) > 0.01 ||
-                                std::abs(cur_l - api_l) > 0.01 ||
-                                std::abs(cur_c - api_c) > 0.01 ||
-                                std::abs(cur_v - api_v) > 0) {
-                                discrepancy = true;
-                            }
-                        }
-                        if (r_check) freeReplyObject(r_check);
-                        
-                        if (discrepancy) {
-                            std::cout << "   ⚠️ [CandleManager] Discrepancy detected for " << symbol << " 1m at " << ts_closed << "! Self-healing..." << std::endl;
-                            redisReply* set_reply = (redisReply*)redisCommand(reco_redis, 
-                                "HSET %s open %f high %f low %f close %f volume %lld status %s",
-                                candle_key.c_str(), api_o, api_h, api_l, api_c, api_v, "reconciled");
-                            if (set_reply) freeReplyObject(set_reply);
-                            
-                            // Re-aggregate parents
-                            propagate_parent_recalculations(reco_redis, symbol, ts_closed);
-                        } else {
-                            redisReply* set_reply = (redisReply*)redisCommand(reco_redis, "HSET %s status %s", candle_key.c_str(), "reconciled");
-                            if (set_reply) freeReplyObject(set_reply);
-                        }
-                        matched = true;
-                        break;
-                    }
-                }
-                
-                if (!matched) {
-                    // Check if candle is just absent in API (sometimes brokers take slightly longer)
-                    // We can re-queue it one time if it is extremely fresh
-                    std::time_t now_time = std::time(nullptr);
-                    if (now_time - ts_closed < 180) {
-                        std::lock_guard<std::mutex> lock(m_reco_mutex);
-                        m_reco_queue.push_back({symbol, ts_closed});
-                    }
-                }
-            }
-        } catch (const std::exception& e) {
-            std::cerr << "[CandleManager] Reconciliation thread parsing error: " << e.what() << std::endl;
-        }
-    }
-    
-    redisFree(reco_redis);
-    std::cout << "🩺 [CandleManager] Background reconciliation thread cleanly terminated." << std::endl;
-}
-
-void CandleManager::propagate_parent_recalculations(
-    redisContext* reco_redis,
-    const std::string& symbol,
-    int64_t ts_candle
-) {
-    std::vector<std::pair<std::string, int>> parent_timeframes = {
-        {"3m", 180},
-        {"5m", 300},
-        {"15m", 900},
-        {"30m", 1800}
-    };
-    
-    for (const auto& p : parent_timeframes) {
-        const std::string& tf = p.first;
-        int duration = p.second;
-        
-        int64_t ts_parent = (ts_candle / duration) * duration;
-        
-        std::vector<Candle> valid_candles;
-        for (int64_t t = ts_parent; t < ts_parent + duration; t += 60) {
-            std::string candle_key = "md:candle:" + symbol + ":1m:" + std::to_string(t);
-            redisReply* r = (redisReply*)redisCommand(reco_redis, "HGETALL %s", candle_key.c_str());
-            if (r && r->type == REDIS_REPLY_ARRAY && r->elements > 0) {
-                Candle c;
-                c.timestamp = t;
-                for (size_t i = 0; i < r->elements; i += 2) {
-                    std::string field = r->element[i]->str;
-                    std::string val = r->element[i+1]->str;
-                    if (field == "open") c.open = std::stod(val);
-                    else if (field == "high") c.high = std::stod(val);
-                    else if (field == "low") c.low = std::stod(val);
-                    else if (field == "close") c.close = std::stod(val);
-                    else if (field == "volume") c.volume = std::stoll(val);
-                }
-                valid_candles.push_back(c);
-            }
-            if (r) freeReplyObject(r);
-        }
-        
-        if (valid_candles.empty()) continue;
-        
-        try {
-            double o = valid_candles.front().open;
-            double c = valid_candles.back().close;
-            double h = valid_candles.front().high;
-            double l = valid_candles.front().low;
-            int64_t v = 0;
-            
-            for (const auto& candle : valid_candles) {
-                h = std::max(h, candle.high);
-                l = std::min(l, candle.low);
-                v += candle.volume;
-            }
-            
-            std::string parent_key = "md:candle:" + symbol + ":" + tf + ":" + std::to_string(ts_parent);
-            std::string zset_key = "md:candles:" + symbol + ":" + tf;
-            
-            redisReply* r_hset = (redisReply*)redisCommand(reco_redis, 
-                "HSET %s open %f high %f low %f close %f volume %lld status %s",
-                parent_key.c_str(), o, h, l, c, v, "reconciled");
-            if (r_hset) freeReplyObject(r_hset);
-            
-            redisReply* r_zadd = (redisReply*)redisCommand(reco_redis, "ZADD %s %lld %lld", zset_key.c_str(), ts_parent, ts_parent);
-            if (r_zadd) freeReplyObject(r_zadd);
-            
-            std::cout << "   🔄 [CandleManager] Propagated aggregation for " << symbol << " " << tf << " at " << ts_parent << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "[CandleManager] Parent re-aggregation error: " << e.what() << std::endl;
-        }
-    }
-}

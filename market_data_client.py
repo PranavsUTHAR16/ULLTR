@@ -52,7 +52,10 @@ class MarketDataClient:
 
     def get_spot_key(self, underlying="NIFTY"):
         """Resolve the spot instrument key (e.g., 'spot:NIFTY' -> 'NSE_INDEX|Nifty 50')."""
-        return self.r.get(f"spot:{underlying.upper()}") or "NSE_INDEX|Nifty 50"
+        resolved = self.r.get(f"spot:{underlying.upper()}")
+        if resolved:
+            return resolved
+        return "BSE_INDEX|SENSEX" if underlying.upper() == "SENSEX" else "NSE_INDEX|Nifty 50"
 
     def get_spot_quote(self, underlying="NIFTY"):
         """Fetch the latest spot quote snapshot directly from the Redis HASH."""
@@ -60,19 +63,23 @@ class MarketDataClient:
         raw_hash = self.r.hgetall(f"md:quote:{key}")
         return self._parse_hash_quote(raw_hash)
 
-    def get_spot_price(self, underlying="NIFTY", fallback=23500.0):
+    def get_spot_price(self, underlying="NIFTY", fallback=None):
         """Fetch just the spot price LTP as a float."""
+        if fallback is None:
+            fallback = 73500.0 if underlying.upper() == "SENSEX" else 23500.0
         quote = self.get_spot_quote(underlying)
         if quote and "ltp" in quote:
             return quote["ltp"]
         return fallback
 
-    def get_atm_strike(self, underlying="NIFTY", strike_increment=50):
+    def get_atm_strike(self, underlying="NIFTY", strike_increment=None):
         """Calculate the At-The-Money (ATM) strike price rounded to the nearest increment."""
+        if strike_increment is None:
+            strike_increment = 100 if underlying.upper() == "SENSEX" else 50
         spot = self.get_spot_price(underlying)
         return int(round(spot / strike_increment) * strike_increment)
 
-    def get_nearby_chain(self, underlying="NIFTY", expiry=None, count=2, strike_increment=50):
+    def get_nearby_chain(self, underlying="NIFTY", expiry=None, count=2, strike_increment=None):
         """
         Fetch quotes and option Greeks for At-The-Money (ATM) and nearby strikes in a single
         highly optimized Redis pipelined exchange.
@@ -89,6 +96,9 @@ class MarketDataClient:
         if not expiry:
             raise ValueError("Expiry date (YYYY-MM-DD) must be specified")
             
+        if strike_increment is None:
+            strike_increment = 100 if underlying.upper() == "SENSEX" else 50
+
         # 1. Resolve Spot Index Price & ATM strike
         spot_price = self.get_spot_price(underlying)
         atm_strike = int(round(spot_price / strike_increment) * strike_increment)
@@ -97,7 +107,7 @@ class MarketDataClient:
         strikes = [atm_strike + (i * strike_increment) for i in range(-count, count + 1)]
         
         # 3. Read option metadata map for this expiry (chain:NIFTY:<expiry>)
-        chain_meta = self.r.hgetall(f"chain:NIFTY:{expiry}")
+        chain_meta = self.r.hgetall(f"chain:{underlying.upper()}:{expiry}")
         if not chain_meta:
             return {
                 "underlying": underlying,
@@ -194,30 +204,75 @@ class MarketDataClient:
         return sorted(candles, key=lambda x: x["timestamp"])
 
 if __name__ == "__main__":
+    from datetime import datetime
+    
+    def format_ts(ts):
+        if not ts:
+            return "N/A"
+        try:
+            val = float(ts)
+            if val > 1e11:  # Milliseconds
+                val /= 1000.0
+            return datetime.fromtimestamp(val).strftime("%H:%M:%S.%f")[:-3]
+        except Exception:
+            return str(ts)
+
     # Standard check / manual test
     client = MarketDataClient()
-    spot = client.get_spot_price()
-    atm = client.get_atm_strike()
-    print("📈 Low-Latency Client Test Snapshot:")
-    print(f"   Spot price: {spot}")
-    print(f"   ATM strike: {atm}")
     
-    # Try fetching Nifty front expiry ATM +/- 1 strikes
-    print("\n⚡ Pipelining ATM +/- 1 strikes chain quotes...")
-    import time
-    start = time.perf_counter()
-    chain = client.get_nearby_chain(expiry="2026-06-02", count=1)
-    end = time.perf_counter()
+    print(f"⏰ Local Client Time: {datetime.now().strftime('%H:%M:%S.%f')[:-3]}")
     
-    print(f"⏱️ Fetch completed in {(end - start) * 1000.0:.3f} ms!")
-    
-    # Print formatted ATM pair
-    atm_ce = chain["strikes"][atm]["CE"]
-    atm_pe = chain["strikes"][atm]["PE"]
-    print(f"\n🔥 ATM Strike CE ({atm_ce.get('symbol') if atm_ce else 'N/A'}):")
-    print(f"   LTP: {atm_ce.get('ltp')} | Bid: {atm_ce.get('bid')} | Ask: {atm_ce.get('ask')}")
-    print(f"   Delta: {atm_ce.get('option_greeks', {}).get('delta')} | Theta: {atm_ce.get('option_greeks', {}).get('theta')}")
-    
-    print(f"\n🔥 ATM Strike PE ({atm_pe.get('symbol') if atm_pe else 'N/A'}):")
-    print(f"   LTP: {atm_pe.get('ltp')} | Bid: {atm_pe.get('bid')} | Ask: {atm_pe.get('ask')}")
-    print(f"   Delta: {atm_pe.get('option_greeks', {}).get('delta')} | Theta: {atm_pe.get('option_greeks', {}).get('theta')}")
+    for underlying in ["NIFTY", "SENSEX"]:
+        print(f"\n=========================================")
+        print(f"📈 {underlying} Low-Latency Client Test Snapshot:")
+        print(f"=========================================")
+        spot_quote = client.get_spot_quote(underlying)
+        spot = spot_quote.get("ltp") if spot_quote else "N/A"
+        atm = client.get_atm_strike(underlying)
+        
+        print(f"   Spot price: {spot}")
+        if spot_quote:
+            print(f"   Exchange Time: {format_ts(spot_quote.get('ts_exchange'))} | Recv Time: {format_ts(spot_quote.get('ts_recv'))}")
+        print(f"   ATM strike: {atm}")
+        
+        # Try fetching front expiry ATM +/- 1 strikes
+        print(f"⚡ Pipelining ATM +/- 1 strikes chain quotes...")
+        
+        # Dynamically find the front expiry seeded in Redis
+        chain_keys = client.r.keys(f"chain:{underlying}:*")
+        expiry = sorted([k.split(":")[-1] for k in chain_keys])[0] if chain_keys else None
+        
+        if not expiry:
+            print(f"   ⚠️ No seeded expiries found in Redis for {underlying}.")
+            continue
+            
+        print(f"   Selected Expiry: {expiry}")
+        
+        chain = client.get_nearby_chain(underlying=underlying, expiry=expiry, count=1)
+
+        # Print formatted ATM pair
+        atm_ce = chain["strikes"].get(atm, {}).get("CE")
+        atm_pe = chain["strikes"].get(atm, {}).get("PE")
+        
+        if atm_ce and (isinstance(atm_ce, dict) and not atm_ce.get('error')):
+            print(f"\n   🔥 ATM CE ({atm_ce.get('symbol')}):")
+            print(f"      LTP: {atm_ce.get('ltp')} | Bid: {atm_ce.get('bid')} | Ask: {atm_ce.get('ask')}")
+            print(f"      Delta: {atm_ce.get('option_greeks', {}).get('delta') if atm_ce.get('option_greeks') else 'N/A'} | Theta: {atm_ce.get('option_greeks', {}).get('theta') if atm_ce.get('option_greeks') else 'N/A'}")
+            print(f"      Exchange Time: {format_ts(atm_ce.get('ts_exchange'))} | Recv Time: {format_ts(atm_ce.get('ts_recv'))}")
+        else:
+            print(f"\n   🔥 ATM CE: N/A (No active quote in Redis. Raw response: {atm_ce})")
+            
+        if atm_pe and (isinstance(atm_pe, dict) and not atm_pe.get('error')):
+            print(f"\n   🔥 ATM PE ({atm_pe.get('symbol')}):")
+            print(f"      LTP: {atm_pe.get('ltp')} | Bid: {atm_pe.get('bid')} | Ask: {atm_pe.get('ask')}")
+            print(f"      Delta: {atm_pe.get('option_greeks', {}).get('delta') if atm_pe.get('option_greeks') else 'N/A'} | Theta: {atm_pe.get('option_greeks', {}).get('theta') if atm_pe.get('option_greeks') else 'N/A'}")
+            print(f"      Exchange Time: {format_ts(atm_pe.get('ts_exchange'))} | Recv Time: {format_ts(atm_pe.get('ts_recv'))}")
+        else:
+            print(f"\n   🔥 ATM PE: N/A (No active quote in Redis. Raw response: {atm_pe})")
+
+        # Fetch the last 10 candles (1-minute timeframe) for the Call Option
+        print(f"⚡ Fetching sample 1m option candles...")
+        if atm_ce and isinstance(atm_ce, dict) and "symbol" in atm_ce:
+            candles = client.get_candles(atm_ce["symbol"], timeframe="1m", count=10)
+            for c in candles[:3]:
+                print(f"      {c['time']} | O: {c['open']} | H: {c['high']} | C: {c['close']} | Vol: {c['volume']} | Status: {c['status']}")

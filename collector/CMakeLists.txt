@@ -38,24 +38,34 @@ target_include_directories(collector PRIVATE
 )
 
 # Libraries to link
-target_link_libraries(collector PRIVATE
-    protobuf::libprotobuf
-    absl_log_internal_message
-    absl_log_internal_nullguard
-    absl_log_internal_check_op
-    absl_raw_logging_internal
-    absl_strings
-    absl_strings_internal
-    absl_hash
-    absl_synchronization
-    absl_time
-    absl_time_zone
-    absl_throw_delegate
-    absl_spinlock_wait
-    absl_stacktrace
-    absl_malloc_internal
-    OpenSSL::SSL
-    OpenSSL::Crypto
-    Threads::Threads
-    hiredis
-)
+if(APPLE)
+    target_link_libraries(collector PRIVATE
+        protobuf::libprotobuf
+        absl_log_internal_message
+        absl_log_internal_nullguard
+        absl_log_internal_check_op
+        absl_raw_logging_internal
+        absl_strings
+        absl_strings_internal
+        absl_hash
+        absl_synchronization
+        absl_time
+        absl_time_zone
+        absl_throw_delegate
+        absl_spinlock_wait
+        absl_stacktrace
+        absl_malloc_internal
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        Threads::Threads
+        hiredis
+    )
+else()
+    target_link_libraries(collector PRIVATE
+        protobuf::libprotobuf
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        Threads::Threads
+        hiredis
+    )
+endif()

@@ -90,10 +90,37 @@ async def get_quote(symbol: str):
     """Retrieve the latest cached quote snapshot for a specific symbol."""
     try:
         r = await get_redis_client()
-        raw_quote = await r.get(f"md:quote:{symbol}")
-        if not raw_quote:
-            raise HTTPException(status_code=404, detail=f"Quote not found for symbol: {symbol}")
-        return json.loads(raw_quote)
+        key = f"md:quote:{symbol}"
+        key_type = await r.type(key)
+        
+        if key_type == "hash":
+            raw_hash = await r.hgetall(key)
+            if not raw_hash:
+                raise HTTPException(status_code=404, detail=f"Quote not found for symbol: {symbol}")
+            
+            quote = {}
+            greeks = {}
+            for k, v in raw_hash.items():
+                if k in ["ltp", "close", "volume", "oi", "iv", "bid", "bid_qty", "ask", "ask_qty", "ts_exchange", "ts_recv", "atp", "tbq", "tsq"]:
+                    try:
+                        quote[k] = float(v) if "." in v else int(v)
+                    except ValueError:
+                        quote[k] = v
+                elif k in ["delta", "theta", "gamma", "vega", "rho"]:
+                    try:
+                        greeks[k] = float(v) if "." in v else int(v)
+                    except ValueError:
+                        greeks[k] = v
+                else:
+                    quote[k] = v
+            if greeks:
+                quote["option_greeks"] = greeks
+            return quote
+        else:
+            raw_quote = await r.get(key)
+            if not raw_quote:
+                raise HTTPException(status_code=404, detail=f"Quote not found for symbol: {symbol}")
+            return json.loads(raw_quote)
     except HTTPException:
         raise
     except Exception as e:
@@ -115,21 +142,54 @@ async def get_quotes_batch(symbols: str):
         
     try:
         r = await get_redis_client()
-        redis_keys = [f"md:quote:{symbol}" for symbol in symbol_list]
         
-        # MGET retrieves multiple keys in one single command (O(N) vector performance)
-        raw_quotes = await r.mget(redis_keys)
+        # Pipelined lookup of key types
+        pipe = r.pipeline()
+        for symbol in symbol_list:
+            pipe.type(f"md:quote:{symbol}")
+        types = await pipe.execute()
+        
+        # Pipelined fetch of values based on type
+        pipe = r.pipeline()
+        for symbol, key_type in zip(symbol_list, types):
+            if key_type == "hash":
+                pipe.hgetall(f"md:quote:{symbol}")
+            else:
+                pipe.get(f"md:quote:{symbol}")
+        raw_results = await pipe.execute()
         
         quotes = []
-        for symbol, raw_q in zip(symbol_list, raw_quotes):
-            if raw_q:
-                quotes.append(json.loads(raw_q))
-            else:
+        for symbol, key_type, raw_val in zip(symbol_list, types, raw_results):
+            if not raw_val:
                 quotes.append({"symbol": symbol, "status": "offline", "error": "No data in cache"})
+                continue
+                
+            if key_type == "hash":
+                quote = {}
+                greeks = {}
+                for k, v in raw_val.items():
+                    if k in ["ltp", "close", "volume", "oi", "iv", "bid", "bid_qty", "ask", "ask_qty", "ts_exchange", "ts_recv", "atp", "tbq", "tsq"]:
+                        try:
+                            quote[k] = float(v) if "." in v else int(v)
+                        except ValueError:
+                            quote[k] = v
+                    elif k in ["delta", "theta", "gamma", "vega", "rho"]:
+                        try:
+                            greeks[k] = float(v) if "." in v else int(v)
+                        except ValueError:
+                            greeks[k] = v
+                    else:
+                        quote[k] = v
+                if greeks:
+                    quote["option_greeks"] = greeks
+                quotes.append(quote)
+            else:
+                quotes.append(json.loads(raw_val))
         return quotes
     except Exception as e:
         logger.error(f"Failed to retrieve batch quotes: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
 
 @app.websocket("/ws")
 async def websocket_stream(websocket: WebSocket):

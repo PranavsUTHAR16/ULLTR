@@ -46,20 +46,12 @@ public:
         int64_t ts_exchange
     );
 
-    // 4. Thread-safe Background reconciliation worker controls
-    void start_reconciliation();
-    void stop_reconciliation();
-
     // Reload token upon dynamic authentication refresh
     void reload_token();
 
 private:
-    // Dynamic HTTPS client using Boost.Beast
+    // Dynamic HTTPS client using Boost.Beast (used only for startup catch-up)
     std::string https_get(const std::string& target);
-
-    // Background thread loops
-    void reconciliation_loop();
-    void propagate_parent_recalculations(redisContext* reco_redis, const std::string& symbol, int64_t ts_candle);
 
     // Configuration properties
     std::string m_redis_host;
@@ -74,10 +66,5 @@ private:
     // Map of symbol -> Map of timeframe ("1m", "3m", "5m", "15m", "30m") -> Candle
     std::unordered_map<std::string, std::unordered_map<std::string, Candle>> m_active_candles;
     std::unordered_map<std::string, int> m_timeframes;
-
-    // Multi-threaded background properties
-    std::thread m_reco_thread;
-    std::atomic<bool> m_stop_reco;
-    std::vector<std::pair<std::string, int64_t>> m_reco_queue;
-    std::mutex m_reco_mutex;
 };
+

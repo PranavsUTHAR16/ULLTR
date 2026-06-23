@@ -13,8 +13,9 @@ import os
 import json
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env file in the same directory as this script
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 # Configuration constants from environment variables
 API_KEY = os.getenv('UPSTOX_API_KEY')
@@ -26,6 +27,7 @@ PIN = os.getenv('UPSTOX_PIN')
 
 if not all([API_KEY, SECRET_KEY, TOTP_KEY, MOBILE_NO, PIN]):
     print("❌ Error: Missing required environment variables.")
+    print(f"Looked for .env at: {dotenv_path}")
     print("Please ensure UPSTOX_API_KEY, UPSTOX_SECRET_KEY, UPSTOX_TOTP_KEY, UPSTOX_MOBILE_NO, and UPSTOX_PIN are set.")
     exit(1)
 
@@ -85,6 +87,24 @@ def run_auth(playwright: Playwright) -> str:
 
 def main():
     """Main entry point - authenticate and save token"""
+    import time
+    token_path = os.path.join(os.path.dirname(__file__), 'access_token.json')
+    
+    # 1. Rate-limit authentication: bypass login if the token is from today
+    if os.path.exists(token_path):
+        from datetime import datetime, date
+        mtime = os.path.getmtime(token_path)
+        mtime_date = datetime.fromtimestamp(mtime).date()
+        if mtime_date == date.today():
+            print(f"🪙 Access token is from today. Bypassing Playwright login to prevent duplicate OTP triggers.")
+            
+            # Read token to return it for consistency
+            try:
+                with open(token_path) as f:
+                    return json.load(f).get("access_token", "")
+            except Exception:
+                pass
+                
     print("🔐 Starting Upstox authentication...")
     
     with sync_playwright() as playwright:
@@ -94,8 +114,6 @@ def main():
     print(f"✅ Access Token obtained")
     
     # Save to same directory as this script
-    import os
-    token_path = os.path.join(os.path.dirname(__file__), 'access_token.json')
     with open(token_path, 'w') as f:
         json.dump({'access_token': access_token}, f)
     
