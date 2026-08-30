@@ -321,6 +321,37 @@ class MultiModelEngine:
         except Exception:
             pass
 
+    def send_telegram_model_periodic_updates(self):
+        """Sends periodic real-time MTM and PnL updates to Telegram while positions are open."""
+        try:
+            if not self.active_positions:
+                return
+            import requests
+            bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "8234942867:AAFdoNjo72DsEYo9DSicTJm8-t5n_B_G30g")
+            chat_id = os.environ.get("TELEGRAM_CHAT_ID", "-1003102434057")
+            
+            s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
+            m2_real, m2_unreal, m2_tot = self.calculate_model_pnl("0216_MODEL")
+            dd_real, dd_unreal, dd_tot = self.calculate_model_pnl("DYNAMIC_DTE")
+            comb_tot = s6_tot + m2_tot + dd_tot
+
+            now_str = datetime.now().strftime("%H:%M:%S")
+            lines = [
+                f"📡 <b>LIVE TELEMETRY UPDATE | {now_str}</b>",
+                f"• Model 1 [Strategy 6] (10L): <b>₹{s6_tot:+,.2f}</b> (Unrealized: ₹{s6_unreal:+,.2f})",
+                f"• Model 2 [0216 Model] (10L): <b>₹{m2_tot:+,.2f}</b> (Unrealized: ₹{m2_unreal:+,.2f})",
+                f"• Model 3 [Dynamic DTE]: <b>₹{dd_tot:+,.2f}</b> (Unrealized: ₹{dd_unreal:+,.2f})",
+                f"💰 <b>Combined Portfolio PnL: ₹{comb_tot:+,.2f}</b>",
+                "\n<b>Open Legs:</b>"
+            ]
+            for p in self.active_positions:
+                lines.append(f"  • <b>[{p.model_id}] {p.strike} {p.option_type}</b>: {p.lots}L @ ₹{p.entry_price:.2f} ➔ ₹{p.current_price:.2f} (PnL: <b>₹{p.pnl:+,.2f}</b>)")
+            
+            payload = {"chat_id": chat_id, "text": "\n".join(lines), "parse_mode": "HTML"}
+            requests.post(f"https://api.telegram.org/bot{bot_token}/sendMessage", json=payload, timeout=4.0)
+        except Exception:
+            pass
+
     def send_telegram_eod_broadcast(self):
         """Sends Telegram daily summary at 15:00 market close."""
         try:

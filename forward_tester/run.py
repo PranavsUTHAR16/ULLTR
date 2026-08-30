@@ -26,6 +26,7 @@ def run_live(engine: MultiModelEngine):
     entry_triggered = len(engine.strategy6.active_positions) > 0 or len(engine.strategy6.closed_positions) > 0
     exit_triggered = False
     last_render_time = 0.0
+    last_telegram_time = time.time()
     
     while True:
         try:
@@ -37,13 +38,18 @@ def run_live(engine: MultiModelEngine):
                 if len(engine.strategy6.active_positions) > 0:
                     entry_triggered = True
                 
-            # Monitor active positions & evaluate 0216 Model 5-minute candle signals
+            # Monitor active positions & evaluate 5-minute candle signals
             engine.update_and_monitor()
                 
             # Render terminal status dashboard once per second
             if time.time() - last_render_time >= 1.0:
                 engine.render_dashboard()
                 last_render_time = time.time()
+
+            # Send 15-second Telegram model updates while positions are active
+            if (engine.active_positions or engine.closed_positions) and (time.time() - last_telegram_time >= 15.0):
+                engine.send_telegram_model_periodic_updates()
+                last_telegram_time = time.time()
 
             # Check 15:00 PM EOD Exit
             if not exit_triggered and now >= dtime(exit_h, exit_m, exit_s):
