@@ -113,11 +113,17 @@ def main():
     access_token = get_access_token(code)
     print(f"✅ Access Token obtained")
     
-    # Save to same directory as this script
-    with open(token_path, 'w') as f:
-        json.dump({'access_token': access_token}, f)
-    
-    print(f"💾 Token saved to: {token_path}")
+    # Save to same directory as this script and parent directory
+    parent_token_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'access_token.json')
+    for target in [token_path, parent_token_path]:
+        try:
+            with open(target, 'w') as f:
+                json.dump({'access_token': access_token}, f)
+            os.chmod(target, 0o666)
+            print(f"💾 Token saved to: {target}")
+        except Exception as e:
+            print(f"⚠️ Warning saving to {target}: {e}")
+
     return access_token
 
 
