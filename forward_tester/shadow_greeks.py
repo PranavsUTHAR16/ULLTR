@@ -83,9 +83,15 @@ def select_delta_strike(
     if options_df.empty:
         return None
 
-    cand = options_df[(options_df["option_type"] == option_type) & (options_df["close"] >= min_price)].copy()
+    px_col = "close" if "close" in options_df.columns else ("ltp" if "ltp" in options_df.columns else "price")
+    if px_col not in options_df.columns:
+        return None
+
+    cand = options_df[(options_df["option_type"] == option_type) & (options_df[px_col] >= min_price)].copy()
     if cand.empty:
         return None
+    if "close" not in cand.columns:
+        cand["close"] = cand[px_col]
 
     if "delta" not in cand.columns or cand["delta"].isnull().any():
         cand = compute_bs_greeks_onthefly(cand, spot_price, r=r)
@@ -115,6 +121,8 @@ def select_delta_strike(
         "strike": float(best_row["strike"]),
         "option_type": option_type,
         "entry_price": float(best_row["close"]),
+        "ltp": float(best_row["close"]),
+        "close": float(best_row["close"]),
         "delta": float(best_row["delta"]),
         "gamma": float(best_row.get("gamma", 0.0)),
         "theta": float(best_row.get("theta", 0.0)),

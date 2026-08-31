@@ -180,7 +180,7 @@ class Strategy6Model(BaseTradingModel):
         return self.active_positions
 
     def _create_position(self, opt_info: dict, opt_type: str, leg_type: str, delta: float, lots: int, lot_size: int, sl_mult: float) -> ForwardTestPosition:
-        entry_px = float(opt_info["ltp"])
+        entry_px = float(opt_info.get("entry_price") or opt_info.get("ltp") or opt_info.get("close") or 0.0)
         return ForwardTestPosition(
             model_id="STRATEGY_6",
             underlying=self.underlying,
@@ -211,13 +211,16 @@ class Strategy6Model(BaseTradingModel):
             for opt_type, leg in leg_pair.items():
                 if not leg or "error" in leg or not isinstance(leg, dict):
                     continue
-                ltp = leg.get("ltp") or leg.get("close")
-                if ltp and ltp > 0:
+                ltp = leg.get("ltp") or leg.get("close") or leg.get("last_price")
+                if ltp and float(ltp) > 0:
+                    px_val = float(ltp)
                     rows.append({
                         "symbol": leg.get("symbol"),
                         "strike": float(strike),
                         "option_type": opt_type.upper(),
-                        "ltp": float(ltp),
+                        "ltp": px_val,
+                        "close": px_val,
+                        "price": px_val,
                         "delta": leg.get("option_greeks", {}).get("delta", 0.0) if leg.get("option_greeks") else 0.0,
                         "iv": leg.get("option_greeks", {}).get("iv", 0.15) if leg.get("option_greeks") else 0.15,
                     })
