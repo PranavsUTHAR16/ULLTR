@@ -25,12 +25,12 @@ echo -e "${GREEN}✓ Timezone configured. Current Time: $(date)${NC}"
 
 # 2. Update System Packages
 echo -e "\n${YELLOW}[2/7] Updating Ubuntu package repositories...${NC}"
-sudo apt update && sudo apt upgrade -y
+sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -o Dpkg::Options::="--force-confold"
 echo -e "${GREEN}✓ OS packages upgraded.${NC}"
 
 # 3. Install System Dependencies & C++ Compiler Toolchain
 echo -e "\n${YELLOW}[3/7] Installing Compilers, Redis Server, and Python dependencies...${NC}"
-sudo apt install -y build-essential gcc g++ cmake make redis-server \
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential gcc g++ cmake make redis-server \
     python3-pip python3-venv python3-dev libpq-dev libssl-dev \
     libboost-all-dev libhiredis-dev libprotobuf-dev protobuf-compiler nlohmann-json3-dev
 echo -e "${GREEN}✓ System compilers and tools installed.${NC}"
@@ -153,10 +153,10 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-# D. Daily Strategy Model 7 Service & Timer
-sudo tee /etc/systemd/system/ulltr-strategy-model7.service > /dev/null << EOF
+# D. Daily Single-Model Forward Tester Service & Timer
+sudo tee /etc/systemd/system/ulltr-forward-tester.service > /dev/null << EOF
 [Unit]
-Description=ULLTR Model 7 Strategy Live Execution
+Description=ULLTR Single Model Forward Tester Execution
 After=network.target ulltr-redis.service ulltr-expiry-manager.service
 
 [Service]
@@ -170,43 +170,13 @@ ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python -u forward_tester
 WantedBy=multi-user.target
 EOF
 
-sudo tee /etc/systemd/system/ulltr-strategy-model7.timer > /dev/null << EOF
+sudo tee /etc/systemd/system/ulltr-forward-tester.timer > /dev/null << EOF
 [Unit]
-Description=Run ULLTR Model 7 Strategy daily at 09:15 AM
+Description=Run ULLTR Forward Tester daily at 09:15 AM
 
 [Timer]
 OnCalendar=*-*-* 09:15:00
-Unit=ulltr-strategy-model7.service
-Persistent=true
-
-[Install]
-WantedBy=timers.target
-EOF
-
-# E. Daily Strategy TWAP Breakout Service & Timer
-sudo tee /etc/systemd/system/ulltr-strategy-twap.service > /dev/null << EOF
-[Unit]
-Description=ULLTR TWAP Breakout Strategy Live Execution
-After=network.target ulltr-redis.service ulltr-expiry-manager.service
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/Users/prana/Desktop/open_source/web
-Environment=PATH=/Users/prana/Desktop/open_source/web/venv/bin:/usr/bin
-ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python -u forward_tester_twap/run.py
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo tee /etc/systemd/system/ulltr-strategy-twap.timer > /dev/null << EOF
-[Unit]
-Description=Run ULLTR TWAP Breakout Strategy daily at 09:15 AM
-
-[Timer]
-OnCalendar=*-*-* 09:15:00
-Unit=ulltr-strategy-twap.service
+Unit=ulltr-forward-tester.service
 Persistent=true
 
 [Install]
@@ -274,17 +244,19 @@ WantedBy=timers.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable ulltr-auth
+sudo systemctl enable ulltr-auth.service
+sudo systemctl enable ulltr-auth.timer
 sudo systemctl enable ulltr-expiry-manager
 sudo systemctl enable ulltr-health-check
-sudo systemctl enable ulltr-strategy-model7.timer
-sudo systemctl enable ulltr-strategy-twap.timer
+sudo systemctl enable ulltr-forward-tester.timer
 sudo systemctl enable ulltr-yield-scraper.timer
 sudo systemctl enable ulltr-eod-pipeline.timer
-sudo systemctl start ulltr-strategy-model7.timer
-sudo systemctl start ulltr-strategy-twap.timer
+sudo systemctl enable ulltr-eod-cleanup.timer
+sudo systemctl start ulltr-auth.timer
+sudo systemctl start ulltr-forward-tester.timer
 sudo systemctl start ulltr-yield-scraper.timer
 sudo systemctl start ulltr-eod-pipeline.timer
+sudo systemctl start ulltr-eod-cleanup.timer
 
 echo -e "\n${GREEN}================================================================${NC}"
 echo -e "✅ ULLTR System VM Bootstrap & Services Installed Successfully!"
