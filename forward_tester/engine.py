@@ -247,17 +247,21 @@ class MultiModelEngine:
         print("=" * 85)
 
     def _send_telegram(self, text: str):
-        """Helper to send HTML-formatted Telegram messages to configured channel."""
-        try:
-            import requests
-            bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "8234942867:AAFdoNjo72DsEYo9DSicTJm8-t5n_B_G30g")
-            chat_id = os.environ.get("TELEGRAM_CHAT_ID", "-5009029141")
-            payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
-            res = requests.post(f"https://api.telegram.org/bot{bot_token}/sendMessage", json=payload, timeout=5.0)
-            if not res.ok:
-                print(f"⚠️ Telegram send error ({res.status_code}): {res.text}")
-        except Exception as e:
-            print(f"⚠️ Telegram network error: {e}")
+        """Dispatches HTML-formatted Telegram messages asynchronously in a background thread."""
+        import threading
+        def _worker():
+            try:
+                import requests
+                bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "8234942867:AAFdoNjo72DsEYo9DSicTJm8-t5n_B_G30g")
+                chat_id = os.environ.get("TELEGRAM_CHAT_ID", "-5009029141")
+                payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
+                res = requests.post(f"https://api.telegram.org/bot{bot_token}/sendMessage", json=payload, timeout=5.0)
+                if not res.ok:
+                    print(f"⚠️ Telegram send error ({res.status_code}): {res.text}")
+            except Exception as e:
+                print(f"⚠️ Telegram network error: {e}")
+
+        threading.Thread(target=_worker, daemon=True).start()
 
     def send_telegram_entry_broadcast(self):
         """Sends Telegram notification on Strategy 6 entry."""
