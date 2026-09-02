@@ -187,6 +187,9 @@ class ClickHouseTickStreamer:
                         "strike": float(h.get("strike", 0.0)),
                         "option_type": h.get("option_type", "FUT")
                     }
+        except Exception as e:
+            logger.warning(f"Error parsing Redis meta:* keys: {e}")
+
         try:
             self.quote_keys = self.r.keys("md:quote:*")
         except Exception:
