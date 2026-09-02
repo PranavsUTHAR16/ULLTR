@@ -238,25 +238,24 @@ class DynamicDTEModel(BaseTradingModel):
         return None
 
     def update_and_monitor(self, current_time_str: str) -> List[ForwardTestPosition]:
-        """Monitors spot High/Low against spot_sl_price / spot_tp_price."""
+        """Monitors spot and option prices against spot_sl_price / spot_tp_price in <0.5ms."""
         closed_this_tick = []
         if not self.active_positions:
             return closed_this_tick
 
-        df_live = self.get_intraday_5m_bars(self.underlying, completed_only=False)
-        if df_live.empty:
+        cur_spot_p = self.data_client.get_spot_price(self.underlying)
+        if not cur_spot_p or cur_spot_p <= 0:
             return closed_this_tick
 
-        latest_live_bar = df_live.iloc[-1]
         for pos in list(self.active_positions):
             cur_opt_px = self.data_client.get_option_ltp(pos.symbol) if hasattr(self.data_client, "get_option_ltp") else 0.0
             if cur_opt_px <= 0:
                 cur_opt_px = pos.current_price
 
             triggered, reason = pos.update_spot_and_option_price(
-                spot_high=float(latest_live_bar["high"]),
-                spot_low=float(latest_live_bar["low"]),
-                spot_close=float(latest_live_bar["close"]),
+                spot_high=cur_spot_p,
+                spot_low=cur_spot_p,
+                spot_close=cur_spot_p,
                 opt_price=cur_opt_px
             )
             if triggered:

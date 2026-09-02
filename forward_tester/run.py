@@ -58,7 +58,7 @@ def run_live(engine: MultiModelEngine):
                 print("\n🏁 EOD Execution completed. Exiting forward test loop.")
                 break
                 
-            time.sleep(0.5)
+            time.sleep(0.005)
             
         except KeyboardInterrupt:
             print("\n👋 Keyboard interrupt received. Exiting gracefully...")

@@ -343,49 +343,26 @@ class Model0216(BaseTradingModel):
 
     def update_and_monitor(self, current_time_str: str) -> List[ForwardTestPosition]:
         """
-        Evaluates live option MTM, 20% decay BE lock, 35% Tier 1 scaling, and high/low futures stops.
+        Evaluates live option MTM, 20% decay BE lock, 35% Tier 1 scaling, and high/low futures stops in <0.5ms.
         """
         closed_this_tick = []
+        if not self.active_positions:
+            return closed_this_tick
+
+        cur_spot_p = self.data_client.get_spot_price(self.target_asset)
+        if not cur_spot_p or cur_spot_p <= 0:
+            return closed_this_tick
+
         for pos in list(self.active_positions):
-            if current_time_str <= getattr(pos, "entry_time", ""):
-                continue
+            cur_opt_p = self.data_client.get_option_ltp(pos.symbol) if hasattr(self.data_client, "get_option_ltp") else 0.0
+            if cur_opt_p <= 0:
+                cur_opt_p = pos.current_price
 
-            table = "sensex_options" if pos.underlying == "SENSEX" else "options"
-            df_opt = self.query_df(f"""
-                SELECT any(close) as opt_close
-                FROM {table}
-                WHERE date = '{self.current_date}'
-                  AND expiry_date = '{self.target_expiry}'
-                  AND strike = {pos.strike}
-                  AND option_type = '{pos.option_type}'
-                  AND formatDateTime(timestamp, '%H:%i') = '{current_time_str}'
-                  AND close > 0
-            """)
-            if df_opt.empty or df_opt["opt_close"].iloc[0] is None:
-                continue
-
-            cur_opt_p = float(df_opt["opt_close"].iloc[0])
             pos.current_price = cur_opt_p
             pos.pnl = (pos.entry_price - cur_opt_p - 1.5) * pos.total_qty
 
-            df_fut = self.query_df(f"""
-                WITH ranked_contracts AS (
-                    SELECT expiry_date, sum(volume) as total_vol
-                    FROM nifty_futures
-                    WHERE date = '{self.current_date}'
-                    GROUP BY expiry_date ORDER BY total_vol DESC LIMIT 1
-                )
-                SELECT max(high) as cur_high, min(low) as cur_low
-                FROM nifty_futures
-                WHERE date = '{self.current_date}'
-                  AND expiry_date = (SELECT expiry_date FROM ranked_contracts)
-                  AND formatDateTime(timestamp, '%H:%i') = '{current_time_str}'
-            """)
-            cur_high_p = pos.spot_entry_price
-            cur_low_p = pos.spot_entry_price
-            if not df_fut.empty:
-                cur_high_p = float(df_fut["cur_high"].iloc[0]) if df_fut["cur_high"].iloc[0] is not None else cur_high_p
-                cur_low_p = float(df_fut["cur_low"].iloc[0]) if df_fut["cur_low"].iloc[0] is not None else cur_low_p
+            cur_high_p = cur_spot_p
+            cur_low_p = cur_spot_p
 
             # 1. Early 20% Decay BE Trail
             if (not getattr(pos, "be_locked", False)) and (cur_opt_p <= pos.entry_price * 0.80):

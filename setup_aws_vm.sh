@@ -165,6 +165,8 @@ User=root
 WorkingDirectory=/Users/prana/Desktop/open_source/web
 Environment=PATH=/Users/prana/Desktop/open_source/web/venv/bin:/usr/bin
 ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python -u forward_tester/run.py
+CPUAffinity=1
+Nice=-15
 
 [Install]
 WantedBy=multi-user.target
