@@ -80,9 +80,10 @@ class StockDepthCollector:
             return False
         with open(eq_file) as f:
             eqs = json.load(f)
-        self.instruments = list(eqs.keys())
+        # Filter to 50 NIFTY 50 stocks for full_d30 (strict 50 instrument key limit under Upstox Plus)
+        self.instruments = [k for k, v in eqs.items() if v.get("index") == "NIFTY_50" or k.startswith("NSE_EQ")][:50]
         self.metadata = {k: {"underlying": v["symbol"], "exchange": v["exchange"]} for k, v in eqs.items()}
-        logger.info(f"📋 Loaded {len(self.instruments)} constituent equity instruments for depth collection.")
+        logger.info(f"📋 Loaded {len(self.instruments)} NIFTY 50 equity instruments for 30-level depth collection (Upstox Plus full_d30).")
         return True
 
     def init_clickhouse(self):
