@@ -142,6 +142,10 @@ class MultiModelEngine:
         if new_pos_s6:
             self.log_trade_execution()
             self.send_telegram_entry_broadcast()
+        else:
+            warn_msg = f"⚠️ <b>STRATEGY 6 09:18 AM ENTRY ALERT</b>\n• No positions opened for {self.strategy6.underlying}.\n• Expiry: {self.strategy6.expiry or 'NOT_FOUND'} | DTE: {self.strategy6.dte}\n• Redis Option Chain check required."
+            print(f"⚠️ Strategy 6 09:18 AM entry resulted in 0 positions (Underlying: {self.strategy6.underlying}, Expiry: {self.strategy6.expiry})")
+            self._send_telegram(warn_msg)
 
     def evaluate_5m_boundary(self):
         """Evaluates 5-minute candle boundary execution for Model 0216 and Model 3 (Dynamic DTE)."""
@@ -262,6 +266,33 @@ class MultiModelEngine:
                 print(f"⚠️ Telegram network error: {e}")
 
         threading.Thread(target=_worker, daemon=True).start()
+
+    def send_telegram_morning_heartbeat(self):
+        """Sends daily morning confirmation at 09:15 AM market open."""
+        und = self.strategy6.underlying
+        exp = self.strategy6.expiry or "PENDING"
+        dte = self.strategy6.dte
+        regime = f"{self.strategy6.regime[0]}-{self.strategy6.regime[1]}"
+        msg = (
+            f"🟢 <b>ULLTR LIVE FORWARD TESTER ACTIVE (Market Open 09:15 IST)</b>\n"
+            f"📅 Date: <b>{self.current_date}</b>\n"
+            f"🎯 Strategy 6 Focus: <b>{und}</b> (Expiry: <b>{exp}</b> | DTE: <b>{dte}</b>)\n"
+            f"📊 Micro-Regime: <b>{regime}</b> | Jump Active: <b>{self.strategy6.morning_active}</b>\n"
+            f"⏳ Scheduled: Strategy 6 sharp entry at <b>09:18:01 IST</b>\n"
+            f"🛡️ Portfolio Cap: <b>20 Lots / ₹50L Capital</b>"
+        )
+        self._send_telegram(msg)
+
+    def send_telegram_periodic_heartbeat(self):
+        """Sends periodic hourly heartbeat when no trades are open to confirm daemon health."""
+        now_str = datetime.now().strftime("%H:%M:%S")
+        msg = (
+            f"💓 <b>ULLTR FORWARD TESTER HEARTBEAT | {now_str} IST</b>\n"
+            f"• Status: <b>Engine Healthy & Actively Polling (5ms loop)</b>\n"
+            f"• Active Positions: <b>{len(self.active_positions)}</b> | Closed: <b>{len(self.closed_positions)}</b>\n"
+            f"• Model 0216 & Dynamic DTE: <b>Actively monitoring 5m candle closes</b>"
+        )
+        self._send_telegram(msg)
 
     def send_telegram_entry_broadcast(self):
         """Sends Telegram notification on Strategy 6 entry."""

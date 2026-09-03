@@ -59,7 +59,7 @@ class Strategy6Model(BaseTradingModel):
                     info[und] = {"expiry": exp_str, "dte": dte}
                     
         if not info:
-            return "NIFTY", today.strftime("%Y-%m-%d"), 0
+            return "NIFTY", "", 0
             
         if "SENSEX" in info and "NIFTY" in info:
             if info["SENSEX"]["dte"] < info["NIFTY"]["dte"]:
@@ -131,6 +131,13 @@ class Strategy6Model(BaseTradingModel):
         if self.entry_executed or self.active_positions:
             return self.active_positions
 
+        # Dynamically refresh closer expiry from Redis right before 09:18 AM entry
+        fresh_und, fresh_exp, fresh_dte = self._select_closer_expiry()
+        if fresh_exp:
+            self.underlying, self.expiry, self.dte = fresh_und, fresh_exp, fresh_dte
+            self.regime = self._compute_micro_regime(self.underlying)
+            self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
+
         lot_alloc = self.config.alloc_lr.get(self.regime, (7, 3, 1.75))
         # Scale to 10 lots (half of 20-lot default: primary lots + secondary lots = 10)
         p_lots = max(1, round(lot_alloc[0] / 2.0))
@@ -147,10 +154,16 @@ class Strategy6Model(BaseTradingModel):
 
         spot_px = self.data_client.get_spot_price(self.underlying)
         if spot_px <= 0:
+            print(f"⚠️ Strategy 6 Entry Failed: Spot price for {self.underlying} returned {spot_px}")
+            return []
+
+        if not self.expiry:
+            print(f"⚠️ Strategy 6 Entry Failed: No valid expiry found for {self.underlying} in Redis.")
             return []
 
         df_opts = self._build_options_dataframe(self.underlying, self.expiry)
         if df_opts.empty:
+            print(f"⚠️ Strategy 6 Entry Failed: Empty option chain dataframe for {self.underlying} expiry {self.expiry} (Spot: {spot_px})")
             return []
 
         lot_size = self.config.sensex_lot_size if self.underlying == "SENSEX" else self.config.nifty_lot_size

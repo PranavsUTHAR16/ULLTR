@@ -27,31 +27,48 @@ def run_live(engine: MultiModelEngine):
     exit_triggered = False
     last_render_time = 0.0
     last_telegram_time = time.time()
+    last_heartbeat_hour = -1
+    market_open_refreshed = False
     
     while True:
         try:
-            now = datetime.now().time()
+            now_dt = datetime.now()
+            now = now_dt.time()
             
-            # Check 09:18 AM Strategy 6 Entry
+            # 1. Market Open Re-initialization & Morning Telegram Broadcast at 09:15 AM
+            if not market_open_refreshed and now >= dtime(9, 15, 0) and now < dtime(exit_h, exit_m, exit_s):
+                print("🔔 Market Open detected (09:15 IST). Refreshing option chains and day state from Redis...")
+                engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
+                engine.send_telegram_morning_heartbeat()
+                market_open_refreshed = True
+
+            # 2. Check 09:18 AM Strategy 6 Entry
             if not entry_triggered and now >= dtime(entry_h, entry_m, entry_s) and now < dtime(exit_h, exit_m, exit_s):
+                if not engine.strategy6.expiry:
+                    engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
                 engine.execute_0918_dual_model_entry()
                 if len(engine.strategy6.active_positions) > 0:
                     entry_triggered = True
                 
-            # Monitor active positions & evaluate 5-minute candle signals
+            # 3. Monitor active positions & evaluate 5-minute candle signals
             engine.update_and_monitor()
                 
-            # Render terminal status dashboard once per second
+            # 4. Render terminal status dashboard once per second
             if time.time() - last_render_time >= 1.0:
                 engine.render_dashboard()
                 last_render_time = time.time()
 
-            # Send 15-second Telegram model updates while positions are active
+            # 5. Send 15-second Telegram model updates while positions are active
             if (engine.active_positions or engine.closed_positions) and (time.time() - last_telegram_time >= 15.0):
                 engine.send_telegram_model_periodic_updates()
                 last_telegram_time = time.time()
 
-            # Check 15:00 PM EOD Exit
+            # 6. Send Hourly Telegram Heartbeat when idle (10:00, 11:00, 12:00, 13:00, 14:00)
+            if not engine.active_positions and now_dt.minute == 0 and now_dt.hour != last_heartbeat_hour and 9 <= now_dt.hour <= 15:
+                engine.send_telegram_periodic_heartbeat()
+                last_heartbeat_hour = now_dt.hour
+
+            # 7. Check 15:00 PM EOD Exit
             if not exit_triggered and now >= dtime(exit_h, exit_m, exit_s):
                 engine.execute_eod_squareoff()
                 exit_triggered = True
