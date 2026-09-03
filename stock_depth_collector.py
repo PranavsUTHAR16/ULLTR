@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """
-ULLTR Standalone Stock Order Book Depth (full_d30 / full_d5) Collector & ClickHouse Streamer
-========================================================================================
-Collects deep multi-level order book data (up to 30 depth levels) for all 50 NIFTY 50 
-and 30 SENSEX constituent stocks without interfering with existing tick/option collectors.
+ULLTR Standalone Stock Order Book Depth (full_d30) Dual-Connection Collector
+==========================================================================
+Collects deep 30-level order book data for all 50 NIFTY 50 and 30 SENSEX constituent stocks
+using separate dedicated WebSocket connections under the Upstox Plus 5-connection allowance.
+
+Architecture:
+- Connection 1: 50 NIFTY 50 Stocks (NSE_EQ) in 'full_d30' mode (strict <=50 keys limit)
+- Connection 2: 30 SENSEX 30 Stocks (BSE_EQ) in 'full_d30' mode (strict <=50 keys limit)
+- F&O Options Collection: Completely separate C++ collector process (unaffected & independent)
 Flushes micro-batches asynchronously to ClickHouse Cloud (default.stock_orderbook_depth).
-Designed specifically for Closing Auction Session (CAS) closing price discovery and depth analysis.
 """
 
 import sys
@@ -49,10 +53,12 @@ class StockDepthCollector:
         self.ch_client = None
         self.buffer = []
         self.last_flush = time.time()
-        self.instruments = []
-        self.metadata = {} # symbol -> {underlying, exchange}
+        self.nse_instruments = []
+        self.bse_instruments = []
+        self.metadata = {}  # symbol -> {underlying, exchange}
         self.total_flushed = 0
         self.running = True
+        self.lock = asyncio.Lock()
 
     def load_token(self):
         token_paths = [
@@ -80,10 +86,15 @@ class StockDepthCollector:
             return False
         with open(eq_file) as f:
             eqs = json.load(f)
-        # Filter to 50 NIFTY 50 stocks for full_d30 (strict 50 instrument key limit under Upstox Plus)
-        self.instruments = [k for k, v in eqs.items() if v.get("index") == "NIFTY_50" or k.startswith("NSE_EQ")][:50]
+
+        # Connection 1: 50 NIFTY 50 stocks (strictly <= 50 keys for full_d30 compliance)
+        self.nse_instruments = [k for k, v in eqs.items() if v.get("index") == "NIFTY_50" or k.startswith("NSE_EQ")][:50]
+
+        # Connection 2: 30 SENSEX 30 stocks (strictly <= 50 keys for full_d30 compliance)
+        self.bse_instruments = [k for k, v in eqs.items() if v.get("index") == "SENSEX_30" or k.startswith("BSE_EQ")][:30]
+
         self.metadata = {k: {"underlying": v["symbol"], "exchange": v["exchange"]} for k, v in eqs.items()}
-        logger.info(f"📋 Loaded {len(self.instruments)} NIFTY 50 equity instruments for 30-level depth collection (Upstox Plus full_d30).")
+        logger.info(f"📋 Loaded {len(self.nse_instruments)} NSE stocks (Conn 1) + {len(self.bse_instruments)} BSE stocks (Conn 2) for full_d30 depth collection.")
         return True
 
     def init_clickhouse(self):
@@ -113,7 +124,9 @@ class StockDepthCollector:
                 bids_price Array(Float64) CODEC(ZSTD(1)),
                 bids_qty Array(Int64) CODEC(ZSTD(1)),
                 asks_price Array(Float64) CODEC(ZSTD(1)),
-                asks_qty Array(Int64) CODEC(ZSTD(1))
+                asks_qty Array(Int64) CODEC(ZSTD(1)),
+                market_buy_qty Int64 CODEC(T64, ZSTD(1)),
+                market_sell_qty Int64 CODEC(T64, ZSTD(1))
             ) ENGINE = MergeTree()
             PARTITION BY toYYYYMM(timestamp)
             ORDER BY (underlying, symbol, timestamp);
@@ -144,50 +157,55 @@ class StockDepthCollector:
         except Exception as e:
             logger.error(f"❌ Failed to flush depth buffer to ClickHouse: {e}")
 
-    async def run(self):
-        if not self.load_token() or not self.load_instruments() or not self.init_clickhouse():
-            return
-
-        # Upstox V3 Market Data Feed WebSocket URL
-        # We need authorized redirect / websocket url from Upstox
+    async def get_authorized_ws_url(self):
         import requests
         auth_url = "https://api.upstox.com/v3/feed/market-data-feed/authorize"
         headers = {
             "Authorization": f"Bearer {self.access_token}",
             "Accept": "application/json"
         }
-        
+        for attempt in range(5):
+            try:
+                r = requests.get(auth_url, headers=headers, timeout=10)
+                if r.status_code == 200:
+                    return r.json().get("data", {}).get("authorizedRedirectUri")
+                logger.error(f"Auth API returned status {r.status_code}: {r.text}")
+            except Exception as e:
+                logger.error(f"Auth API request exception: {e}")
+            await asyncio.sleep(3)
+            self.load_token()
+            headers["Authorization"] = f"Bearer {self.access_token}"
+        return None
+
+    async def stream_worker(self, segment_name, instruments):
+        if not instruments:
+            logger.warning(f"[{segment_name}] No instruments specified. Worker terminating.")
+            return
+
         while self.running:
             try:
-                logger.info("Requesting authorized WebSocket URI for Depth feed...")
-                r = requests.get(auth_url, headers=headers, timeout=10)
-                if r.status_code != 200:
-                    logger.error(f"Auth API returned status {r.status_code}: {r.text}")
+                ws_url = await self.get_authorized_ws_url()
+                if not ws_url:
+                    logger.error(f"[{segment_name}] Failed to obtain authorized WebSocket URI. Retrying in 5s...")
                     await asyncio.sleep(5)
-                    self.load_token()
-                    headers["Authorization"] = f"Bearer {self.access_token}"
                     continue
 
-                ws_url = r.json().get("data", {}).get("authorizedRedirectUri")
-                logger.info(f"Connecting to Upstox Depth WebSocket...")
-
+                logger.info(f"[{segment_name}] Connecting to Upstox Depth WebSocket for {len(instruments)} instruments...")
                 ssl_ctx = ssl.create_default_context()
                 ssl_ctx.check_hostname = False
                 ssl_ctx.verify_mode = ssl.CERT_NONE
 
                 async with websockets.connect(ws_url, ssl=ssl_ctx, max_size=10_000_000, ping_interval=20) as ws:
-                    logger.info("✅ Connected to WebSocket! Sending 'full_d30' depth subscription...")
-
                     sub_payload = {
-                        "guid": f"stock_depth_{int(time.time()*1000)}",
+                        "guid": f"stock_depth_{segment_name.lower()}_{int(time.time()*1000)}",
                         "method": "sub",
                         "data": {
                             "mode": "full_d30",
-                            "instrumentKeys": self.instruments
+                            "instrumentKeys": instruments
                         }
                     }
                     await ws.send(json.dumps(sub_payload).encode('utf-8'))
-                    logger.info(f"🚀 Subscribed to {len(self.instruments)} stocks in 'full_d30' (30-level depth) mode!")
+                    logger.info(f"🚀 [{segment_name}] Subscribed to {len(instruments)} stocks in 'full_d30' (30-level depth) mode!")
 
                     msg_count = 0
                     while self.running:
@@ -198,12 +216,13 @@ class StockDepthCollector:
                                 feed_resp.ParseFromString(msg)
                                 msg_count += 1
                                 if msg_count % 100 == 1:
-                                    logger.info(f"📥 Received frame #{msg_count} containing {len(feed_resp.feeds)} feeds (Buffer: {len(self.buffer)})")
+                                    logger.info(f"📥 [{segment_name}] Frame #{msg_count} containing {len(feed_resp.feeds)} feeds")
 
                                 now_dt = datetime.now(IST)
+                                new_rows = []
 
                                 for sym_key, feed in feed_resp.feeds.items():
-                                    meta = self.metadata.get(sym_key, {"underlying": sym_key, "exchange": "NSE_EQ"})
+                                    meta = self.metadata.get(sym_key, {"underlying": sym_key, "exchange": f"{segment_name}_EQ"})
                                     underlying = meta["underlying"]
                                     exchange = meta["exchange"]
 
@@ -225,7 +244,7 @@ class StockDepthCollector:
                                         tbq = int(mff.tbq)
                                         tsq = int(mff.tsq)
 
-                                        # Extract all depth levels (including Market Orders with price == 0)
+                                        # Extract all depth levels (up to 30 levels)
                                         if mff.HasField("marketLevel"):
                                             for q in mff.marketLevel.bidAskQuote:
                                                 if q.bidQ > 0:
@@ -261,7 +280,7 @@ class StockDepthCollector:
                                     mkt_sell_qty = sum(q for p, q in zip(asks_p, asks_q) if p == 0.0)
 
                                     if ltp > 0 or bids_p or asks_p:
-                                        self.buffer.append([
+                                        new_rows.append([
                                             now_dt, sym_key, underlying, exchange,
                                             ltp, cp, vol, tbq, tsq,
                                             bid1, bid_qty1, ask1, ask_qty1,
@@ -269,18 +288,42 @@ class StockDepthCollector:
                                             mkt_buy_qty, mkt_sell_qty
                                         ])
 
-                                if len(self.buffer) >= BATCH_SIZE or (time.time() - self.last_flush >= FLUSH_INTERVAL_SEC):
-                                    self.flush_buffer()
+                                if new_rows:
+                                    async with self.lock:
+                                        self.buffer.extend(new_rows)
+                                        if len(self.buffer) >= BATCH_SIZE:
+                                            self.flush_buffer()
 
                         except asyncio.TimeoutError:
-                            if self.buffer:
-                                self.flush_buffer()
                             continue
 
             except Exception as e:
-                logger.error(f"⚠️ WebSocket connection error: {e}. Reconnecting in 3s...")
+                logger.error(f"⚠️ [{segment_name}] WebSocket error: {e}. Reconnecting in 3s...")
                 await asyncio.sleep(3)
-                self.load_token()
+
+    async def flush_loop(self):
+        while self.running:
+            await asyncio.sleep(FLUSH_INTERVAL_SEC)
+            async with self.lock:
+                if self.buffer and (time.time() - self.last_flush >= FLUSH_INTERVAL_SEC or len(self.buffer) >= BATCH_SIZE):
+                    self.flush_buffer()
+
+    async def run(self):
+        if not self.load_token() or not self.load_instruments() or not self.init_clickhouse():
+            return
+
+        logger.info(
+            f"🌟 Starting Dual-Connection 30-Depth Collector:\n"
+            f"   📡 Connection 1: NSE NIFTY 50 ({len(self.nse_instruments)} stocks)\n"
+            f"   📡 Connection 2: BSE SENSEX 30 ({len(self.bse_instruments)} stocks)\n"
+            f"   ⚡ F&O Options Collector: Unaffected (Independent C++ process)"
+        )
+
+        task_nse = asyncio.create_task(self.stream_worker("NSE", self.nse_instruments))
+        task_bse = asyncio.create_task(self.stream_worker("BSE", self.bse_instruments))
+        task_flush = asyncio.create_task(self.flush_loop())
+
+        await asyncio.gather(task_nse, task_bse, task_flush)
 
 
 if __name__ == "__main__":
