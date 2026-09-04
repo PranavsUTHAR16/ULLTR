@@ -101,7 +101,7 @@ def test_live_broker_gateway(live_order: bool = False):
     eq = cas.calculate_equilibrium("NIFTY")
     sym, token, strike, otype, ltp = cas.select_cas_strike("NIFTY", eq["expected_move"], eq["spot_ref"])
     print(f"\n  Dispatching real test order (1 Lot NIFTY {strike} {otype} - Token: {token})...")
-    qty = 65 if "NIFTY" in sym else 20
+    qty = 65
     res = gateway.place_order(
         instrument_token=token,
         quantity=qty,
