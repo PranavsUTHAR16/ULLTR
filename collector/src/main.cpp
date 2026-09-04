@@ -470,11 +470,15 @@ private:
                     norm["tsq"] = mff.tsq();
                     
                     if (mff.has_marketlevel() && mff.marketlevel().bidaskquote_size() > 0) {
-                        auto const& best = mff.marketlevel().bidaskquote(0);
-                        norm["bid"] = best.bidp();
-                        norm["bid_qty"] = best.bidq();
-                        norm["ask"] = best.askp();
-                        norm["ask_qty"] = best.askq();
+                        int sz = std::min(mff.marketlevel().bidaskquote_size(), 5);
+                        for (int i = 0; i < sz; ++i) {
+                            auto const& q = mff.marketlevel().bidaskquote(i);
+                            std::string sfx = (i == 0) ? "" : std::to_string(i + 1);
+                            norm["bid" + sfx] = q.bidp();
+                            norm["bid_qty" + sfx] = q.bidq();
+                            norm["ask" + sfx] = q.askp();
+                            norm["ask_qty" + sfx] = q.askq();
+                        }
                     }
 
                     if (mff.has_optiongreeks()) {
@@ -543,10 +547,19 @@ private:
                 if (norm.contains("oi")) { args.push_back("oi"); args.push_back(std::to_string(norm["oi"].get<double>())); }
                 if (norm.contains("iv")) { args.push_back("iv"); args.push_back(std::to_string(norm["iv"].get<double>())); }
                 
-                if (norm.contains("bid")) { args.push_back("bid"); args.push_back(std::to_string(norm["bid"].get<double>())); }
-                if (norm.contains("bid_qty")) { args.push_back("bid_qty"); args.push_back(std::to_string(norm["bid_qty"].get<int64_t>())); }
-                if (norm.contains("ask")) { args.push_back("ask"); args.push_back(std::to_string(norm["ask"].get<double>())); }
-                if (norm.contains("ask_qty")) { args.push_back("ask_qty"); args.push_back(std::to_string(norm["ask_qty"].get<int64_t>())); }
+                for (int i = 1; i <= 5; ++i) {
+                    std::string sfx = (i == 1) ? "" : std::to_string(i);
+                    std::string b = "bid" + sfx;
+                    std::string bq = "bid_qty" + sfx;
+                    std::string a = "ask" + sfx;
+                    std::string aq = "ask_qty" + sfx;
+                    if (norm.contains(b)) { args.push_back(b); args.push_back(std::to_string(norm[b].get<double>())); }
+                    if (norm.contains(bq)) { args.push_back(bq); args.push_back(std::to_string(norm[bq].get<int64_t>())); }
+                    if (norm.contains(a)) { args.push_back(a); args.push_back(std::to_string(norm[a].get<double>())); }
+                    if (norm.contains(aq)) { args.push_back(aq); args.push_back(std::to_string(norm[aq].get<int64_t>())); }
+                }
+                if (norm.contains("tbq")) { args.push_back("tbq"); args.push_back(std::to_string((int64_t)norm["tbq"].get<double>())); }
+                if (norm.contains("tsq")) { args.push_back("tsq"); args.push_back(std::to_string((int64_t)norm["tsq"].get<double>())); }
                 
                 if (norm.contains("ts_exchange")) { args.push_back("ts_exchange"); args.push_back(std::to_string(norm["ts_exchange"].get<int64_t>())); }
                 if (norm.contains("ts_recv")) { args.push_back("ts_recv"); args.push_back(std::to_string(norm["ts_recv"].get<int64_t>())); }

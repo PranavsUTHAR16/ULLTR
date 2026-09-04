@@ -51,7 +51,12 @@ class ClickHouseTickStreamer:
         self.columns = [
             "timestamp", "symbol", "underlying", "expiry", "strike", "option_type",
             "ltp", "close", "bid", "bid_qty", "ask", "ask_qty", "volume", "open_interest",
-            "iv", "delta", "theta", "gamma", "vega", "rho", "ts_exchange", "ts_recv"
+            "iv", "delta", "theta", "gamma", "vega", "rho", "ts_exchange", "ts_recv",
+            "bid2", "bid_qty2", "ask2", "ask_qty2",
+            "bid3", "bid_qty3", "ask3", "ask_qty3",
+            "bid4", "bid_qty4", "ask4", "ask_qty4",
+            "bid5", "bid_qty5", "ask5", "ask_qty5",
+            "tbq", "tsq"
         ]
 
     def connect_clickhouse(self):
@@ -76,7 +81,7 @@ class ClickHouseTickStreamer:
                 time.sleep(5.0)
 
     def ensure_schema(self):
-        """Ensures the market_ticks table exists with optimal column compression codecs."""
+        """Ensures the market_ticks table exists with optimal column compression codecs and 5-level depth."""
         schema_sql = """
         CREATE TABLE IF NOT EXISTS market_ticks (
             timestamp DateTime64(3, 'Asia/Kolkata') CODEC(DoubleDelta, LZ4),
@@ -100,7 +105,25 @@ class ClickHouseTickStreamer:
             vega Float32 CODEC(Gorilla, ZSTD(1)),
             rho Float32 CODEC(Gorilla, ZSTD(1)),
             ts_exchange Int64 CODEC(DoubleDelta, LZ4),
-            ts_recv Int64 CODEC(DoubleDelta, LZ4)
+            ts_recv Int64 CODEC(DoubleDelta, LZ4),
+            bid2 Float32 CODEC(Gorilla, ZSTD(1)),
+            bid_qty2 UInt32 CODEC(T64, ZSTD(1)),
+            ask2 Float32 CODEC(Gorilla, ZSTD(1)),
+            ask_qty2 UInt32 CODEC(T64, ZSTD(1)),
+            bid3 Float32 CODEC(Gorilla, ZSTD(1)),
+            bid_qty3 UInt32 CODEC(T64, ZSTD(1)),
+            ask3 Float32 CODEC(Gorilla, ZSTD(1)),
+            ask_qty3 UInt32 CODEC(T64, ZSTD(1)),
+            bid4 Float32 CODEC(Gorilla, ZSTD(1)),
+            bid_qty4 UInt32 CODEC(T64, ZSTD(1)),
+            ask4 Float32 CODEC(Gorilla, ZSTD(1)),
+            ask_qty4 UInt32 CODEC(T64, ZSTD(1)),
+            bid5 Float32 CODEC(Gorilla, ZSTD(1)),
+            bid_qty5 UInt32 CODEC(T64, ZSTD(1)),
+            ask5 Float32 CODEC(Gorilla, ZSTD(1)),
+            ask_qty5 UInt32 CODEC(T64, ZSTD(1)),
+            tbq UInt64 CODEC(T64, ZSTD(1)),
+            tsq UInt64 CODEC(T64, ZSTD(1))
         ) ENGINE = MergeTree()
         PARTITION BY toYYYYMM(timestamp)
         ORDER BY (underlying, expiry, strike, option_type, symbol, timestamp)
@@ -310,7 +333,25 @@ class ClickHouseTickStreamer:
                         float(q.get("vega", 0.0)),
                         float(q.get("rho", 0.0)),
                         ts_exch,
-                        ts_recv
+                        ts_recv,
+                        float(q.get("bid2", 0.0)),
+                        int(float(q.get("bid_qty2", 0))),
+                        float(q.get("ask2", 0.0)),
+                        int(float(q.get("ask_qty2", 0))),
+                        float(q.get("bid3", 0.0)),
+                        int(float(q.get("bid_qty3", 0))),
+                        float(q.get("ask3", 0.0)),
+                        int(float(q.get("ask_qty3", 0))),
+                        float(q.get("bid4", 0.0)),
+                        int(float(q.get("bid_qty4", 0))),
+                        float(q.get("ask4", 0.0)),
+                        int(float(q.get("ask_qty4", 0))),
+                        float(q.get("bid5", 0.0)),
+                        int(float(q.get("bid_qty5", 0))),
+                        float(q.get("ask5", 0.0)),
+                        int(float(q.get("ask_qty5", 0))),
+                        int(float(q.get("tbq", 0))),
+                        int(float(q.get("tsq", 0)))
                     ]
 
                     self.buffer.append(row)
