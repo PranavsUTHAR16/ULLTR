@@ -265,8 +265,8 @@ class CASModel(BaseTradingModel):
                 und, eq_data["expected_move"], eq_data["spot_ref"]
             )
             
-            # Lot size: 25 for NIFTY, 10 for SENSEX
-            qty = 25 if und == "NIFTY" else 10
+            # Lot size: 65 for NIFTY, 20 for SENSEX
+            qty = 65 if und == "NIFTY" else 20
             
             # 3. Fire real order via Upstox HFT Gateway
             order_res = self.gateway.place_order(
