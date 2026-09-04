@@ -109,8 +109,8 @@ def test_live_broker_gateway(live_order: bool = False):
     
     print(f"  • API Version Used        : {res['api_version']}")
     print(f"  • HTTP Status Code        : {res['status_code']}")
-    print(f"  • Execution Success       : {res['is_success']}")
-    print(f"  • Order ID / Rejection Msg: {res['order_id'] or res['error_msg']}")
+    print(f"  • Order ID / Rejection Msg: {res.get('primary_order_id') or res.get('error_msg')}")
+    print(f"  • Raw Broker Response     : {res.get('raw_response')}")
     print(f"  • Gateway Network RTT     : {res['gateway_rtt_ms']:.2f} ms")
     print(f"  • Signal-to-ACK Turnaround: {res['turnaround_ms']:.2f} ms")
     if res.get("broker_latency_meta"):
