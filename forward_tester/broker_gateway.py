@@ -49,6 +49,7 @@ class UpstoxBrokerGateway:
         self.session.mount("https://", adapter)
         
         self._update_headers()
+        self.hft_v3_enabled = True
         self.warmup_connection()
         
     def load_token(self) -> bool:
@@ -121,8 +122,16 @@ class UpstoxBrokerGateway:
 
         t_signal_ns = time.perf_counter_ns()
         
-        target_url = V3_HFT_ORDER_URL
-        api_version = "v3"
+        if not self.hft_v3_enabled:
+            target_url = V2_STD_ORDER_URL
+            api_version = "v2"
+            payload_to_send = payload.copy()
+            payload_to_send.pop("slice", None)
+        else:
+            target_url = V3_HFT_ORDER_URL
+            api_version = "v3"
+            payload_to_send = payload
+
         response_json = {}
         status_code = 0
         error_msg = ""
@@ -131,7 +140,7 @@ class UpstoxBrokerGateway:
         
         t_sent_ns = time.perf_counter_ns()
         try:
-            resp = self.session.post(target_url, json=payload, timeout=3.0)
+            resp = self.session.post(target_url, json=payload_to_send, timeout=3.0)
             t_ack_ns = time.perf_counter_ns()
             status_code = resp.status_code
             try:
@@ -139,8 +148,15 @@ class UpstoxBrokerGateway:
             except Exception:
                 response_json = {"raw_text": resp.text}
         except Exception as e:
-            # Failover to V2 standard endpoint
-            logger.warning(f"V3 HFT gateway error ({e}), failing over to V2 standard gateway...")
+            logger.warning(f"Gateway request exception ({e})")
+            status_code = 500
+            error_msg = str(e)
+            t_ack_ns = time.perf_counter_ns()
+
+        # Check if V3 is blocked due to static IP restrictions (UDAPI1154) or 403
+        if api_version == "v3" and (status_code in [401, 403, 404] or "UDAPI1154" in str(response_json)):
+            self.hft_v3_enabled = False
+            logger.warning("Upstox V3 HFT requires static IP whitelist (UDAPI1154). Automatic failover to V2 standard gateway...")
             target_url = V2_STD_ORDER_URL
             api_version = "v2"
             payload_v2 = payload.copy()
@@ -150,7 +166,10 @@ class UpstoxBrokerGateway:
                 resp = self.session.post(target_url, json=payload_v2, timeout=3.0)
                 t_ack_ns = time.perf_counter_ns()
                 status_code = resp.status_code
-                response_json = resp.json()
+                try:
+                    response_json = resp.json()
+                except Exception:
+                    response_json = {"raw_text": resp.text}
             except Exception as e2:
                 t_ack_ns = time.perf_counter_ns()
                 status_code = 500
