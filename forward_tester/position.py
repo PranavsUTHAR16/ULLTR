@@ -43,7 +43,11 @@ class ForwardTestPosition:
             return False, ""
             
         self.current_price = new_price
-        self.pnl = (self.entry_price - self.current_price) * self.total_qty
+        is_buy = "BUY" in self.leg_type or getattr(self, "action", "") == "BUY"
+        if is_buy:
+            self.pnl = (self.current_price - self.entry_price) * self.total_qty
+        else:
+            self.pnl = (self.entry_price - self.current_price) * self.total_qty
         
         # 1. Check Stop Loss breach (price >= entry_price * sl_mult)
         if self.sl_mult > 0 and self.current_price >= self.sl_price:
@@ -126,7 +130,11 @@ class ForwardTestPosition:
             self.status = "EOD_EXIT"
             self.exit_price = exit_price
             self.current_price = exit_price
-            self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+            is_buy = "BUY" in self.leg_type or getattr(self, "action", "") == "BUY"
+            if is_buy:
+                self.pnl = (self.exit_price - self.entry_price) * self.total_qty
+            else:
+                self.pnl = (self.entry_price - self.exit_price) * self.total_qty
 
 # Backward compatibility aliases
 Strategy6Position = ForwardTestPosition

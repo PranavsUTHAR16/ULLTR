@@ -76,7 +76,10 @@ class ULLTRHealthChecker:
             "data_feed_stalled": False,
             "collector_down": False,
             "reconciler_down": False,
-            "redis_down": False
+            "redis_down": False,
+            "clickhouse_streamer_down": False,
+            "depth_collector_down": False,
+            "forward_tester_down": False
         }
         
         # Timing trackers
@@ -98,30 +101,24 @@ class ULLTRHealthChecker:
         if not self.enabled:
             logger.info(f"[HEALTH-MOCK] {text}")
             return False
-            
+        
         try:
             await self.init_session()
-            url = f"{self.base_url}/sendMessage"
             payload = {
                 "chat_id": self.chat_id,
                 "text": text,
                 "parse_mode": "HTML"
             }
-            async with self.session.post(url, json=payload) as response:
-                if response.status == 200:
-                    return True
-                else:
-                    err_txt = await response.text()
-                    logger.error(f"Telegram API error {response.status}: {err_txt}")
-                    return False
+            async with self.session.post(f"{self.base_url}/sendMessage", json=payload, timeout=5) as resp:
+                return resp.status == 200
         except Exception as e:
-            logger.error(f"Telegram request failed: {e}")
+            logger.error(f"Failed to send Telegram alert: {e}")
             return False
 
     async def check_redis(self):
-        """Checks if local Redis server is active and accessible via unix socket or loopback"""
+        """Verifies that Redis In-Memory server is alive and responding"""
+        import redis
         try:
-            import redis
             socket_path = "/Users/prana/Desktop/open_source/web/redis.sock"
             if os.path.exists(socket_path):
                 r = redis.Redis(unix_socket_path=socket_path, decode_responses=True)
@@ -139,29 +136,58 @@ class ULLTRHealthChecker:
                 await self.send_telegram(f"🚨 <b>REDIS DATABASE ALERT</b>\n❌ Failed to ping Redis database! Error: {e}")
 
     async def check_processes(self):
-        """Monitors active state of ULLTR system processes"""
+        """Monitors active state of all critical ULLTR system services with auto-recovery"""
         try:
+            now_ist = datetime.now(IST)
+            is_market_hours = ("09:14" <= now_ist.strftime("%H:%M") <= "15:35") and (now_ist.weekday() < 5)
+
             # 1. Check C++ Ingestor (./collector)
             coll_check = subprocess.run(["pgrep", "-f", "./collector"], capture_output=True)
-            if coll_check.returncode != 0:
+            if coll_check.returncode != 0 and is_market_hours:
                 if not self.alert_states["collector_down"]:
                     self.alert_states["collector_down"] = True
-                    await self.send_telegram("🚨 <b>ULLTR SYSTEM ALERT</b>\n❌ C++ Ingestor (<code>./collector</code>) process is not running!")
+                    await self.send_telegram("🚨 <b>ULLTR SYSTEM ALERT</b>\n❌ C++ Ingestor (<code>./collector</code>) process is not running! Expiry manager will auto-relaunch.")
             else:
                 if self.alert_states["collector_down"]:
                     self.alert_states["collector_down"] = False
                     await self.send_telegram("✅ <b>ULLTR PROCESS RECOVERY</b>\nC++ Ingestor (<code>./collector</code>) is back online.")
 
-            # 2. Check Reconciler daemon (reconciler.py)
-            reco_check = subprocess.run(["pgrep", "-f", "reconciler.py"], capture_output=True)
-            if reco_check.returncode != 0:
-                if not self.alert_states["reconciler_down"]:
-                    self.alert_states["reconciler_down"] = True
-                    await self.send_telegram("🚨 <b>ULLTR SYSTEM ALERT</b>\n❌ Python Reconciler (<code>reconciler.py</code>) is not running!")
+            # 2. Check ClickHouse Real-time Tick Streamer (clickhouse_streamer.py)
+            ch_check = subprocess.run(["pgrep", "-f", "clickhouse_streamer.py"], capture_output=True)
+            if ch_check.returncode != 0 and is_market_hours:
+                if not self.alert_states["clickhouse_streamer_down"]:
+                    self.alert_states["clickhouse_streamer_down"] = True
+                    logger.warning("ClickHouse Streamer is down! Attempting auto-recovery...")
+                    subprocess.run(["sudo", "systemctl", "restart", "ulltr-clickhouse-streamer.service"], capture_output=True)
+                    await self.send_telegram("🚨 <b>CLICKHOUSE STREAMER ALERT</b>\n❌ <code>clickhouse_streamer.py</code> was down! Auto-restart triggered.")
             else:
-                if self.alert_states["reconciler_down"]:
-                    self.alert_states["reconciler_down"] = False
-                    await self.send_telegram("✅ <b>ULLTR PROCESS RECOVERY</b>\nPython Reconciler (<code>reconciler.py</code>) is back online.")
+                if self.alert_states["clickhouse_streamer_down"]:
+                    self.alert_states["clickhouse_streamer_down"] = False
+                    await self.send_telegram("✅ <b>CLICKHOUSE STREAMER RECOVERY</b>\nClickHouse real-time tick streamer is active and flushing ticks.")
+
+            # 3. Check Level-30 Depth Collector (stock_depth_collector.py)
+            depth_check = subprocess.run(["pgrep", "-f", "stock_depth_collector.py"], capture_output=True)
+            if depth_check.returncode != 0 and is_market_hours:
+                if not self.alert_states["depth_collector_down"]:
+                    self.alert_states["depth_collector_down"] = True
+                    subprocess.run(["sudo", "systemctl", "restart", "ulltr-depth-collector.service"], capture_output=True)
+                    await self.send_telegram("🚨 <b>DEPTH COLLECTOR ALERT</b>\n❌ <code>stock_depth_collector.py</code> was down! Auto-restart triggered.")
+            else:
+                if self.alert_states["depth_collector_down"]:
+                    self.alert_states["depth_collector_down"] = False
+                    await self.send_telegram("✅ <b>DEPTH COLLECTOR RECOVERY</b>\nLevel-30 depth collector is back online.")
+
+            # 4. Check Multi-Model Forward Tester (forward_tester/run.py)
+            ft_check = subprocess.run(["pgrep", "-f", "forward_tester/run.py"], capture_output=True)
+            if ft_check.returncode != 0 and is_market_hours:
+                if not self.alert_states["forward_tester_down"]:
+                    self.alert_states["forward_tester_down"] = True
+                    subprocess.run(["sudo", "systemctl", "restart", "ulltr-forward-tester.service"], capture_output=True)
+                    await self.send_telegram("🚨 <b>FORWARD TESTER ALERT</b>\n❌ <code>forward_tester/run.py</code> was down! Auto-restart triggered.")
+            else:
+                if self.alert_states["forward_tester_down"]:
+                    self.alert_states["forward_tester_down"] = False
+                    await self.send_telegram("✅ <b>FORWARD TESTER RECOVERY</b>\nForward tester engine is back online.")
 
         except Exception as e:
             logger.error(f"Error checking processes: {e}")

@@ -92,7 +92,7 @@ ssh -i "$KEY_PATH" "${REMOTE_USER}@${VM_IP}" "
     echo '=========================================';
     echo '🔍 System Daemon Status Report:';
     echo '=========================================';
-    for service in ulltr-redis ulltr-auth ulltr-expiry-manager ulltr-health-check; do
+    for service in ulltr-redis ulltr-auth ulltr-expiry-manager ulltr-health-check ulltr-forward-tester.timer; do
         status=\$(systemctl is-active \$service);
         if [ \"\$status\" == \"active\" ]; then
             echo -e \"🟢 \$service: \$status\";

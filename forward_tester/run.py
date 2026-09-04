@@ -21,10 +21,12 @@ def run_live(engine: MultiModelEngine):
     print("🟢 NSE Exchange is OPEN today. Initiating execution loop...")
     
     entry_h, entry_m, entry_s = engine.config.strategy6.entry_time  # 09:18:01
-    exit_h, exit_m, exit_s = engine.config.strategy6.exit_time      # 15:00:00
+    exit_h, exit_m, exit_s = 15, 25, 0                               # Extended to 15:25:00 for CAS execution
     
     entry_triggered = len(engine.strategy6.active_positions) > 0 or len(engine.strategy6.closed_positions) > 0
-    exit_triggered = False
+    morning_exit_triggered = False
+    cas_armed = False
+    cas_triggered = False
     last_render_time = 0.0
     last_telegram_time = time.time()
     last_heartbeat_hour = -1
@@ -43,7 +45,7 @@ def run_live(engine: MultiModelEngine):
                 market_open_refreshed = True
 
             # 2. Check 09:18 AM Strategy 6 Entry
-            if not entry_triggered and now >= dtime(entry_h, entry_m, entry_s) and now < dtime(exit_h, exit_m, exit_s):
+            if not entry_triggered and now >= dtime(entry_h, entry_m, entry_s) and now < dtime(15, 0, 0):
                 if not engine.strategy6.expiry:
                     engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
                 engine.execute_0918_dual_model_entry()
@@ -68,11 +70,27 @@ def run_live(engine: MultiModelEngine):
                 engine.send_telegram_periodic_heartbeat()
                 last_heartbeat_hour = now_dt.hour
 
-            # 7. Check 15:00 PM EOD Exit
-            if not exit_triggered and now >= dtime(exit_h, exit_m, exit_s):
+            # 7. Check 15:00 PM Squareoff for Morning Models (Strategy 6 & 0216)
+            if not morning_exit_triggered and now >= dtime(15, 0, 0):
+                engine.strategy6.execute_eod_squareoff("15:00")
+                engine.model_0216.execute_eod_squareoff("15:00")
+                morning_exit_triggered = True
+                print("\n🏁 15:00:00 Morning models squared off. Entering CAS Monitoring Phase...")
+
+            # 8. Check 15:15 PM CAS Arming
+            if not cas_armed and now >= dtime(15, 15, 0):
+                engine.arm_cas_session()
+                cas_armed = True
+
+            # 9. Check 15:20:01 PM CAS Entry Execution (Sub-1ms Real Order Placement)
+            if not cas_triggered and now >= dtime(15, 20, 1):
+                engine.execute_cas_entry()
+                cas_triggered = True
+
+            # 10. Check 15:25 PM Final EOD Exit
+            if now >= dtime(exit_h, exit_m, exit_s):
                 engine.execute_eod_squareoff()
-                exit_triggered = True
-                print("\n🏁 EOD Execution completed. Exiting forward test loop.")
+                print("\n🏁 15:25:00 Full session completed. Exiting forward test loop.")
                 break
                 
             time.sleep(0.005)
@@ -99,6 +117,10 @@ def run_dry_run(engine: MultiModelEngine):
     
     print("\nStep 2: Simulating 0216 Model 5-Minute Candle Signal Evaluation...")
     engine.evaluate_5m_boundary()
+    
+    print("\nStep 3: Simulating CAS Sub-1ms Equilibrium & Real Order Placement...")
+    engine.arm_cas_session()
+    engine.execute_cas_entry()
     
     time.sleep(1.0)
     engine.render_dashboard()

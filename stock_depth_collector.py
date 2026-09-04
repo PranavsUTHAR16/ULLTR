@@ -59,6 +59,14 @@ class StockDepthCollector:
         self.total_flushed = 0
         self.running = True
         self.lock = asyncio.Lock()
+        try:
+            import redis
+            self.redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+            self.redis_client.ping()
+            logger.info("✅ Connected to local Redis for sub-1ms depth caching.")
+        except Exception as e:
+            logger.warning(f"Redis depth cache unavailable ({e}).")
+            self.redis_client = None
 
     def load_token(self):
         token_paths = [
@@ -289,6 +297,20 @@ class StockDepthCollector:
                                         ])
 
                                 if new_rows:
+                                    if self.redis_client:
+                                        try:
+                                            pipe = self.redis_client.pipeline(transaction=False)
+                                            now_ts = time.time()
+                                            for r in new_rows:
+                                                pipe.hset(f"depth:quote:{r[1]}", mapping={
+                                                    "ltp": r[4], "cp": r[5], "vol": r[6], "tbq": r[7], "tsq": r[8],
+                                                    "bid1": r[9], "bid_qty1": r[10], "ask1": r[11], "ask_qty1": r[12],
+                                                    "mbq": r[17], "msq": r[18], "ts": now_ts
+                                                })
+                                            pipe.execute()
+                                        except Exception as e:
+                                            logger.debug(f"Redis depth pipe error: {e}")
+
                                     async with self.lock:
                                         self.buffer.extend(new_rows)
                                         if len(self.buffer) >= BATCH_SIZE:

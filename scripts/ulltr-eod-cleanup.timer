@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger ULLTR Daily EOD Cleanup at 16:15 PM IST
+
+[Timer]
+OnCalendar=*-*-* 16:15:00
+OnBootSec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -17,9 +17,8 @@ def is_market_open_today():
     if not os.path.exists(token_path):
         run_needed = True
     else:
-        from datetime import datetime, date
         mtime_date = datetime.fromtimestamp(os.path.getmtime(token_path)).date()
-        if mtime_date < date.today():
+        if mtime_date < datetime.now().date():
             run_needed = True
             
     if run_needed:
@@ -91,9 +90,28 @@ def is_market_open_today():
         print("🟢 Weekend fallback triggered: Today is a weekday. Assuming market is OPEN.")
         return True
 
-def restart_collector():
+def clear_premarket_logs():
+    """Truncates log files each morning during premarket activity to keep disk I/O and memory ultra-fast."""
+    log_files = [
+        "/Users/prana/Desktop/open_source/web/collector_bg.log",
+        "/Users/prana/Desktop/open_source/web/reconciler_stdout.log",
+        "/Users/prana/Desktop/open_source/web/reconciler.log",
+    ]
+    for lf in log_files:
+        try:
+            if os.path.exists(lf):
+                with open(lf, "w") as f:
+                    f.write(f"=== Premarket log reset for {date.today()} ===\n")
+                print(f"🧹 Truncated premarket log: {lf}")
+        except Exception as e:
+            print(f"⚠️ Could not clear log {lf}: {e}")
+
+def restart_collector(clear_logs: bool = False):
     """Stops the active C++ collector and reconciler, and restarts them in the background."""
     print("🔄 Terminating active C++ Ingestion Collector & Reconciler...")
+    if clear_logs:
+        clear_premarket_logs()
+        
     # Kill existing collector and reconciler binaries
     subprocess.run(["pkill", "-f", "./collector"], capture_output=True)
     subprocess.run(["pkill", "-f", "reconciler.py"], capture_output=True)
@@ -204,34 +222,8 @@ def main():
                     if run_opt.returncode == 0:
                         # Merge newly selected symbols into C++ collector config
                         print("🔄 Merging updated instruments into C++ configuration...")
-                        merge_cmd = """
-import json, redis
-with open('nifty_option_symbols.json') as f:
-    opts = json.load(f)
-with open('collector/config.json') as f:
-    cfg = json.load(f)
-expected = []
-if 'index_key' in opts:
-    expected = [opts['index_key']] + opts['symbols']
-else:
-    for underlying, info in opts.items():
-        expected.append(info['index_key'])
-        expected.extend(info['symbols'])
-# Append India VIX to the instruments list
-expected.append("NSE_INDEX|India VIX")
-cfg['instruments'] = expected
-with open('collector/config.json', 'w') as f:
-    json.dump(cfg, f, indent=2)
-
-# Seed spot:VIX in Redis
-try:
-    r = redis.Redis(unix_socket_path="/Users/prana/Desktop/open_source/web/redis.sock", decode_responses=True)
-    r.set("spot:VIX", "NSE_INDEX|India VIX")
-except:
-    pass
-"""
                         run_merge = subprocess.run(
-                            [sys.executable, "-c", merge_cmd],
+                            [sys.executable, "scripts/update_instruments.py"],
                             capture_output=True,
                             text=True,
                             cwd="/Users/prana/Desktop/open_source/web"
@@ -289,6 +281,22 @@ except:
                     r.set(f"daily:market_restart:{current_date}", "processed")
                     print(f"🎉 Collector successfully restarted for live market hours at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}!\n")
             
+            # --- TRIGGER 3.5: Scrape India 10-Year Bond Yield at 09:17:30 AM IST ---
+            bond_yield_processed = r.get(f"daily:bond_yield:{current_date}")
+            if current_time_str == "09:17" and not bond_yield_processed:
+                print(f"\n📈 Premarket 09:17 AM Trigger: Scraping India 10Y Bond Yield from Investing.com...")
+                try:
+                    subprocess.run(
+                        [sys.executable, "scrape_bond_yield.py"],
+                        capture_output=True,
+                        text=True,
+                        cwd="/Users/prana/Desktop/open_source/web"
+                    )
+                    r.set(f"daily:bond_yield:{current_date}", "processed")
+                    print(f"✅ Bond yield scraped and saved for dynamic Greeks calculation.")
+                except Exception as e:
+                    print(f"⚠️ Error running bond yield scraper: {e}")
+            
             # --- TRIGGER 2: Afternoon Expiry Rollover at 15:45 PM ---
             is_expiry_day_passed_time = False
             is_expiry_date_stale = False
@@ -322,25 +330,8 @@ except:
                     if run_opt.returncode == 0:
                         # Step B: Merge newly selected symbols into C++ collector config
                         print("🔄 Merging updated instruments into C++ configuration...")
-                        merge_cmd = """
-import json
-with open('nifty_option_symbols.json') as f:
-    opts = json.load(f)
-with open('collector/config.json') as f:
-    cfg = json.load(f)
-expected = []
-if 'index_key' in opts:
-    expected = [opts['index_key']] + opts['symbols']
-else:
-    for underlying, info in opts.items():
-        expected.append(info['index_key'])
-        expected.extend(info['symbols'])
-cfg['instruments'] = expected
-with open('collector/config.json', 'w') as f:
-    json.dump(cfg, f, indent=2)
-"""
                         run_merge = subprocess.run(
-                            [sys.executable, "-c", merge_cmd],
+                            [sys.executable, "scripts/update_instruments.py"],
                             capture_output=True,
                             text=True,
                             cwd="/Users/prana/Desktop/open_source/web"

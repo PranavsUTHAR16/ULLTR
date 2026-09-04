@@ -16,6 +16,7 @@ from forward_tester.models.strategy_6 import Strategy6Model
 from forward_tester.models.model_0216 import Model0216
 from forward_tester.models.dynamic_dte import DynamicDTEModel
 from forward_tester.models.ultra_tsmom import UltraTSMOMModel
+from forward_tester.models.cas_model import CASModel
 
 class MultiModelEngine:
     """
@@ -24,6 +25,7 @@ class MultiModelEngine:
       • Model 2: 0216_MODEL (Master Derivatives Engine @ 10 Lots / 5m Candle Boundary)
       • Model 3: DYNAMIC_DTE (Dynamic DTE Arbitrage TWAP Touch & Rejection Engine)
       • Model 4: ULTRA_TSMOM (15-min Z-score Momentum Engine)
+      • Model 5: CAS_ARB (Sub-1ms 0DTE / Closing Auction Session Real Order Gateway)
     """
     def __init__(self, config: Optional[MultiModelConfig] = None, dry_run: bool = False):
         self.config = config or MultiModelConfig()
@@ -35,6 +37,7 @@ class MultiModelEngine:
         self.model_0216 = Model0216(data_client=self.data_client, config=self.config)
         self.dynamic_dte = DynamicDTEModel(data_client=self.data_client, config=self.config)
         self.ultra_tsmom = UltraTSMOMModel(data_client=self.data_client, config=self.config)
+        self.cas_model = CASModel(data_client=self.data_client, config=self.config)
         
         self.log_file = os.path.join(os.path.dirname(__file__), "dual_model_trades.csv")
         self.last_5m_checked: str = ""
@@ -51,6 +54,7 @@ class MultiModelEngine:
         self.model_0216.init_trading_day(trade_date)
         self.dynamic_dte.init_trading_day(trade_date)
         self.ultra_tsmom.init_trading_day(trade_date)
+        self.cas_model.init_trading_day(trade_date)
 
     @property
     def active_positions(self) -> List[ForwardTestPosition]:
@@ -59,7 +63,8 @@ class MultiModelEngine:
             self.strategy6.active_positions +
             self.model_0216.active_positions +
             self.dynamic_dte.active_positions +
-            self.ultra_tsmom.active_positions
+            self.ultra_tsmom.active_positions +
+            self.cas_model.active_positions
         )
 
     @property
@@ -69,7 +74,8 @@ class MultiModelEngine:
             self.strategy6.closed_positions +
             self.model_0216.closed_positions +
             self.dynamic_dte.closed_positions +
-            self.ultra_tsmom.closed_positions
+            self.ultra_tsmom.closed_positions +
+            self.cas_model.closed_positions
         )
 
     def load_saved_positions(self):
@@ -124,6 +130,8 @@ class MultiModelEngine:
                     target_model = self.model_0216
                 elif model_id == "DYNAMIC_DTE":
                     target_model = self.dynamic_dte
+                elif model_id == "CAS_ARB":
+                    target_model = self.cas_model
                 else:
                     target_model = self.ultra_tsmom
 
@@ -146,6 +154,18 @@ class MultiModelEngine:
             warn_msg = f"⚠️ <b>STRATEGY 6 09:18 AM ENTRY ALERT</b>\n• No positions opened for {self.strategy6.underlying}.\n• Expiry: {self.strategy6.expiry or 'NOT_FOUND'} | DTE: {self.strategy6.dte}\n• Redis Option Chain check required."
             print(f"⚠️ Strategy 6 09:18 AM entry resulted in 0 positions (Underlying: {self.strategy6.underlying}, Expiry: {self.strategy6.expiry})")
             self._send_telegram(warn_msg)
+
+    def arm_cas_session(self):
+        """Arms CAS Model at 15:15–15:20 IST."""
+        self.cas_model.arm_cas_session()
+
+    def execute_cas_entry(self) -> List[Dict[str, Any]]:
+        """Triggers CAS 15:20:01 real order execution for NIFTY and SENSEX."""
+        results = self.cas_model.execute_cas_entry()
+        if results:
+            self.log_trade_execution()
+            self.send_telegram_cas_execution(results)
+        return results
 
     def evaluate_5m_boundary(self):
         """Evaluates 5-minute candle boundary execution for Model 0216 and Model 3 (Dynamic DTE)."""
@@ -220,6 +240,8 @@ class MultiModelEngine:
             model = self.model_0216
         elif model_id == "DYNAMIC_DTE":
             model = self.dynamic_dte
+        elif model_id == "CAS_ARB":
+            model = self.cas_model
         else:
             model = self.ultra_tsmom
         return model.get_realized_and_unrealized_pnl()
@@ -230,15 +252,17 @@ class MultiModelEngine:
         s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
         m2_real, m2_unreal, m2_tot = self.calculate_model_pnl("0216_MODEL")
         dd_real, dd_unreal, dd_tot = self.calculate_model_pnl("DYNAMIC_DTE")
-        comb_tot = s6_tot + m2_tot + dd_tot
+        cas_real, cas_unreal, cas_tot = self.calculate_model_pnl("CAS_ARB")
+        comb_tot = s6_tot + m2_tot + dd_tot + cas_tot
 
         print(f"\n🚀 MULTI-MODEL LIVE FORWARD TESTER | {now_str}")
         print("=" * 85)
-        print(f"Strategy 6: {self.strategy6.underlying} ({self.strategy6.regime[0]}-{self.strategy6.regime[1]}) | 0216 Asset: {self.model_0216.target_asset} | Dynamic DTE: {self.dynamic_dte.underlying}")
+        print(f"Strategy 6: {self.strategy6.underlying} ({self.strategy6.regime[0]}-{self.strategy6.regime[1]}) | 0216 Asset: {self.model_0216.target_asset} | CAS Arb: {'ARMED' if self.cas_model.is_armed else 'WAITING'}")
         print("-" * 85)
         print(f"📊 MODEL 1 [STRATEGY_6] (10 Lots) : ₹{s6_tot:+,.2f} (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})")
         print(f"📊 MODEL 2 [0216_MODEL] (10 Lots) : ₹{m2_tot:+,.2f} (Realized: ₹{m2_real:+,.2f} | Unrealized: ₹{m2_unreal:+,.2f})")
         print(f"📊 MODEL 3 [DYNAMIC_DTE]          : ₹{dd_tot:+,.2f} (Realized: ₹{dd_real:+,.2f} | Unrealized: ₹{dd_unreal:+,.2f})")
+        print(f"📊 MODEL 5 [CAS_ARB] (Real Orders): ₹{cas_tot:+,.2f} (Realized: ₹{cas_real:+,.2f} | Unrealized: ₹{cas_unreal:+,.2f})")
         print(f"💰 COMBINED TOTAL PORTFOLIO PnL   : ₹{comb_tot:+,.2f} (Max Cap: 20 Lots / ₹50L Capital)")
         print("-" * 85)
         print("ACTIVE POSITIONS:")
@@ -328,6 +352,39 @@ class MultiModelEngine:
             f"• Spot Anchor: Entry ₹{pos.spot_entry_price:.2f} | Spot SL ₹{pos.spot_sl_price:.2f} | Spot TP ₹{pos.spot_tp_price:.2f}"
         )
         self._send_telegram(msg)
+
+    def send_telegram_cas_execution(self, results: List[Dict[str, Any]]):
+        """Sends immediate Telegram alert on 15:20 CAS order placement with latency turnaround."""
+        lines = [
+            "⚡ <b>CAS SUB-1MS ARBITRAGE & REAL BROKER ORDER DISPATCH</b>",
+            f"📅 Date: <b>{self.current_date}</b> | Time: <b>15:20:01 IST</b>\n"
+        ]
+        for r in results:
+            und = r["underlying"]
+            otype = r["option_type"]
+            strike = r["strike"]
+            qty = r["quantity"]
+            cas_p = r["cas_price"]
+            spot_p = r["spot_ref"]
+            move = r["expected_move"]
+            calc_us = r["calc_time_us"]
+            turnaround = r["turnaround_ms"]
+            rtt = r["gateway_rtt_ms"]
+            status = r["order_status"]
+            err = r["error_msg"]
+            order_id = r.get("order_id", "")
+            
+            icon = "🟢" if r["is_success"] else "🟠"
+            lines.append(
+                f"{icon} <b>{und} CAS EXECUTION:</b>\n"
+                f"  • CAS Eq: <b>{cas_p:,.2f}</b> (Spot: {spot_p:,.2f} | Move: <b>{move:+5.2f} pts</b>)\n"
+                f"  • ⚡ Calc Latency: <b>{calc_us} µs ({calc_us/1000:.3f} ms)</b>\n"
+                f"  • Action: <b>BUY {strike} {otype}</b> ({qty} Qty / 1 Lot)\n"
+                f"  • Broker Ack: <b>HTTP {status}</b> ({err if err else f'Order #{order_id}'})\n"
+                f"  • ⏱️ Gateway Network RTT: <b>{rtt:.2f} ms</b>\n"
+                f"  • 🚀 Signal-to-Broker Turnaround: <b>{turnaround:.2f} ms</b>\n"
+            )
+        self._send_telegram("\n".join(lines))
 
     def send_telegram_sl_broadcast(self, sl_positions: List[ForwardTestPosition]):
         """Sends Telegram notification when SL / TP is hit."""

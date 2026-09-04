@@ -1,0 +1,11 @@
+[Unit]
+Description=ULLTR Daily Automated EOD Disk Cleanup & Maintenance
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash /Users/prana/Desktop/open_source/web/scripts/eod_cleanup.sh
+
+[Install]
+WantedBy=multi-user.target

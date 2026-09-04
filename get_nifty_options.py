@@ -170,18 +170,56 @@ def main():
 
         keys_1 = exp1_opts['instrument_key'].tolist()
         keys_2 = exp2_opts['instrument_key'].tolist()
-        total_symbols = keys_1 + keys_2
-        print(f"   Selected option symbols: {len(total_symbols)} (Exp1: {len(keys_1)}, Exp2: {len(keys_2)})")
+        
+        # Discover Front & Next Month Futures (FUTIDX)
+        fut_df = nfo[
+            (nfo['name'] == config['name']) & 
+            (nfo['exchange'] == config['exchange']) & 
+            (nfo['instrument_type'] == 'FUTIDX')
+        ].copy()
+        
+        fut_symbols = []
+        fut_info = {}
+        if not fut_df.empty:
+            fut_df['expiry_dt'] = pd.to_datetime(fut_df['expiry'])
+            valid_futs = fut_df[fut_df['expiry_dt'].dt.date >= today].sort_values('expiry_dt')
+            if len(valid_futs) >= 1:
+                front_fut = valid_futs.iloc[0]
+                front_key = front_fut['instrument_key']
+                front_exp = str(front_fut['expiry'])
+                fut_symbols.append(front_key)
+                fut_info["front"] = {
+                    "instrument_key": front_key,
+                    "tradingsymbol": front_fut.get('tradingsymbol', ''),
+                    "expiry": front_exp
+                }
+                print(f"   🔥 Front Future: {front_fut.get('tradingsymbol', '')} ({front_key}) | Expiry: {front_exp}")
+            
+            if len(valid_futs) >= 2:
+                next_fut = valid_futs.iloc[1]
+                next_key = next_fut['instrument_key']
+                next_exp = str(next_fut['expiry'])
+                fut_symbols.append(next_key)
+                fut_info["next"] = {
+                    "instrument_key": next_key,
+                    "tradingsymbol": next_fut.get('tradingsymbol', ''),
+                    "expiry": next_exp
+                }
+                print(f"   🔥 Next Future: {next_fut.get('tradingsymbol', '')} ({next_key}) | Expiry: {next_exp}")
+
+        total_symbols = keys_1 + keys_2 + fut_symbols
+        print(f"   Selected option + futures symbols: {len(total_symbols)} (Exp1: {len(keys_1)}, Exp2: {len(keys_2)}, Futs: {len(fut_symbols)})")
 
         output_data[key] = {
             "index_key": config['index_key'],
             "expiry_1": expiry_1_str,
             "expiry_2": expiry_2_str,
             "spot_price": config['spot_price'],
+            "futures": fut_info,
             "symbols": total_symbols
         }
 
-        # Seed option chain metadata directly to Redis
+        # Seed option chain & futures metadata directly to Redis
         if r:
             try:
                 # Seed spot index mapping
@@ -210,7 +248,27 @@ def main():
                 if exp2_map:
                     r.hset(f"chain:{key}:{expiry_2_str}", mapping=exp2_map)
 
-                print(f"   🌱 Seeded `spot:{key}` and chain maps for expiries: {expiry_1_str}, {expiry_2_str}")
+                # Seed Futures metadata to Redis
+                if "front" in fut_info:
+                    r.set(f"fut:{key}:front", fut_info["front"]["instrument_key"])
+                    r.hset(f"meta:{fut_info['front']['instrument_key']}", mapping={
+                        "underlying": key,
+                        "expiry": fut_info["front"]["expiry"],
+                        "strike": "0.0",
+                        "option_type": "FUT",
+                        "tradingsymbol": fut_info["front"]["tradingsymbol"]
+                    })
+                if "next" in fut_info:
+                    r.set(f"fut:{key}:next", fut_info["next"]["instrument_key"])
+                    r.hset(f"meta:{fut_info['next']['instrument_key']}", mapping={
+                        "underlying": key,
+                        "expiry": fut_info["next"]["expiry"],
+                        "strike": "0.0",
+                        "option_type": "FUT",
+                        "tradingsymbol": fut_info["next"]["tradingsymbol"]
+                    })
+
+                print(f"   🌱 Seeded `spot:{key}`, `fut:{key}`, and chain maps for expiries: {expiry_1_str}, {expiry_2_str}")
             except Exception as e:
                 print(f"   ⚠️ Redis seeding failed for {key}: {e}")
 
@@ -222,6 +280,98 @@ def main():
         print(f"\n💾 Saved selected options config to: {output_path}")
     except Exception as e:
         print(f"❌ Failed to save config to JSON: {e}")
+
+    # 5. Process NIFTY 50 and SENSEX 30 Equity Constituents
+    process_equity_constituents(nfo, r)
+
+def process_equity_constituents(nfo: pd.DataFrame, r):
+    print("\n--- Processing NIFTY 50 (NSE) & SENSEX 30 (BSE) Equity Constituents ---")
+    
+    nifty50_symbols = [
+        'HDFCBANK', 'ICICIBANK', 'BHARTIARTL', 'RELIANCE', 'KOTAKBANK', 'ETERNAL',
+        'AXISBANK', 'INFY', 'TATASTEEL', 'M&M', 'BAJFINANCE', 'ADANIENT', 'TITAN',
+        'SBIN', 'SHRIRAMFIN', 'LT', 'NTPC', 'MARUTI', 'TCS', 'BEL', 'ULTRACEMCO',
+        'HINDALCO', 'JSWSTEEL', 'ADANIPORTS', 'TECHM', 'EICHERMOT', 'ONGC', 'BAJAJ-AUTO',
+        'TMPV', 'HCLTECH', 'GRASIM', 'ITC', 'APOLLOHOSP', 'SUNPHARMA', 'HINDUNILVR',
+        'POWERGRID', 'INDIGO', 'JIOFIN', 'COALINDIA', 'TRENT', 'SBILIFE', 'MAXHEALTH',
+        'ASIANPAINT', 'HDFCLIFE', 'DRREDDY', 'BAJAJFINSV', 'TATACONSUM', 'NESTLEIND',
+        'WIPRO', 'CIPLA'
+    ]
+
+    sensex30_symbols = [
+        'RELIANCE', 'BHARTIARTL', 'HDFCBANK', 'ICICIBANK', 'SBIN', 'TCS', 'BAJFINANCE',
+        'LT', 'HINDUNILVR', 'SUNPHARMA', 'TITAN', 'INFY', 'MARUTI', 'KOTAKBANK', 'M&M',
+        'ADANIPORTS', 'AXISBANK', 'HCLTECH', 'ULTRACEMCO', 'ITC', 'BAJAJFINSV', 'NTPC',
+        'ETERNAL', 'BEL', 'ASIANPAINT', 'POWERGRID', 'TATASTEEL', 'INDIGO', 'TECHM', 'TRENT'
+    ]
+
+    nse_eq = nfo[(nfo['exchange'] == 'NSE_EQ') & (nfo['instrument_type'] == 'EQUITY')]
+    bse_eq = nfo[(nfo['exchange'] == 'BSE_EQ') & (nfo['instrument_type'] == 'EQUITY')]
+    sym_col = 'tradingsymbol' if 'tradingsymbol' in nfo.columns else 'trading_symbol'
+
+    equities = {}
+    nse_keys = []
+    bse_keys = []
+
+    for s in nifty50_symbols:
+        m = nse_eq[nse_eq[sym_col] == s]
+        if not m.empty:
+            row = m.iloc[0]
+            key = row['instrument_key']
+            nse_keys.append(key)
+            equities[key] = {
+                'instrument_key': key,
+                'symbol': s,
+                'tradingsymbol': s,
+                'company_name': row.get('name', s),
+                'exchange': 'NSE_EQ',
+                'index': 'NIFTY_50'
+            }
+
+    for s in sensex30_symbols:
+        m = bse_eq[bse_eq[sym_col] == s]
+        if not m.empty:
+            row = m.iloc[0]
+            key = row['instrument_key']
+            bse_keys.append(key)
+            equities[key] = {
+                'instrument_key': key,
+                'symbol': s,
+                'tradingsymbol': s,
+                'company_name': row.get('name', s),
+                'exchange': 'BSE_EQ',
+                'index': 'SENSEX_30'
+            }
+
+    print(f"   Resolved: {len(nse_keys)} NIFTY 50 stocks (NSE) | {len(bse_keys)} SENSEX 30 stocks (BSE)")
+
+    eq_path = 'equity_symbols.json'
+    try:
+        with open(eq_path, 'w') as f:
+            json.dump(equities, f, indent=2)
+        print(f"   💾 Saved equity constituents to: {eq_path}")
+    except Exception as e:
+        print(f"   ⚠️ Failed to save equity symbols: {e}")
+
+    # Seed to Redis
+    if r:
+        try:
+            pipe = r.pipeline(transaction=False)
+            for key, info in equities.items():
+                pipe.hset(f"meta:{key}", mapping={
+                    "underlying": info["symbol"],
+                    "symbol": info["symbol"],
+                    "tradingsymbol": info["tradingsymbol"],
+                    "exchange": info["exchange"],
+                    "index": info["index"],
+                    "expiry": "1970-01-01",
+                    "strike": "0.0",
+                    "option_type": "EQ"
+                })
+            pipe.execute()
+            print(f"   🌱 Seeded {len(equities)} equity `meta:*` hashes to Redis!")
+        except Exception as e:
+            print(f"   ⚠️ Redis equity seeding failed: {e}")
 
 if __name__ == "__main__":
     main()

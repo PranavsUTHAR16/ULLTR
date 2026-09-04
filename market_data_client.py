@@ -134,16 +134,36 @@ class MarketDataClient:
             if pe_key:
                 target_symbols.append(pe_key)
                 
-        # 5. Pipelined multi-HGETALL (one single network exchange)
+        # 5. Pipelined multi-HGETALL for quotes & 1m candle fallback
         pipe = self.r.pipeline()
         for sym in target_symbols:
+            pipe.hgetall(f"quote:{sym}")
             pipe.hgetall(f"md:quote:{sym}")
             
-        raw_quotes = pipe.execute()
+        results = pipe.execute()
         
         # Map raw quotes back to their symbols
         symbol_quotes = {}
-        for sym, raw_q in zip(target_symbols, raw_quotes):
+        for i, sym in enumerate(target_symbols):
+            q1 = results[2 * i]
+            q2 = results[2 * i + 1]
+            raw_q = q1 or q2
+            
+            # Fallback to latest 1m candle in Redis if live quote hash is empty off-hours
+            if not raw_q or not any(raw_q.values()):
+                candle_keys = self.r.keys(f"md:candle:{sym}:1m:*")
+                if candle_keys:
+                    latest_ck = sorted(candle_keys)[-1]
+                    c_data = self.r.hgetall(latest_ck)
+                    if c_data:
+                        raw_q = {
+                            "symbol": sym,
+                            "ltp": c_data.get("close"),
+                            "close": c_data.get("close"),
+                            "volume": c_data.get("volume"),
+                            "status": "historical"
+                        }
+            
             symbol_quotes[sym] = self._parse_hash_quote(raw_q)
             
         # 6. Construct structured output
