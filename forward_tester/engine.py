@@ -160,7 +160,7 @@ class MultiModelEngine:
         self.cas_model.arm_cas_session()
 
     def execute_cas_entry(self) -> List[Dict[str, Any]]:
-        """Triggers CAS 15:20:01 real order execution for NIFTY and SENSEX."""
+        """Triggers CAS 15:20:05 real order execution for NIFTY and SENSEX."""
         results = self.cas_model.execute_cas_entry()
         if results:
             self.log_trade_execution()
@@ -357,7 +357,7 @@ class MultiModelEngine:
         """Sends immediate Telegram alert on 15:20 CAS order placement with latency turnaround."""
         lines = [
             "⚡ <b>CAS SUB-1MS ARBITRAGE & REAL BROKER ORDER DISPATCH</b>",
-            f"📅 Date: <b>{self.current_date}</b> | Time: <b>15:20:01 IST</b>\n"
+            f"📅 Date: <b>{self.current_date}</b> | Time: <b>15:20:05 IST</b>\n"
         ]
         for r in results:
             und = r["underlying"]

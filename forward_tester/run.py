@@ -82,8 +82,8 @@ def run_live(engine: MultiModelEngine):
                 engine.arm_cas_session()
                 cas_armed = True
 
-            # 9. Check 15:20:01 PM CAS Entry Execution (Sub-1ms Real Order Placement)
-            if not cas_triggered and now >= dtime(15, 20, 1):
+            # 9. Check 15:20:05 PM CAS Entry Execution (Sub-1ms Real Order Placement)
+            if not cas_triggered and now >= dtime(15, 20, 5):
                 engine.execute_cas_entry()
                 cas_triggered = True
 

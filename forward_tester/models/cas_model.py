@@ -218,6 +218,12 @@ class CASModel(BaseTradingModel):
                 chain = self.data_client.get_option_chain(underlying, expiry)
                 if isinstance(chain, dict) and chain:
                     token = chain.get(float(atm_strike), {}).get(opt_type) or chain.get(int(atm_strike), {}).get(opt_type)
+                    if not token:
+                        available_strikes = [float(k) for k in chain.keys() if opt_type in chain[k]]
+                        if available_strikes:
+                            closest_strike = min(available_strikes, key=lambda s: abs(s - atm_strike))
+                            token = chain[closest_strike].get(opt_type)
+                            atm_strike = int(closest_strike)
                     if token:
                         instrument_token = str(token)
                         symbol = instrument_token.split("|")[-1] if "|" in instrument_token else instrument_token
@@ -236,7 +242,7 @@ class CASModel(BaseTradingModel):
         if not symbol or not instrument_token:
             prefix = "NIFTY" if underlying == "NIFTY" else "SENSEX"
             symbol = f"{prefix}_{atm_strike}_{opt_type}"
-            instrument_token = "NSE_FO|46938" if underlying == "NIFTY" else "BSE_FO|579300"
+            instrument_token = "NSE_FO|42640" if underlying == "NIFTY" else "BSE_FO|860348"
             if ltp <= 0.0:
                 ltp = 50.0
             
@@ -244,13 +250,13 @@ class CASModel(BaseTradingModel):
 
     def execute_cas_entry(self) -> List[Dict[str, Any]]:
         """
-        Fires real orders for both NIFTY and SENSEX ATM contracts at 15:20:01 IST.
+        Fires real orders for both NIFTY and SENSEX ATM contracts at 15:20:05 IST.
         Measures microsecond latency turnaround.
         """
         if self.entry_executed:
             return self.cas_telemetry
 
-        logger.info("🚨 15:20:01 CAS WINDOW TRIGGERED! Executing Sub-1ms Orderbook Arbitrage...")
+        logger.info("🚨 15:20:05 CAS WINDOW TRIGGERED! Executing Sub-1ms Orderbook Arbitrage...")
         results = []
         
         # Execute for both NIFTY and SENSEX
