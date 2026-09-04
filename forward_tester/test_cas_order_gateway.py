@@ -97,9 +97,12 @@ def test_live_broker_gateway(live_order: bool = False):
         print("  ℹ️ Skipping real order dispatch (pass --live-order to send real order to Upstox).")
         return
         
-    print("\n  Dispatching real test order (1 Lot NIFTY 24000 CE)...")
+    cas = CASModel()
+    eq = cas.calculate_equilibrium("NIFTY")
+    sym, token, strike, otype, ltp = cas.select_cas_strike("NIFTY", eq["expected_move"], eq["spot_ref"])
+    print(f"\n  Dispatching real test order (1 Lot NIFTY {strike} {otype} - Token: {token})...")
     res = gateway.place_order(
-        instrument_token="NSE_FO|46938",
+        instrument_token=token,
         quantity=25,
         transaction_type="BUY",
         product="I",
