@@ -1,0 +1,18 @@
+[Unit]
+Description=ULLTR Unified Portfolio Telegram Sidecar Daemon (10-Second Telemetry & Instant Alerts)
+After=network.target ulltr-redis.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/Users/prana/Desktop/open_source/web
+Environment=PATH=/Users/prana/Desktop/open_source/web/venv/bin:/usr/bin
+ExecStart=/Users/prana/Desktop/open_source/web/venv/bin/python -u scripts/telegram_portfolio_daemon.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

@@ -41,7 +41,8 @@ HEARTBEAT_HOURS = 1.0
 
 # ULLTR Paths
 BASE_DIR = "/Users/prana/Desktop/open_source/web"
-COLLECTOR_LOG = os.path.join(BASE_DIR, "collector_bg.log")
+COLLECTOR_LOG = os.path.join(BASE_DIR, "collector", "collector.log")
+COLLECTOR_BG_LOG = os.path.join(BASE_DIR, "collector_bg.log")
 RECONCILER_LOG = os.path.join(BASE_DIR, "reconciler.log")
 RECO_STDOUT = os.path.join(BASE_DIR, "reconciler_stdout.log")
 
@@ -198,11 +199,13 @@ class ULLTRHealthChecker:
         feed_active = False
 
         # Verify tick activity by checking modification time of C++ log
-        if os.path.exists(COLLECTOR_LOG):
-            mtime = os.path.getmtime(COLLECTOR_LOG)
-            if now - mtime <= 30:  # Collector log updated in last 30s
-                feed_active = True
-                self.last_tick_time = mtime
+        for c_log in [COLLECTOR_LOG, COLLECTOR_BG_LOG]:
+            if os.path.exists(c_log):
+                mtime = os.path.getmtime(c_log)
+                if now - mtime <= 30:  # Collector log updated in last 30s
+                    feed_active = True
+                    self.last_tick_time = mtime
+                    break
 
         # Verify by checking reconciler log modifications
         if not feed_active and os.path.exists(RECONCILER_LOG):

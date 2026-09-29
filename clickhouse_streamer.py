@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger("ClickHouseStreamer")
 
 # ClickHouse Configuration
-CH_HOST = os.environ.get("CLICKHOUSE_HOST", "libz0hxoze.ap-south-1.aws.clickhouse.cloud")
+CH_HOST = os.environ.get("CLICKHOUSE_HOST", "ra5fptcofl.ap-south-1.aws.clickhouse.cloud")
 CH_USER = os.environ.get("CLICKHOUSE_USER", "default")
 CH_PASSWORD = os.environ.get("CLICKHOUSE_PASSWORD", "BhhYrZvtF3lA~")
 CH_PORT = int(os.environ.get("CLICKHOUSE_PORT", "8443"))

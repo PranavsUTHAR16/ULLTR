@@ -226,6 +226,15 @@ def main():
                 r.set(f"spot:{key}", config['index_key'])
                 r.set("spot:VIX", "NSE_INDEX|India VIX")
 
+                # Clean up any expired chain keys in Redis
+                existing_chains = r.keys(f"chain:{key}:*")
+                for ck in existing_chains:
+                    if not ck.endswith(":meta"):
+                        c_date = ck.split(":")[-1]
+                        if c_date < today.strftime("%Y-%m-%d"):
+                            r.delete(ck)
+                            print(f"   🧹 Purged expired Redis chain: {ck}")
+
                 # Map Expiry 1 (strike:CE/PE -> instrument_key)
                 exp1_map = {}
                 for _, row in exp1_opts.iterrows():

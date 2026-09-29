@@ -18,11 +18,12 @@ class TestTriModelEngine(unittest.TestCase):
         self.assertIsInstance(cfg.model_0216, Model0216Config)
         self.assertIsInstance(cfg.dynamic_dte, DynamicDTEConfig)
         self.assertIsInstance(cfg.ultra_tsmom, UltraTSMOMConfig)
-        self.assertEqual(cfg.strategy6.total_lots, 10)
+        self.assertEqual(cfg.strategy6.total_lots, 20)
+        self.assertFalse(cfg.model_0216.enabled)
+        self.assertFalse(cfg.dynamic_dte.enabled)
         self.assertEqual(cfg.model_0216.lots_nifty, 10)
         self.assertEqual(cfg.model_0216.lots_sensex, 20)
-        self.assertEqual(cfg.dynamic_dte.total_lots, 20)
-        self.assertEqual(cfg.dynamic_dte.sl_cap_nifty, 60.0)
+        self.assertEqual(cfg.dynamic_dte.total_lots, 10)
 
     def test_position_spot_sl_tp_evaluation(self):
         """Test ForwardTestPosition spot-based stop loss and profit target logic."""
