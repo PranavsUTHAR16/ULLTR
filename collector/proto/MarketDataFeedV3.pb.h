@@ -35,6 +35,7 @@
 #include "google/protobuf/map_field.h"
 #include "google/protobuf/generated_enum_reflection.h"
 #include "google/protobuf/unknown_field_set.h"
+#include "google/protobuf/wrappers.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -58,7 +59,11 @@ struct TableStruct_MarketDataFeedV3_2eproto {
 extern "C" {
 extern const ::google::protobuf::internal::DescriptorTable descriptor_table_MarketDataFeedV3_2eproto;
 }  // extern "C"
+namespace com {
 namespace upstox {
+namespace marketdatafeederv3udapi {
+namespace rpc {
+namespace proto {
 enum MarketStatus : int;
 extern const uint32_t MarketStatus_internal_data_[];
 enum RequestMode : int;
@@ -137,6 +142,22 @@ extern const ::google::protobuf::internal::ClassDataFull MarketInfo_class_data_;
 #else
 extern const MarketInfoGlobalsTypeInternal MarketInfo_globals_;
 #endif  // PROTOBUF_MESSAGE_GLOBALS
+class MarketInfo_CasMarketStatusEntry_DoNotUse;
+struct MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal;
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+extern MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_CasMarketStatusEntry_DoNotUse_globals_;
+extern const ::google::protobuf::internal::ClassDataFull MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_;
+#else
+extern const MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_CasMarketStatusEntry_DoNotUse_globals_;
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+class MarketInfo_PreOpenSessionStatusEntry_DoNotUse;
+struct MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal;
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+extern MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_;
+extern const ::google::protobuf::internal::ClassDataFull MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_;
+#else
+extern const MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_;
+#endif  // PROTOBUF_MESSAGE_GLOBALS
 class MarketInfo_SegmentStatusEntry_DoNotUse;
 struct MarketInfo_SegmentStatusEntry_DoNotUseGlobalsTypeInternal;
 #ifndef PROTOBUF_MESSAGE_GLOBALS
@@ -185,22 +206,38 @@ extern const ::google::protobuf::internal::ClassDataFull Quote_class_data_;
 #else
 extern const QuoteGlobalsTypeInternal Quote_globals_;
 #endif  // PROTOBUF_MESSAGE_GLOBALS
+class StatusInfo;
+struct StatusInfoGlobalsTypeInternal;
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+extern StatusInfoGlobalsTypeInternal StatusInfo_globals_;
+extern const ::google::protobuf::internal::ClassDataFull StatusInfo_class_data_;
+#else
+extern const StatusInfoGlobalsTypeInternal StatusInfo_globals_;
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}  // namespace proto
+}  // namespace rpc
+}  // namespace marketdatafeederv3udapi
 }  // namespace upstox
+}  // namespace com
 namespace google {
 namespace protobuf {
 template <>
-internal::EnumTraitsT<::upstox::MarketStatus_internal_data_>
-    internal::EnumTraitsImpl::value<::upstox::MarketStatus>;
+internal::EnumTraitsT<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus_internal_data_>
+    internal::EnumTraitsImpl::value<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>;
 template <>
-internal::EnumTraitsT<::upstox::RequestMode_internal_data_>
-    internal::EnumTraitsImpl::value<::upstox::RequestMode>;
+internal::EnumTraitsT<::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode_internal_data_>
+    internal::EnumTraitsImpl::value<::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode>;
 template <>
-internal::EnumTraitsT<::upstox::Type_internal_data_>
-    internal::EnumTraitsImpl::value<::upstox::Type>;
+internal::EnumTraitsT<::com::upstox::marketdatafeederv3udapi::rpc::proto::Type_internal_data_>
+    internal::EnumTraitsImpl::value<::com::upstox::marketdatafeederv3udapi::rpc::proto::Type>;
 }  // namespace protobuf
 }  // namespace google
 
+namespace com {
 namespace upstox {
+namespace marketdatafeederv3udapi {
+namespace rpc {
+namespace proto {
 enum Type : int {
   initial_feed = 0,
   live_feed = 1,
@@ -336,8 +373,226 @@ using ::google::protobuf::internal::generated_enum::AbslUnparseFlag;
 
 // -------------------------------------------------------------------
 
+class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED StatusInfo final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo) */ {
+ public:
+  inline StatusInfo() : StatusInfo(nullptr) {}
+  ~StatusInfo() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(StatusInfo* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(StatusInfo));
+  }
+#endif
+
+  template <typename = void>
+  explicit constexpr StatusInfo(::google::protobuf::internal::ConstantInitialized,
+                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+                               class_data);
+
+  inline StatusInfo(const StatusInfo& from) : StatusInfo(nullptr, from) {}
+  inline StatusInfo(StatusInfo&& from) noexcept : StatusInfo(nullptr, ::std::move(from)) {}
+  inline StatusInfo& operator=(const StatusInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline StatusInfo& operator=(StatusInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  [[nodiscard]] inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  [[nodiscard]] inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL
+  mutable_unknown_fields() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL
+  GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  [[nodiscard]] static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  [[nodiscard]] static const StatusInfo& default_instance() {
+    return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<StatusInfo>(&StatusInfo_globals_);
+  }
+  static constexpr int kIndexInFileMessages = 11;
+  friend void swap(StatusInfo& a, StatusInfo& b) { a.Swap(&b); }
+  inline void Swap(StatusInfo* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(StatusInfo* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  [[nodiscard]] StatusInfo* PROTOBUF_NONNULL
+  New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<StatusInfo>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const StatusInfo& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const StatusInfo& from) { StatusInfo::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  [[nodiscard]] bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  [[nodiscard]] static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  [[nodiscard]] static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  [[nodiscard]] ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] ::size_t ByteSizeLong() const final;
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] int GetCachedSize() const {
+    return _impl_._cached_size_.Get();
+  }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(StatusInfo* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo"; }
+
+  explicit StatusInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  StatusInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const StatusInfo& from);
+  StatusInfo(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, StatusInfo&& from) noexcept
+      : StatusInfo(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_(
+      const MessageLite& prototype,
+      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
+
+  [[nodiscard]] ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kStatusFieldNumber = 1,
+    kUpdatedTimeFieldNumber = 2,
+  };
+  // string status = 1;
+  void clear_status() ;
+  [[nodiscard]] const ::std::string& status() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_status(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_status();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_status();
+  void set_allocated_status(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_status() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_status(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_status();
+
+  public:
+  // int64 updatedTime = 2;
+  void clear_updatedtime() ;
+  [[nodiscard]] ::int64_t updatedtime() const;
+  void set_updatedtime(::int64_t value);
+
+  private:
+  ::int64_t _internal_updatedtime() const;
+  void _internal_set_updatedtime(::int64_t value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+ private:
+  class _Internal;
+  using ParseTableT_ =
+      ::google::protobuf::internal::TcParseTable<1, 2,
+                          0, 70,
+                          2>;
+  static constexpr ParseTableT_ InternalGenerateParseTable_(
+      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
+  friend class ::google::protobuf::internal::TcParser;
+  #ifndef PROTOBUF_MESSAGE_GLOBALS
+  static const ParseTableT_ _table_;
+  #endif
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  friend ::google::protobuf::internal::PrivateAccess;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                                    ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const StatusInfo& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::internal::ArenaStringPtr status_;
+    ::int64_t updatedtime_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
+};
+// -------------------------------------------------------------------
+
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Quote final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.Quote) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote) */ {
  public:
   inline Quote() : Quote(nullptr) {}
   ~Quote() PROTOBUF_FINAL;
@@ -459,7 +714,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Quote final : public ::google::prot
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.Quote"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.Quote"; }
 
   explicit Quote(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   Quote(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Quote& from);
@@ -529,7 +784,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Quote final : public ::google::prot
   void _internal_set_askp(double value);
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.Quote)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
  private:
   class _Internal;
   using ParseTableT_ =
@@ -574,7 +829,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Quote final : public ::google::prot
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OptionGreeks final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.OptionGreeks) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks) */ {
  public:
   inline OptionGreeks() : OptionGreeks(nullptr) {}
   ~OptionGreeks() PROTOBUF_FINAL;
@@ -696,7 +951,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OptionGreeks final : public ::googl
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.OptionGreeks"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks"; }
 
   explicit OptionGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   OptionGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const OptionGreeks& from);
@@ -777,7 +1032,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OptionGreeks final : public ::googl
   void _internal_set_rho(double value);
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.OptionGreeks)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
  private:
   class _Internal;
   using ParseTableT_ =
@@ -823,7 +1078,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OptionGreeks final : public ::googl
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OHLC final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.OHLC) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC) */ {
  public:
   inline OHLC() : OHLC(nullptr) {}
   ~OHLC() PROTOBUF_FINAL;
@@ -945,7 +1200,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OHLC final : public ::google::proto
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.OHLC"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC"; }
 
   explicit OHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   OHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const OHLC& from);
@@ -1053,12 +1308,12 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OHLC final : public ::google::proto
   void _internal_set_ts(::int64_t value);
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.OHLC)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
  private:
   class _Internal;
   using ParseTableT_ =
       ::google::protobuf::internal::TcParseTable<3, 7,
-                          0, 28,
+                          0, 66,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
       const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
@@ -1101,12 +1356,12 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED OHLC final : public ::google::proto
 // -------------------------------------------------------------------
 
 class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo_SegmentStatusEntry_DoNotUse final
-    : public ::google::protobuf::internal::MapEntry<::std::string, ::upstox::MarketStatus,
+    : public ::google::protobuf::internal::MapEntry<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus,
                              ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
                              ::google::protobuf::internal::WireFormatLite::TYPE_ENUM> {
  public:
   using SuperType =
-      ::google::protobuf::internal::MapEntry<::std::string, ::upstox::MarketStatus,
+      ::google::protobuf::internal::MapEntry<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus,
                       ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
                       ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>;
   MarketInfo_SegmentStatusEntry_DoNotUse();
@@ -1132,7 +1387,7 @@ class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo_SegmentStatusEntry_DoNotU
 
   using ParseTableT_ =
       ::google::protobuf::internal::TcParseTable<1, 2,
-                          0, 48,
+                          0, 86,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
       const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
@@ -1146,248 +1401,11 @@ class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo_SegmentStatusEntry_DoNotU
       const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
       ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   static constexpr auto InternalNewImpl_();
-};
-// -------------------------------------------------------------------
-
-class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED LTPC final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.LTPC) */ {
- public:
-  inline LTPC() : LTPC(nullptr) {}
-  ~LTPC() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(LTPC* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(LTPC));
-  }
-#endif
-
-  template <typename = void>
-  explicit constexpr LTPC(::google::protobuf::internal::ConstantInitialized,
-                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
-                               class_data);
-
-  inline LTPC(const LTPC& from) : LTPC(nullptr, from) {}
-  inline LTPC(LTPC&& from) noexcept : LTPC(nullptr, ::std::move(from)) {}
-  inline LTPC& operator=(const LTPC& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline LTPC& operator=(LTPC&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  [[nodiscard]] inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  [[nodiscard]] inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL
-  mutable_unknown_fields() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL
-  GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  [[nodiscard]] static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  [[nodiscard]] static const LTPC& default_instance() {
-    return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<LTPC>(&LTPC_globals_);
-  }
-  static constexpr int kIndexInFileMessages = 0;
-  friend void swap(LTPC& a, LTPC& b) { a.Swap(&b); }
-  inline void Swap(LTPC* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(LTPC* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  [[nodiscard]] LTPC* PROTOBUF_NONNULL
-  New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<LTPC>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const LTPC& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const LTPC& from) { LTPC::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  [[nodiscard]] bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  [[nodiscard]] static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  [[nodiscard]] static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  [[nodiscard]] ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  [[nodiscard]] ::size_t ByteSizeLong() const final;
-  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  [[nodiscard]] int GetCachedSize() const {
-    return _impl_._cached_size_.Get();
-  }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(LTPC* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.LTPC"; }
-
-  explicit LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const LTPC& from);
-  LTPC(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, LTPC&& from) noexcept
-      : LTPC(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_(
-      const MessageLite& prototype,
-      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
-
-  [[nodiscard]] ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kLtpFieldNumber = 1,
-    kLttFieldNumber = 2,
-    kLtqFieldNumber = 3,
-    kCpFieldNumber = 4,
-  };
-  // double ltp = 1;
-  void clear_ltp() ;
-  [[nodiscard]] double ltp() const;
-  void set_ltp(double value);
-
-  private:
-  double _internal_ltp() const;
-  void _internal_set_ltp(double value);
-
-  public:
-  // int64 ltt = 2;
-  void clear_ltt() ;
-  [[nodiscard]] ::int64_t ltt() const;
-  void set_ltt(::int64_t value);
-
-  private:
-  ::int64_t _internal_ltt() const;
-  void _internal_set_ltt(::int64_t value);
-
-  public:
-  // int64 ltq = 3;
-  void clear_ltq() ;
-  [[nodiscard]] ::int64_t ltq() const;
-  void set_ltq(::int64_t value);
-
-  private:
-  ::int64_t _internal_ltq() const;
-  void _internal_set_ltq(::int64_t value);
-
-  public:
-  // double cp = 4;
-  void clear_cp() ;
-  [[nodiscard]] double cp() const;
-  void set_cp(double value);
-
-  private:
-  double _internal_cp() const;
-  void _internal_set_cp(double value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:upstox.LTPC)
- private:
-  class _Internal;
-  using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<2, 4,
-                          0, 0,
-                          2>;
-  static constexpr ParseTableT_ InternalGenerateParseTable_(
-      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
-  friend class ::google::protobuf::internal::TcParser;
-  #ifndef PROTOBUF_MESSAGE_GLOBALS
-  static const ParseTableT_ _table_;
-  #endif
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  friend ::google::protobuf::internal::PrivateAccess;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                                    ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const LTPC& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    double ltp_;
-    ::int64_t ltt_;
-    ::int64_t ltq_;
-    double cp_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
 };
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.MarketOHLC) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC) */ {
  public:
   inline MarketOHLC() : MarketOHLC(nullptr) {}
   ~MarketOHLC() PROTOBUF_FINAL;
@@ -1509,7 +1527,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google:
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.MarketOHLC"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC"; }
 
   explicit MarketOHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   MarketOHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MarketOHLC& from);
@@ -1536,7 +1554,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google:
   enum : int {
     kOhlcFieldNumber = 1,
   };
-  // repeated .upstox.OHLC ohlc = 1;
+  // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
   [[nodiscard]] int ohlc_size()
       const;
   private:
@@ -1544,20 +1562,20 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google:
 
   public:
   void clear_ohlc() ;
-  [[nodiscard]] const ::upstox::OHLC& ohlc(int index) const;
-  [[nodiscard]] ::upstox::OHLC* PROTOBUF_NONNULL mutable_ohlc(int index);
-  ::upstox::OHLC* PROTOBUF_NONNULL add_ohlc();
-  [[nodiscard]] const ::google::protobuf::RepeatedPtrField<::upstox::OHLC>&
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC& ohlc(int index) const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC* PROTOBUF_NONNULL mutable_ohlc(int index);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC* PROTOBUF_NONNULL add_ohlc();
+  [[nodiscard]] const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>&
   ohlc() const;
-  [[nodiscard]] ::google::protobuf::RepeatedPtrField<::upstox::OHLC>* PROTOBUF_NONNULL
+  [[nodiscard]] ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>* PROTOBUF_NONNULL
   mutable_ohlc();
 
   private:
-  const ::google::protobuf::RepeatedPtrField<::upstox::OHLC>& _internal_ohlc() const;
-  ::google::protobuf::RepeatedPtrField<::upstox::OHLC>* PROTOBUF_NONNULL _internal_mutable_ohlc();
+  const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>& _internal_ohlc() const;
+  ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>* PROTOBUF_NONNULL _internal_mutable_ohlc();
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.MarketOHLC)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
  private:
   class _Internal;
   using ParseTableT_ =
@@ -1590,7 +1608,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google:
         const MarketOHLC& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::RepeatedPtrField< ::upstox::OHLC > ohlc_;
+    ::google::protobuf::RepeatedPtrField< ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC > ohlc_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1599,7 +1617,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketOHLC final : public ::google:
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.MarketLevel) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel) */ {
  public:
   inline MarketLevel() : MarketLevel(nullptr) {}
   ~MarketLevel() PROTOBUF_FINAL;
@@ -1721,7 +1739,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.MarketLevel"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel"; }
 
   explicit MarketLevel(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   MarketLevel(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MarketLevel& from);
@@ -1748,7 +1766,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google
   enum : int {
     kBidAskQuoteFieldNumber = 1,
   };
-  // repeated .upstox.Quote bidAskQuote = 1;
+  // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
   [[nodiscard]] int bidaskquote_size()
       const;
   private:
@@ -1756,20 +1774,20 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google
 
   public:
   void clear_bidaskquote() ;
-  [[nodiscard]] const ::upstox::Quote& bidaskquote(int index) const;
-  [[nodiscard]] ::upstox::Quote* PROTOBUF_NONNULL mutable_bidaskquote(int index);
-  ::upstox::Quote* PROTOBUF_NONNULL add_bidaskquote();
-  [[nodiscard]] const ::google::protobuf::RepeatedPtrField<::upstox::Quote>&
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& bidaskquote(int index) const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL mutable_bidaskquote(int index);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL add_bidaskquote();
+  [[nodiscard]] const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>&
   bidaskquote() const;
-  [[nodiscard]] ::google::protobuf::RepeatedPtrField<::upstox::Quote>* PROTOBUF_NONNULL
+  [[nodiscard]] ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>* PROTOBUF_NONNULL
   mutable_bidaskquote();
 
   private:
-  const ::google::protobuf::RepeatedPtrField<::upstox::Quote>& _internal_bidaskquote() const;
-  ::google::protobuf::RepeatedPtrField<::upstox::Quote>* PROTOBUF_NONNULL _internal_mutable_bidaskquote();
+  const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>& _internal_bidaskquote() const;
+  ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>* PROTOBUF_NONNULL _internal_mutable_bidaskquote();
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.MarketLevel)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
  private:
   class _Internal;
   using ParseTableT_ =
@@ -1802,7 +1820,360 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google
         const MarketLevel& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::RepeatedPtrField< ::upstox::Quote > bidaskquote_;
+    ::google::protobuf::RepeatedPtrField< ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote > bidaskquote_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo_PreOpenSessionStatusEntry_DoNotUse final
+    : public ::google::protobuf::internal::MapEntry<::std::string, ::google::protobuf::Message,
+                             ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+                             ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE> {
+ public:
+  using SuperType =
+      ::google::protobuf::internal::MapEntry<::std::string, ::google::protobuf::Message,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>;
+  MarketInfo_PreOpenSessionStatusEntry_DoNotUse();
+  template <typename = void>
+  explicit constexpr MarketInfo_PreOpenSessionStatusEntry_DoNotUse(::google::protobuf::internal::ConstantInitialized,
+                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+                               class_data);
+  explicit MarketInfo_PreOpenSessionStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr const void* PROTOBUF_NONNULL internal_message_globals() {
+    return &MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_;
+  }
+
+
+  static constexpr auto InternalGenerateClassData_(
+      const ::google::protobuf::MessageLite& prototype,
+      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
+
+ private:
+  friend class ::google::protobuf::MessageLite;
+  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
+  friend ::google::protobuf::internal::PrivateAccess;
+  friend MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal;
+
+  using ParseTableT_ =
+      ::google::protobuf::internal::TcParseTable<1, 2,
+                          1, 93,
+                          2>;
+  static constexpr ParseTableT_ InternalGenerateParseTable_(
+      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
+  friend class ::google::protobuf::internal::TcParser;
+  #ifndef PROTOBUF_MESSAGE_GLOBALS
+  static const ParseTableT_ _table_;
+  #endif
+
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+};
+// -------------------------------------------------------------------
+
+class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo_CasMarketStatusEntry_DoNotUse final
+    : public ::google::protobuf::internal::MapEntry<::std::string, ::google::protobuf::Message,
+                             ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+                             ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE> {
+ public:
+  using SuperType =
+      ::google::protobuf::internal::MapEntry<::std::string, ::google::protobuf::Message,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+                      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE>;
+  MarketInfo_CasMarketStatusEntry_DoNotUse();
+  template <typename = void>
+  explicit constexpr MarketInfo_CasMarketStatusEntry_DoNotUse(::google::protobuf::internal::ConstantInitialized,
+                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+                               class_data);
+  explicit MarketInfo_CasMarketStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr const void* PROTOBUF_NONNULL internal_message_globals() {
+    return &MarketInfo_CasMarketStatusEntry_DoNotUse_globals_;
+  }
+
+
+  static constexpr auto InternalGenerateClassData_(
+      const ::google::protobuf::MessageLite& prototype,
+      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
+
+ private:
+  friend class ::google::protobuf::MessageLite;
+  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
+  friend ::google::protobuf::internal::PrivateAccess;
+  friend MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal;
+
+  using ParseTableT_ =
+      ::google::protobuf::internal::TcParseTable<1, 2,
+                          1, 88,
+                          2>;
+  static constexpr ParseTableT_ InternalGenerateParseTable_(
+      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
+  friend class ::google::protobuf::internal::TcParser;
+  #ifndef PROTOBUF_MESSAGE_GLOBALS
+  static const ParseTableT_ _table_;
+  #endif
+
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+};
+// -------------------------------------------------------------------
+
+class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED LTPC final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC) */ {
+ public:
+  inline LTPC() : LTPC(nullptr) {}
+  ~LTPC() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(LTPC* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(LTPC));
+  }
+#endif
+
+  template <typename = void>
+  explicit constexpr LTPC(::google::protobuf::internal::ConstantInitialized,
+                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+                               class_data);
+
+  inline LTPC(const LTPC& from) : LTPC(nullptr, from) {}
+  inline LTPC(LTPC&& from) noexcept : LTPC(nullptr, ::std::move(from)) {}
+  inline LTPC& operator=(const LTPC& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline LTPC& operator=(LTPC&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  [[nodiscard]] inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  [[nodiscard]] inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL
+  mutable_unknown_fields() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL
+  GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  [[nodiscard]] static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  [[nodiscard]] static const LTPC& default_instance() {
+    return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<LTPC>(&LTPC_globals_);
+  }
+  static constexpr int kIndexInFileMessages = 0;
+  friend void swap(LTPC& a, LTPC& b) { a.Swap(&b); }
+  inline void Swap(LTPC* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(LTPC* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  [[nodiscard]] LTPC* PROTOBUF_NONNULL
+  New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<LTPC>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const LTPC& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const LTPC& from) { LTPC::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  [[nodiscard]] bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  [[nodiscard]] static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  [[nodiscard]] static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  [[nodiscard]] ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] ::size_t ByteSizeLong() const final;
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] int GetCachedSize() const {
+    return _impl_._cached_size_.Get();
+  }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(LTPC* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC"; }
+
+  explicit LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const LTPC& from);
+  LTPC(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, LTPC&& from) noexcept
+      : LTPC(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_(
+      const MessageLite& prototype,
+      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
+
+  [[nodiscard]] ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kIepFieldNumber = 5,
+    kLtpFieldNumber = 1,
+    kLttFieldNumber = 2,
+    kLtqFieldNumber = 3,
+    kCpFieldNumber = 4,
+  };
+  // .google.protobuf.DoubleValue iep = 5;
+  [[nodiscard]] bool has_iep()
+      const;
+  void clear_iep() ;
+  [[nodiscard]] const ::google::protobuf::DoubleValue& iep() const;
+  [[nodiscard]] ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE release_iep();
+  ::google::protobuf::DoubleValue* PROTOBUF_NONNULL mutable_iep();
+  void set_allocated_iep(::google::protobuf::DoubleValue* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_iep(::google::protobuf::DoubleValue* PROTOBUF_NULLABLE value);
+  ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE unsafe_arena_release_iep();
+
+  private:
+  const ::google::protobuf::DoubleValue& _internal_iep() const;
+  ::google::protobuf::DoubleValue* PROTOBUF_NONNULL _internal_mutable_iep();
+
+  public:
+  // double ltp = 1;
+  void clear_ltp() ;
+  [[nodiscard]] double ltp() const;
+  void set_ltp(double value);
+
+  private:
+  double _internal_ltp() const;
+  void _internal_set_ltp(double value);
+
+  public:
+  // int64 ltt = 2;
+  void clear_ltt() ;
+  [[nodiscard]] ::int64_t ltt() const;
+  void set_ltt(::int64_t value);
+
+  private:
+  ::int64_t _internal_ltt() const;
+  void _internal_set_ltt(::int64_t value);
+
+  public:
+  // int64 ltq = 3;
+  void clear_ltq() ;
+  [[nodiscard]] ::int64_t ltq() const;
+  void set_ltq(::int64_t value);
+
+  private:
+  ::int64_t _internal_ltq() const;
+  void _internal_set_ltq(::int64_t value);
+
+  public:
+  // double cp = 4;
+  void clear_cp() ;
+  [[nodiscard]] double cp() const;
+  void set_cp(double value);
+
+  private:
+  double _internal_cp() const;
+  void _internal_set_cp(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
+ private:
+  class _Internal;
+  using ParseTableT_ =
+      ::google::protobuf::internal::TcParseTable<3, 5,
+                          1, 0,
+                          2>;
+  static constexpr ParseTableT_ InternalGenerateParseTable_(
+      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
+  friend class ::google::protobuf::internal::TcParser;
+  #ifndef PROTOBUF_MESSAGE_GLOBALS
+  static const ParseTableT_ _table_;
+  #endif
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  friend ::google::protobuf::internal::PrivateAccess;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                                    ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const LTPC& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE iep_;
+    double ltp_;
+    ::int64_t ltt_;
+    ::int64_t ltq_;
+    double cp_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1811,7 +2182,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketLevel final : public ::google
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.MarketInfo) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo) */ {
  public:
   inline MarketInfo() : MarketInfo(nullptr) {}
   ~MarketInfo() PROTOBUF_FINAL;
@@ -1866,7 +2237,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google:
   [[nodiscard]] static const MarketInfo& default_instance() {
     return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<MarketInfo>(&MarketInfo_globals_);
   }
-  static constexpr int kIndexInFileMessages = 12;
+  static constexpr int kIndexInFileMessages = 15;
   friend void swap(MarketInfo& a, MarketInfo& b) { a.Swap(&b); }
   inline void Swap(MarketInfo* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -1933,7 +2304,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google:
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.MarketInfo"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo"; }
 
   explicit MarketInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   MarketInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MarketInfo& from);
@@ -1959,8 +2330,10 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google:
   // accessors -------------------------------------------------------
   enum : int {
     kSegmentStatusFieldNumber = 1,
+    kCasMarketStatusFieldNumber = 2,
+    kPreOpenSessionStatusFieldNumber = 3,
   };
-  // map<string, .upstox.MarketStatus> segmentStatus = 1;
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus> segmentStatus = 1;
   [[nodiscard]] int segmentstatus_size()
       const;
   private:
@@ -1968,20 +2341,52 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google:
 
   public:
   void clear_segmentstatus() ;
-  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>& segmentstatus() const;
-  [[nodiscard]] ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>* PROTOBUF_NONNULL mutable_segmentstatus();
+  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>& segmentstatus() const;
+  [[nodiscard]] ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>* PROTOBUF_NONNULL mutable_segmentstatus();
 
   private:
-  const ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>& _internal_segmentstatus() const;
-  ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>* PROTOBUF_NONNULL _internal_mutable_segmentstatus();
+  const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>& _internal_segmentstatus() const;
+  ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>* PROTOBUF_NONNULL _internal_mutable_segmentstatus();
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.MarketInfo)
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> casMarketStatus = 2;
+  [[nodiscard]] int casmarketstatus_size()
+      const;
+  private:
+  int _internal_casmarketstatus_size() const;
+
+  public:
+  void clear_casmarketstatus() ;
+  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& casmarketstatus() const;
+  [[nodiscard]] ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL mutable_casmarketstatus();
+
+  private:
+  const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& _internal_casmarketstatus() const;
+  ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL _internal_mutable_casmarketstatus();
+
+  public:
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> preOpenSessionStatus = 3;
+  [[nodiscard]] int preopensessionstatus_size()
+      const;
+  private:
+  int _internal_preopensessionstatus_size() const;
+
+  public:
+  void clear_preopensessionstatus() ;
+  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& preopensessionstatus() const;
+  [[nodiscard]] ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL mutable_preopensessionstatus();
+
+  private:
+  const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& _internal_preopensessionstatus() const;
+  ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL _internal_mutable_preopensessionstatus();
+
+  public:
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
  private:
   class _Internal;
   using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<0, 1,
-                          1, 39,
+      ::google::protobuf::internal::TcParseTable<0, 3,
+                          5, 112,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
       const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
@@ -2009,286 +2414,9 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketInfo final : public ::google:
         const MarketInfo& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::google::protobuf::internal::MapField<MarketInfo_SegmentStatusEntry_DoNotUse, ::std::string, ::upstox::MarketStatus> segmentstatus_;
-    PROTOBUF_TSAN_DECLARE_MEMBER
-  };
-  union { Impl_ _impl_; };
-  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
-};
-// -------------------------------------------------------------------
-
-class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FirstLevelWithGreeks final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.FirstLevelWithGreeks) */ {
- public:
-  inline FirstLevelWithGreeks() : FirstLevelWithGreeks(nullptr) {}
-  ~FirstLevelWithGreeks() PROTOBUF_FINAL;
-
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-  void operator delete(FirstLevelWithGreeks* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
-    SharedDtor(*msg);
-    ::google::protobuf::internal::SizedDelete(msg, sizeof(FirstLevelWithGreeks));
-  }
-#endif
-
-  template <typename = void>
-  explicit constexpr FirstLevelWithGreeks(::google::protobuf::internal::ConstantInitialized,
-                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
-                               class_data);
-
-  inline FirstLevelWithGreeks(const FirstLevelWithGreeks& from) : FirstLevelWithGreeks(nullptr, from) {}
-  inline FirstLevelWithGreeks(FirstLevelWithGreeks&& from) noexcept : FirstLevelWithGreeks(nullptr, ::std::move(from)) {}
-  inline FirstLevelWithGreeks& operator=(const FirstLevelWithGreeks& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline FirstLevelWithGreeks& operator=(FirstLevelWithGreeks&& from) noexcept {
-    if (this == &from) return *this;
-    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  [[nodiscard]] inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
-      ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
-  }
-  [[nodiscard]] inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL
-  mutable_unknown_fields() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
-  }
-
-  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
-    return GetDescriptor();
-  }
-  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL
-  GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  [[nodiscard]] static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  [[nodiscard]] static const FirstLevelWithGreeks& default_instance() {
-    return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<FirstLevelWithGreeks>(&FirstLevelWithGreeks_globals_);
-  }
-  static constexpr int kIndexInFileMessages = 9;
-  friend void swap(FirstLevelWithGreeks& a, FirstLevelWithGreeks& b) { a.Swap(&b); }
-  inline void Swap(FirstLevelWithGreeks* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
-      InternalSwap(other);
-    } else {
-      ::google::protobuf::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(FirstLevelWithGreeks* PROTOBUF_NONNULL other) {
-    if (other == this) return;
-    ABSL_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  [[nodiscard]] FirstLevelWithGreeks* PROTOBUF_NONNULL
-  New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
-    return ::google::protobuf::Message::DefaultConstruct<FirstLevelWithGreeks>(arena);
-  }
-  using ::google::protobuf::Message::CopyFrom;
-  void CopyFrom(const FirstLevelWithGreeks& from);
-  using ::google::protobuf::Message::MergeFrom;
-  void MergeFrom(const FirstLevelWithGreeks& from) { FirstLevelWithGreeks::MergeImpl(*this, from); }
-
-  private:
-  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
-                        const ::google::protobuf::MessageLite& from_msg);
-
-  public:
-  [[nodiscard]] bool IsInitialized() const {
-    return true;
-  }
-  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
-  #if defined(PROTOBUF_CUSTOM_VTABLE)
-  private:
-  [[nodiscard]] static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
-  [[nodiscard]] static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
-
-  public:
-  [[nodiscard]] ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
-  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
-    return _InternalSerialize(*this, target, stream);
-  }
-  #else   // PROTOBUF_CUSTOM_VTABLE
-  [[nodiscard]] ::size_t ByteSizeLong() const final;
-  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
-      ::uint8_t* PROTOBUF_NONNULL target,
-      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
-  #endif  // PROTOBUF_CUSTOM_VTABLE
-  [[nodiscard]] int GetCachedSize() const {
-    return _impl_._cached_size_.Get();
-  }
-
-  private:
-  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static void SharedDtor(MessageLite& self);
-  void InternalSwap(FirstLevelWithGreeks* PROTOBUF_NONNULL other);
- private:
-  template <typename T>
-  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.FirstLevelWithGreeks"; }
-
-  explicit FirstLevelWithGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  FirstLevelWithGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const FirstLevelWithGreeks& from);
-  FirstLevelWithGreeks(
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, FirstLevelWithGreeks&& from) noexcept
-      : FirstLevelWithGreeks(arena) {
-    *this = ::std::move(from);
-  }
-  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
-  static void* PROTOBUF_NONNULL PlacementNew_(
-      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-  static constexpr auto InternalNewImpl_();
-
- public:
-  static constexpr auto InternalGenerateClassData_(
-      const MessageLite& prototype,
-      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
-
-  [[nodiscard]] ::google::protobuf::Metadata GetMetadata() const;
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-  enum : int {
-    kLtpcFieldNumber = 1,
-    kFirstDepthFieldNumber = 2,
-    kOptionGreeksFieldNumber = 3,
-    kVttFieldNumber = 4,
-    kOiFieldNumber = 5,
-    kIvFieldNumber = 6,
-  };
-  // .upstox.LTPC ltpc = 1;
-  [[nodiscard]] bool has_ltpc()
-      const;
-  void clear_ltpc() ;
-  [[nodiscard]] const ::upstox::LTPC& ltpc() const;
-  [[nodiscard]] ::upstox::LTPC* PROTOBUF_NULLABLE release_ltpc();
-  ::upstox::LTPC* PROTOBUF_NONNULL mutable_ltpc();
-  void set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  ::upstox::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
-
-  private:
-  const ::upstox::LTPC& _internal_ltpc() const;
-  ::upstox::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
-
-  public:
-  // .upstox.Quote firstDepth = 2;
-  [[nodiscard]] bool has_firstdepth()
-      const;
-  void clear_firstdepth() ;
-  [[nodiscard]] const ::upstox::Quote& firstdepth() const;
-  [[nodiscard]] ::upstox::Quote* PROTOBUF_NULLABLE release_firstdepth();
-  ::upstox::Quote* PROTOBUF_NONNULL mutable_firstdepth();
-  void set_allocated_firstdepth(::upstox::Quote* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_firstdepth(::upstox::Quote* PROTOBUF_NULLABLE value);
-  ::upstox::Quote* PROTOBUF_NULLABLE unsafe_arena_release_firstdepth();
-
-  private:
-  const ::upstox::Quote& _internal_firstdepth() const;
-  ::upstox::Quote* PROTOBUF_NONNULL _internal_mutable_firstdepth();
-
-  public:
-  // .upstox.OptionGreeks optionGreeks = 3;
-  [[nodiscard]] bool has_optiongreeks()
-      const;
-  void clear_optiongreeks() ;
-  [[nodiscard]] const ::upstox::OptionGreeks& optiongreeks() const;
-  [[nodiscard]] ::upstox::OptionGreeks* PROTOBUF_NULLABLE release_optiongreeks();
-  ::upstox::OptionGreeks* PROTOBUF_NONNULL mutable_optiongreeks();
-  void set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value);
-  ::upstox::OptionGreeks* PROTOBUF_NULLABLE unsafe_arena_release_optiongreeks();
-
-  private:
-  const ::upstox::OptionGreeks& _internal_optiongreeks() const;
-  ::upstox::OptionGreeks* PROTOBUF_NONNULL _internal_mutable_optiongreeks();
-
-  public:
-  // int64 vtt = 4;
-  void clear_vtt() ;
-  [[nodiscard]] ::int64_t vtt() const;
-  void set_vtt(::int64_t value);
-
-  private:
-  ::int64_t _internal_vtt() const;
-  void _internal_set_vtt(::int64_t value);
-
-  public:
-  // double oi = 5;
-  void clear_oi() ;
-  [[nodiscard]] double oi() const;
-  void set_oi(double value);
-
-  private:
-  double _internal_oi() const;
-  void _internal_set_oi(double value);
-
-  public:
-  // double iv = 6;
-  void clear_iv() ;
-  [[nodiscard]] double iv() const;
-  void set_iv(double value);
-
-  private:
-  double _internal_iv() const;
-  void _internal_set_iv(double value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:upstox.FirstLevelWithGreeks)
- private:
-  class _Internal;
-  using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<3, 6,
-                          3, 0,
-                          2>;
-  static constexpr ParseTableT_ InternalGenerateParseTable_(
-      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
-  friend class ::google::protobuf::internal::TcParser;
-  #ifndef PROTOBUF_MESSAGE_GLOBALS
-  static const ParseTableT_ _table_;
-  #endif
-
-  friend class ::google::protobuf::MessageLite;
-  friend class ::google::protobuf::Arena;
-  friend ::google::protobuf::internal::PrivateAccess;
-  template <typename T>
-  friend class ::google::protobuf::Arena::InternalHelper;
-  using InternalArenaConstructable_ = void;
-  using DestructorSkippable_ = void;
-  struct Impl_ {
-    inline explicit constexpr Impl_(::google::protobuf::internal::InternalVisibility visibility,
-                                    ::google::protobuf::internal::ConstantInitialized) noexcept;
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
-    inline explicit Impl_(
-        ::google::protobuf::internal::InternalVisibility visibility,
-        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-        const FirstLevelWithGreeks& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
-    ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::LTPC* PROTOBUF_NULLABLE ltpc_;
-    ::upstox::Quote* PROTOBUF_NULLABLE firstdepth_;
-    ::upstox::OptionGreeks* PROTOBUF_NULLABLE optiongreeks_;
-    ::int64_t vtt_;
-    double oi_;
-    double iv_;
+    ::google::protobuf::internal::MapField<MarketInfo_SegmentStatusEntry_DoNotUse, ::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus> segmentstatus_;
+    ::google::protobuf::internal::MapField<MarketInfo_CasMarketStatusEntry_DoNotUse, ::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo> casmarketstatus_;
+    ::google::protobuf::internal::MapField<MarketInfo_PreOpenSessionStatusEntry_DoNotUse, ::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo> preopensessionstatus_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2297,7 +2425,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FirstLevelWithGreeks final : public
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.MarketFullFeed) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed) */ {
  public:
   inline MarketFullFeed() : MarketFullFeed(nullptr) {}
   ~MarketFullFeed() PROTOBUF_FINAL;
@@ -2419,7 +2547,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::goo
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.MarketFullFeed"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed"; }
 
   explicit MarketFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   MarketFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const MarketFullFeed& from);
@@ -2454,69 +2582,75 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::goo
     kIvFieldNumber = 8,
     kTbqFieldNumber = 9,
     kTsqFieldNumber = 10,
+    kIepFieldNumber = 11,
+    kRpFieldNumber = 12,
+    kIeqFieldNumber = 13,
+    kIiqTotalFieldNumber = 14,
+    kIiqMFieldNumber = 15,
+    kCasEligibleFieldNumber = 16,
   };
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   [[nodiscard]] bool has_ltpc()
       const;
   void clear_ltpc() ;
-  [[nodiscard]] const ::upstox::LTPC& ltpc() const;
-  [[nodiscard]] ::upstox::LTPC* PROTOBUF_NULLABLE release_ltpc();
-  ::upstox::LTPC* PROTOBUF_NONNULL mutable_ltpc();
-  void set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  ::upstox::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& ltpc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE release_ltpc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL mutable_ltpc();
+  void set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
 
   private:
-  const ::upstox::LTPC& _internal_ltpc() const;
-  ::upstox::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& _internal_ltpc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
 
   public:
-  // .upstox.MarketLevel marketLevel = 2;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
   [[nodiscard]] bool has_marketlevel()
       const;
   void clear_marketlevel() ;
-  [[nodiscard]] const ::upstox::MarketLevel& marketlevel() const;
-  [[nodiscard]] ::upstox::MarketLevel* PROTOBUF_NULLABLE release_marketlevel();
-  ::upstox::MarketLevel* PROTOBUF_NONNULL mutable_marketlevel();
-  void set_allocated_marketlevel(::upstox::MarketLevel* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_marketlevel(::upstox::MarketLevel* PROTOBUF_NULLABLE value);
-  ::upstox::MarketLevel* PROTOBUF_NULLABLE unsafe_arena_release_marketlevel();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel& marketlevel() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE release_marketlevel();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NONNULL mutable_marketlevel();
+  void set_allocated_marketlevel(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_marketlevel(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE unsafe_arena_release_marketlevel();
 
   private:
-  const ::upstox::MarketLevel& _internal_marketlevel() const;
-  ::upstox::MarketLevel* PROTOBUF_NONNULL _internal_mutable_marketlevel();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel& _internal_marketlevel() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NONNULL _internal_mutable_marketlevel();
 
   public:
-  // .upstox.OptionGreeks optionGreeks = 3;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
   [[nodiscard]] bool has_optiongreeks()
       const;
   void clear_optiongreeks() ;
-  [[nodiscard]] const ::upstox::OptionGreeks& optiongreeks() const;
-  [[nodiscard]] ::upstox::OptionGreeks* PROTOBUF_NULLABLE release_optiongreeks();
-  ::upstox::OptionGreeks* PROTOBUF_NONNULL mutable_optiongreeks();
-  void set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value);
-  ::upstox::OptionGreeks* PROTOBUF_NULLABLE unsafe_arena_release_optiongreeks();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& optiongreeks() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE release_optiongreeks();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL mutable_optiongreeks();
+  void set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE unsafe_arena_release_optiongreeks();
 
   private:
-  const ::upstox::OptionGreeks& _internal_optiongreeks() const;
-  ::upstox::OptionGreeks* PROTOBUF_NONNULL _internal_mutable_optiongreeks();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& _internal_optiongreeks() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL _internal_mutable_optiongreeks();
 
   public:
-  // .upstox.MarketOHLC marketOHLC = 4;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
   [[nodiscard]] bool has_marketohlc()
       const;
   void clear_marketohlc() ;
-  [[nodiscard]] const ::upstox::MarketOHLC& marketohlc() const;
-  [[nodiscard]] ::upstox::MarketOHLC* PROTOBUF_NULLABLE release_marketohlc();
-  ::upstox::MarketOHLC* PROTOBUF_NONNULL mutable_marketohlc();
-  void set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value);
-  ::upstox::MarketOHLC* PROTOBUF_NULLABLE unsafe_arena_release_marketohlc();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& marketohlc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE release_marketohlc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL mutable_marketohlc();
+  void set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE unsafe_arena_release_marketohlc();
 
   private:
-  const ::upstox::MarketOHLC& _internal_marketohlc() const;
-  ::upstox::MarketOHLC* PROTOBUF_NONNULL _internal_mutable_marketohlc();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& _internal_marketohlc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL _internal_mutable_marketohlc();
 
   public:
   // double atp = 5;
@@ -2579,11 +2713,71 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::goo
   void _internal_set_tsq(double value);
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.MarketFullFeed)
+  // double iep = 11;
+  void clear_iep() ;
+  [[nodiscard]] double iep() const;
+  void set_iep(double value);
+
+  private:
+  double _internal_iep() const;
+  void _internal_set_iep(double value);
+
+  public:
+  // double rp = 12;
+  void clear_rp() ;
+  [[nodiscard]] double rp() const;
+  void set_rp(double value);
+
+  private:
+  double _internal_rp() const;
+  void _internal_set_rp(double value);
+
+  public:
+  // int64 ieq = 13;
+  void clear_ieq() ;
+  [[nodiscard]] ::int64_t ieq() const;
+  void set_ieq(::int64_t value);
+
+  private:
+  ::int64_t _internal_ieq() const;
+  void _internal_set_ieq(::int64_t value);
+
+  public:
+  // int64 iiqTotal = 14;
+  void clear_iiqtotal() ;
+  [[nodiscard]] ::int64_t iiqtotal() const;
+  void set_iiqtotal(::int64_t value);
+
+  private:
+  ::int64_t _internal_iiqtotal() const;
+  void _internal_set_iiqtotal(::int64_t value);
+
+  public:
+  // int64 iiqM = 15;
+  void clear_iiqm() ;
+  [[nodiscard]] ::int64_t iiqm() const;
+  void set_iiqm(::int64_t value);
+
+  private:
+  ::int64_t _internal_iiqm() const;
+  void _internal_set_iiqm(::int64_t value);
+
+  public:
+  // bool casEligible = 16;
+  void clear_caseligible() ;
+  [[nodiscard]] bool caseligible() const;
+  void set_caseligible(bool value);
+
+  private:
+  bool _internal_caseligible() const;
+  void _internal_set_caseligible(bool value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
  private:
   class _Internal;
   using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<4, 10,
+      ::google::protobuf::internal::TcParseTable<4, 16,
                           4, 0,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
@@ -2612,16 +2806,22 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::goo
         const MarketFullFeed& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::LTPC* PROTOBUF_NULLABLE ltpc_;
-    ::upstox::MarketLevel* PROTOBUF_NULLABLE marketlevel_;
-    ::upstox::OptionGreeks* PROTOBUF_NULLABLE optiongreeks_;
-    ::upstox::MarketOHLC* PROTOBUF_NULLABLE marketohlc_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE ltpc_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE marketlevel_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE optiongreeks_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE marketohlc_;
     double atp_;
     ::int64_t vtt_;
     double oi_;
     double iv_;
     double tbq_;
     double tsq_;
+    double iep_;
+    double rp_;
+    ::int64_t ieq_;
+    ::int64_t iiqtotal_;
+    ::int64_t iiqm_;
+    bool caseligible_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2630,7 +2830,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED MarketFullFeed final : public ::goo
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED IndexFullFeed final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.IndexFullFeed) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed) */ {
  public:
   inline IndexFullFeed() : IndexFullFeed(nullptr) {}
   ~IndexFullFeed() PROTOBUF_FINAL;
@@ -2752,7 +2952,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED IndexFullFeed final : public ::goog
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.IndexFullFeed"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed"; }
 
   explicit IndexFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   IndexFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const IndexFullFeed& from);
@@ -2780,39 +2980,39 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED IndexFullFeed final : public ::goog
     kLtpcFieldNumber = 1,
     kMarketOHLCFieldNumber = 2,
   };
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   [[nodiscard]] bool has_ltpc()
       const;
   void clear_ltpc() ;
-  [[nodiscard]] const ::upstox::LTPC& ltpc() const;
-  [[nodiscard]] ::upstox::LTPC* PROTOBUF_NULLABLE release_ltpc();
-  ::upstox::LTPC* PROTOBUF_NONNULL mutable_ltpc();
-  void set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  ::upstox::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& ltpc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE release_ltpc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL mutable_ltpc();
+  void set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
 
   private:
-  const ::upstox::LTPC& _internal_ltpc() const;
-  ::upstox::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& _internal_ltpc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
 
   public:
-  // .upstox.MarketOHLC marketOHLC = 2;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
   [[nodiscard]] bool has_marketohlc()
       const;
   void clear_marketohlc() ;
-  [[nodiscard]] const ::upstox::MarketOHLC& marketohlc() const;
-  [[nodiscard]] ::upstox::MarketOHLC* PROTOBUF_NULLABLE release_marketohlc();
-  ::upstox::MarketOHLC* PROTOBUF_NONNULL mutable_marketohlc();
-  void set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value);
-  ::upstox::MarketOHLC* PROTOBUF_NULLABLE unsafe_arena_release_marketohlc();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& marketohlc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE release_marketohlc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL mutable_marketohlc();
+  void set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE unsafe_arena_release_marketohlc();
 
   private:
-  const ::upstox::MarketOHLC& _internal_marketohlc() const;
-  ::upstox::MarketOHLC* PROTOBUF_NONNULL _internal_mutable_marketohlc();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& _internal_marketohlc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL _internal_mutable_marketohlc();
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
  private:
   class _Internal;
   using ParseTableT_ =
@@ -2845,8 +3045,287 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED IndexFullFeed final : public ::goog
         const IndexFullFeed& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::LTPC* PROTOBUF_NULLABLE ltpc_;
-    ::upstox::MarketOHLC* PROTOBUF_NULLABLE marketohlc_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE ltpc_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE marketohlc_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_MarketDataFeedV3_2eproto;
+};
+// -------------------------------------------------------------------
+
+class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FirstLevelWithGreeks final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks) */ {
+ public:
+  inline FirstLevelWithGreeks() : FirstLevelWithGreeks(nullptr) {}
+  ~FirstLevelWithGreeks() PROTOBUF_FINAL;
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+  void operator delete(FirstLevelWithGreeks* PROTOBUF_NONNULL msg, ::std::destroying_delete_t) {
+    SharedDtor(*msg);
+    ::google::protobuf::internal::SizedDelete(msg, sizeof(FirstLevelWithGreeks));
+  }
+#endif
+
+  template <typename = void>
+  explicit constexpr FirstLevelWithGreeks(::google::protobuf::internal::ConstantInitialized,
+                           const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+                               class_data);
+
+  inline FirstLevelWithGreeks(const FirstLevelWithGreeks& from) : FirstLevelWithGreeks(nullptr, from) {}
+  inline FirstLevelWithGreeks(FirstLevelWithGreeks&& from) noexcept : FirstLevelWithGreeks(nullptr, ::std::move(from)) {}
+  inline FirstLevelWithGreeks& operator=(const FirstLevelWithGreeks& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline FirstLevelWithGreeks& operator=(FirstLevelWithGreeks&& from) noexcept {
+    if (this == &from) return *this;
+    if (::google::protobuf::internal::CanMoveWithInternalSwap(GetArena(), from.GetArena())) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  [[nodiscard]] inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  [[nodiscard]] inline ::google::protobuf::UnknownFieldSet* PROTOBUF_NONNULL
+  mutable_unknown_fields() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL descriptor() {
+    return GetDescriptor();
+  }
+  [[nodiscard]] static const ::google::protobuf::Descriptor* PROTOBUF_NONNULL
+  GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  [[nodiscard]] static const ::google::protobuf::Reflection* PROTOBUF_NONNULL GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  [[nodiscard]] static const FirstLevelWithGreeks& default_instance() {
+    return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<FirstLevelWithGreeks>(&FirstLevelWithGreeks_globals_);
+  }
+  static constexpr int kIndexInFileMessages = 9;
+  friend void swap(FirstLevelWithGreeks& a, FirstLevelWithGreeks& b) { a.Swap(&b); }
+  inline void Swap(FirstLevelWithGreeks* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    if (::google::protobuf::internal::CanUseInternalSwap(GetArena(), other->GetArena())) {
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(FirstLevelWithGreeks* PROTOBUF_NONNULL other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  [[nodiscard]] FirstLevelWithGreeks* PROTOBUF_NONNULL
+  New(::google::protobuf::Arena* PROTOBUF_NULLABLE arena = nullptr) const {
+    return ::google::protobuf::Message::DefaultConstruct<FirstLevelWithGreeks>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const FirstLevelWithGreeks& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const FirstLevelWithGreeks& from) { FirstLevelWithGreeks::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(::google::protobuf::MessageLite& to_msg,
+                        const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  [[nodiscard]] bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() PROTOBUF_FINAL;
+  #if defined(PROTOBUF_CUSTOM_VTABLE)
+  private:
+  [[nodiscard]] static ::size_t ByteSizeLong(const ::google::protobuf::MessageLite& msg);
+  [[nodiscard]] static ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      const ::google::protobuf::MessageLite& msg, ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream);
+
+  public:
+  [[nodiscard]] ::size_t ByteSizeLong() const { return ByteSizeLong(*this); }
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+    return _InternalSerialize(*this, target, stream);
+  }
+  #else   // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] ::size_t ByteSizeLong() const final;
+  [[nodiscard]] ::uint8_t* PROTOBUF_NONNULL _InternalSerialize(
+      ::uint8_t* PROTOBUF_NONNULL target,
+      ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const final;
+  #endif  // PROTOBUF_CUSTOM_VTABLE
+  [[nodiscard]] int GetCachedSize() const {
+    return _impl_._cached_size_.Get();
+  }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static void SharedDtor(MessageLite& self);
+  void InternalSwap(FirstLevelWithGreeks* PROTOBUF_NONNULL other);
+ private:
+  template <typename T>
+  friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks"; }
+
+  explicit FirstLevelWithGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  FirstLevelWithGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const FirstLevelWithGreeks& from);
+  FirstLevelWithGreeks(
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, FirstLevelWithGreeks&& from) noexcept
+      : FirstLevelWithGreeks(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL GetClassData() const PROTOBUF_FINAL;
+  static void* PROTOBUF_NONNULL PlacementNew_(
+      const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+      ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+  static constexpr auto InternalNewImpl_();
+
+ public:
+  static constexpr auto InternalGenerateClassData_(
+      const MessageLite& prototype,
+      const ::google::protobuf::internal::TcParseTableBase* PROTOBUF_NULLABLE tc_table = nullptr);
+
+  [[nodiscard]] ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kLtpcFieldNumber = 1,
+    kFirstDepthFieldNumber = 2,
+    kOptionGreeksFieldNumber = 3,
+    kVttFieldNumber = 4,
+    kOiFieldNumber = 5,
+    kIvFieldNumber = 6,
+  };
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
+  [[nodiscard]] bool has_ltpc()
+      const;
+  void clear_ltpc() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& ltpc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE release_ltpc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL mutable_ltpc();
+  void set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& _internal_ltpc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
+  [[nodiscard]] bool has_firstdepth()
+      const;
+  void clear_firstdepth() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& firstdepth() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE release_firstdepth();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL mutable_firstdepth();
+  void set_allocated_firstdepth(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_firstdepth(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE unsafe_arena_release_firstdepth();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& _internal_firstdepth() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL _internal_mutable_firstdepth();
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
+  [[nodiscard]] bool has_optiongreeks()
+      const;
+  void clear_optiongreeks() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& optiongreeks() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE release_optiongreeks();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL mutable_optiongreeks();
+  void set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE unsafe_arena_release_optiongreeks();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& _internal_optiongreeks() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL _internal_mutable_optiongreeks();
+
+  public:
+  // int64 vtt = 4;
+  void clear_vtt() ;
+  [[nodiscard]] ::int64_t vtt() const;
+  void set_vtt(::int64_t value);
+
+  private:
+  ::int64_t _internal_vtt() const;
+  void _internal_set_vtt(::int64_t value);
+
+  public:
+  // double oi = 5;
+  void clear_oi() ;
+  [[nodiscard]] double oi() const;
+  void set_oi(double value);
+
+  private:
+  double _internal_oi() const;
+  void _internal_set_oi(double value);
+
+  public:
+  // double iv = 6;
+  void clear_iv() ;
+  [[nodiscard]] double iv() const;
+  void set_iv(double value);
+
+  private:
+  double _internal_iv() const;
+  void _internal_set_iv(double value);
+
+  public:
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
+ private:
+  class _Internal;
+  using ParseTableT_ =
+      ::google::protobuf::internal::TcParseTable<3, 6,
+                          3, 0,
+                          2>;
+  static constexpr ParseTableT_ InternalGenerateParseTable_(
+      const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
+  friend class ::google::protobuf::internal::TcParser;
+  #ifndef PROTOBUF_MESSAGE_GLOBALS
+  static const ParseTableT_ _table_;
+  #endif
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  friend ::google::protobuf::internal::PrivateAccess;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                                    ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
+    inline explicit Impl_(
+        ::google::protobuf::internal::InternalVisibility visibility,
+        ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+        const FirstLevelWithGreeks& from_msg);
+    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    ::google::protobuf::internal::CachedSize _cached_size_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE ltpc_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE firstdepth_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE optiongreeks_;
+    ::int64_t vtt_;
+    double oi_;
+    double iv_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -2855,7 +3334,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED IndexFullFeed final : public ::goog
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.FullFeed) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed) */ {
  public:
   inline FullFeed() : FullFeed(nullptr) {}
   ~FullFeed() PROTOBUF_FINAL;
@@ -2910,6 +3389,11 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::p
   [[nodiscard]] static const FullFeed& default_instance() {
     return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<FullFeed>(&FullFeed_globals_);
   }
+  enum FullFeedUnionCase {
+    kMarketFF = 1,
+    kIndexFF = 2,
+    FULLFEEDUNION_NOT_SET = 0,
+  };
   static constexpr int kIndexInFileMessages = 8;
   friend void swap(FullFeed& a, FullFeed& b) { a.Swap(&b); }
   inline void Swap(FullFeed* PROTOBUF_NONNULL other) {
@@ -2977,7 +3461,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::p
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.FullFeed"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed"; }
 
   explicit FullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   FullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const FullFeed& from);
@@ -3005,43 +3489,57 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::p
     kMarketFFFieldNumber = 1,
     kIndexFFFieldNumber = 2,
   };
-  // .upstox.MarketFullFeed marketFF = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed marketFF = 1;
   [[nodiscard]] bool has_marketff()
       const;
-  void clear_marketff() ;
-  [[nodiscard]] const ::upstox::MarketFullFeed& marketff() const;
-  [[nodiscard]] ::upstox::MarketFullFeed* PROTOBUF_NULLABLE release_marketff();
-  ::upstox::MarketFullFeed* PROTOBUF_NONNULL mutable_marketff();
-  void set_allocated_marketff(::upstox::MarketFullFeed* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_marketff(::upstox::MarketFullFeed* PROTOBUF_NULLABLE value);
-  ::upstox::MarketFullFeed* PROTOBUF_NULLABLE unsafe_arena_release_marketff();
-
   private:
-  const ::upstox::MarketFullFeed& _internal_marketff() const;
-  ::upstox::MarketFullFeed* PROTOBUF_NONNULL _internal_mutable_marketff();
+  bool _internal_has_marketff() const;
 
   public:
-  // .upstox.IndexFullFeed indexFF = 2;
+  void clear_marketff() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed& marketff() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE release_marketff();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NONNULL mutable_marketff();
+  void set_allocated_marketff(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_marketff(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE unsafe_arena_release_marketff();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed& _internal_marketff() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NONNULL _internal_mutable_marketff();
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed indexFF = 2;
   [[nodiscard]] bool has_indexff()
       const;
-  void clear_indexff() ;
-  [[nodiscard]] const ::upstox::IndexFullFeed& indexff() const;
-  [[nodiscard]] ::upstox::IndexFullFeed* PROTOBUF_NULLABLE release_indexff();
-  ::upstox::IndexFullFeed* PROTOBUF_NONNULL mutable_indexff();
-  void set_allocated_indexff(::upstox::IndexFullFeed* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_indexff(::upstox::IndexFullFeed* PROTOBUF_NULLABLE value);
-  ::upstox::IndexFullFeed* PROTOBUF_NULLABLE unsafe_arena_release_indexff();
-
   private:
-  const ::upstox::IndexFullFeed& _internal_indexff() const;
-  ::upstox::IndexFullFeed* PROTOBUF_NONNULL _internal_mutable_indexff();
+  bool _internal_has_indexff() const;
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.FullFeed)
+  void clear_indexff() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed& indexff() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE release_indexff();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NONNULL mutable_indexff();
+  void set_allocated_indexff(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_indexff(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE unsafe_arena_release_indexff();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed& _internal_indexff() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NONNULL _internal_mutable_indexff();
+
+  public:
+  void clear_FullFeedUnion();
+  FullFeedUnionCase FullFeedUnion_case() const;
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
  private:
   class _Internal;
+  void set_has_marketff();
+  void set_has_indexff();
+  [[nodiscard]] inline bool has_FullFeedUnion() const;
+  inline void clear_has_FullFeedUnion();
   using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<1, 2,
+      ::google::protobuf::internal::TcParseTable<0, 2,
                           2, 0,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
@@ -3068,10 +3566,14 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::p
         ::google::protobuf::internal::InternalVisibility visibility,
         ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
         const FullFeed& from_msg);
-    ::google::protobuf::internal::HasBits<1> _has_bits_;
+    union FullFeedUnionUnion {
+      constexpr FullFeedUnionUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE marketff_;
+      ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE indexff_;
+    } FullFeedUnion_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::MarketFullFeed* PROTOBUF_NULLABLE marketff_;
-    ::upstox::IndexFullFeed* PROTOBUF_NULLABLE indexff_;
+    ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3080,7 +3582,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FullFeed final : public ::google::p
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Feed final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.Feed) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed) */ {
  public:
   inline Feed() : Feed(nullptr) {}
   ~Feed() PROTOBUF_FINAL;
@@ -3135,6 +3637,12 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Feed final : public ::google::proto
   [[nodiscard]] static const Feed& default_instance() {
     return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<Feed>(&Feed_globals_);
   }
+  enum FeedUnionCase {
+    kLtpc = 1,
+    kFullFeed = 2,
+    kFirstLevelWithGreeks = 3,
+    FEEDUNION_NOT_SET = 0,
+  };
   static constexpr int kIndexInFileMessages = 10;
   friend void swap(Feed& a, Feed& b) { a.Swap(&b); }
   inline void Swap(Feed* PROTOBUF_NONNULL other) {
@@ -3202,7 +3710,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Feed final : public ::google::proto
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.Feed"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.Feed"; }
 
   explicit Feed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   Feed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Feed& from);
@@ -3227,74 +3735,93 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Feed final : public ::google::proto
 
   // accessors -------------------------------------------------------
   enum : int {
+    kRequestModeFieldNumber = 4,
     kLtpcFieldNumber = 1,
     kFullFeedFieldNumber = 2,
     kFirstLevelWithGreeksFieldNumber = 3,
-    kRequestModeFieldNumber = 4,
   };
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
+  void clear_requestmode() ;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode requestmode() const;
+  void set_requestmode(::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode value);
+
+  private:
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode _internal_requestmode() const;
+  void _internal_set_requestmode(::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode value);
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   [[nodiscard]] bool has_ltpc()
       const;
-  void clear_ltpc() ;
-  [[nodiscard]] const ::upstox::LTPC& ltpc() const;
-  [[nodiscard]] ::upstox::LTPC* PROTOBUF_NULLABLE release_ltpc();
-  ::upstox::LTPC* PROTOBUF_NONNULL mutable_ltpc();
-  void set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value);
-  ::upstox::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
-
   private:
-  const ::upstox::LTPC& _internal_ltpc() const;
-  ::upstox::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
+  bool _internal_has_ltpc() const;
 
   public:
-  // .upstox.FullFeed fullFeed = 2;
+  void clear_ltpc() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& ltpc() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE release_ltpc();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL mutable_ltpc();
+  void set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE unsafe_arena_release_ltpc();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& _internal_ltpc() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL _internal_mutable_ltpc();
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed fullFeed = 2;
   [[nodiscard]] bool has_fullfeed()
       const;
-  void clear_fullfeed() ;
-  [[nodiscard]] const ::upstox::FullFeed& fullfeed() const;
-  [[nodiscard]] ::upstox::FullFeed* PROTOBUF_NULLABLE release_fullfeed();
-  ::upstox::FullFeed* PROTOBUF_NONNULL mutable_fullfeed();
-  void set_allocated_fullfeed(::upstox::FullFeed* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_fullfeed(::upstox::FullFeed* PROTOBUF_NULLABLE value);
-  ::upstox::FullFeed* PROTOBUF_NULLABLE unsafe_arena_release_fullfeed();
-
   private:
-  const ::upstox::FullFeed& _internal_fullfeed() const;
-  ::upstox::FullFeed* PROTOBUF_NONNULL _internal_mutable_fullfeed();
+  bool _internal_has_fullfeed() const;
 
   public:
-  // .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
+  void clear_fullfeed() ;
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed& fullfeed() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE release_fullfeed();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NONNULL mutable_fullfeed();
+  void set_allocated_fullfeed(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_fullfeed(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE unsafe_arena_release_fullfeed();
+
+  private:
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed& _internal_fullfeed() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NONNULL _internal_mutable_fullfeed();
+
+  public:
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks firstLevelWithGreeks = 3;
   [[nodiscard]] bool has_firstlevelwithgreeks()
       const;
+  private:
+  bool _internal_has_firstlevelwithgreeks() const;
+
+  public:
   void clear_firstlevelwithgreeks() ;
-  [[nodiscard]] const ::upstox::FirstLevelWithGreeks& firstlevelwithgreeks() const;
-  [[nodiscard]] ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE release_firstlevelwithgreeks();
-  ::upstox::FirstLevelWithGreeks* PROTOBUF_NONNULL mutable_firstlevelwithgreeks();
-  void set_allocated_firstlevelwithgreeks(::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_firstlevelwithgreeks(::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE value);
-  ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE unsafe_arena_release_firstlevelwithgreeks();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks& firstlevelwithgreeks() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE release_firstlevelwithgreeks();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NONNULL mutable_firstlevelwithgreeks();
+  void set_allocated_firstlevelwithgreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_firstlevelwithgreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE unsafe_arena_release_firstlevelwithgreeks();
 
   private:
-  const ::upstox::FirstLevelWithGreeks& _internal_firstlevelwithgreeks() const;
-  ::upstox::FirstLevelWithGreeks* PROTOBUF_NONNULL _internal_mutable_firstlevelwithgreeks();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks& _internal_firstlevelwithgreeks() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NONNULL _internal_mutable_firstlevelwithgreeks();
 
   public:
-  // .upstox.RequestMode requestMode = 4;
-  void clear_requestmode() ;
-  [[nodiscard]] ::upstox::RequestMode requestmode() const;
-  void set_requestmode(::upstox::RequestMode value);
-
-  private:
-  ::upstox::RequestMode _internal_requestmode() const;
-  void _internal_set_requestmode(::upstox::RequestMode value);
-
-  public:
-  // @@protoc_insertion_point(class_scope:upstox.Feed)
+  void clear_FeedUnion();
+  FeedUnionCase FeedUnion_case() const;
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
  private:
   class _Internal;
+  void set_has_ltpc();
+  void set_has_fullfeed();
+  void set_has_firstlevelwithgreeks();
+  [[nodiscard]] inline bool has_FeedUnion() const;
+  inline void clear_has_FeedUnion();
   using ParseTableT_ =
-      ::google::protobuf::internal::TcParseTable<2, 4,
+      ::google::protobuf::internal::TcParseTable<0, 4,
                           3, 0,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
@@ -3323,10 +3850,15 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED Feed final : public ::google::proto
         const Feed& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::LTPC* PROTOBUF_NULLABLE ltpc_;
-    ::upstox::FullFeed* PROTOBUF_NULLABLE fullfeed_;
-    ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE firstlevelwithgreeks_;
     int requestmode_;
+    union FeedUnionUnion {
+      constexpr FeedUnionUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE ltpc_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE fullfeed_;
+      ::google::protobuf::Message* PROTOBUF_NULLABLE firstlevelwithgreeks_;
+    } FeedUnion_;
+    ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3366,7 +3898,7 @@ class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse_FeedsEntry_DoNotUse fin
 
   using ParseTableT_ =
       ::google::protobuf::internal::TcParseTable<1, 2,
-                          1, 42,
+                          1, 80,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
       const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
@@ -3384,7 +3916,7 @@ class PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse_FeedsEntry_DoNotUse fin
 // -------------------------------------------------------------------
 
 class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::google::protobuf::Message
-/* @@protoc_insertion_point(class_definition:upstox.FeedResponse) */ {
+/* @@protoc_insertion_point(class_definition:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse) */ {
  public:
   inline FeedResponse() : FeedResponse(nullptr) {}
   ~FeedResponse() PROTOBUF_FINAL;
@@ -3439,7 +3971,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
   [[nodiscard]] static const FeedResponse& default_instance() {
     return *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<FeedResponse>(&FeedResponse_globals_);
   }
-  static constexpr int kIndexInFileMessages = 14;
+  static constexpr int kIndexInFileMessages = 17;
   friend void swap(FeedResponse& a, FeedResponse& b) { a.Swap(&b); }
   inline void Swap(FeedResponse* PROTOBUF_NONNULL other) {
     if (other == this) return;
@@ -3506,7 +4038,7 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
  private:
   template <typename T>
   friend ::absl::string_view(::google::protobuf::internal::GetAnyMessageName)();
-  static ::absl::string_view FullMessageName() { return "upstox.FeedResponse"; }
+  static ::absl::string_view FullMessageName() { return "com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse"; }
 
   explicit FeedResponse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena);
   FeedResponse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const FeedResponse& from);
@@ -3536,20 +4068,20 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
     kTypeFieldNumber = 1,
     kFeedsFieldNumber = 2,
   };
-  // .upstox.MarketInfo marketInfo = 4;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
   [[nodiscard]] bool has_marketinfo()
       const;
   void clear_marketinfo() ;
-  [[nodiscard]] const ::upstox::MarketInfo& marketinfo() const;
-  [[nodiscard]] ::upstox::MarketInfo* PROTOBUF_NULLABLE release_marketinfo();
-  ::upstox::MarketInfo* PROTOBUF_NONNULL mutable_marketinfo();
-  void set_allocated_marketinfo(::upstox::MarketInfo* PROTOBUF_NULLABLE value);
-  void unsafe_arena_set_allocated_marketinfo(::upstox::MarketInfo* PROTOBUF_NULLABLE value);
-  ::upstox::MarketInfo* PROTOBUF_NULLABLE unsafe_arena_release_marketinfo();
+  [[nodiscard]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo& marketinfo() const;
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE release_marketinfo();
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NONNULL mutable_marketinfo();
+  void set_allocated_marketinfo(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE value);
+  void unsafe_arena_set_allocated_marketinfo(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE unsafe_arena_release_marketinfo();
 
   private:
-  const ::upstox::MarketInfo& _internal_marketinfo() const;
-  ::upstox::MarketInfo* PROTOBUF_NONNULL _internal_mutable_marketinfo();
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo& _internal_marketinfo() const;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NONNULL _internal_mutable_marketinfo();
 
   public:
   // int64 currentTs = 3;
@@ -3562,17 +4094,17 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
   void _internal_set_currentts(::int64_t value);
 
   public:
-  // .upstox.Type type = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
   void clear_type() ;
-  [[nodiscard]] ::upstox::Type type() const;
-  void set_type(::upstox::Type value);
+  [[nodiscard]] ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type type() const;
+  void set_type(::com::upstox::marketdatafeederv3udapi::rpc::proto::Type value);
 
   private:
-  ::upstox::Type _internal_type() const;
-  void _internal_set_type(::upstox::Type value);
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type _internal_type() const;
+  void _internal_set_type(::com::upstox::marketdatafeederv3udapi::rpc::proto::Type value);
 
   public:
-  // map<string, .upstox.Feed> feeds = 2;
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed> feeds = 2;
   [[nodiscard]] int feeds_size()
       const;
   private:
@@ -3580,20 +4112,20 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
 
   public:
   void clear_feeds() ;
-  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::upstox::Feed>& feeds() const;
-  [[nodiscard]] ::google::protobuf::Map<::std::string, ::upstox::Feed>* PROTOBUF_NONNULL mutable_feeds();
+  [[nodiscard]] const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>& feeds() const;
+  [[nodiscard]] ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>* PROTOBUF_NONNULL mutable_feeds();
 
   private:
-  const ::google::protobuf::Map<::std::string, ::upstox::Feed>& _internal_feeds() const;
-  ::google::protobuf::Map<::std::string, ::upstox::Feed>* PROTOBUF_NONNULL _internal_mutable_feeds();
+  const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>& _internal_feeds() const;
+  ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>* PROTOBUF_NONNULL _internal_mutable_feeds();
 
   public:
-  // @@protoc_insertion_point(class_scope:upstox.FeedResponse)
+  // @@protoc_insertion_point(class_scope:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
  private:
   class _Internal;
   using ParseTableT_ =
       ::google::protobuf::internal::TcParseTable<2, 4,
-                          3, 33,
+                          3, 71,
                           2>;
   static constexpr ParseTableT_ InternalGenerateParseTable_(
       const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL class_data);
@@ -3621,10 +4153,10 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
         const FeedResponse& from_msg);
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
-    ::upstox::MarketInfo* PROTOBUF_NULLABLE marketinfo_;
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE marketinfo_;
     ::int64_t currentts_;
     int type_;
-    ::google::protobuf::internal::MapField<FeedResponse_FeedsEntry_DoNotUse, ::std::string, ::upstox::Feed> feeds_;
+    ::google::protobuf::internal::MapField<FeedResponse_FeedsEntry_DoNotUse, ::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed> feeds_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -3651,16 +4183,16 @@ class  PROTOBUF_FUTURE_ADD_EARLY_WARN_UNUSED FeedResponse final : public ::googl
 inline void LTPC::clear_ltp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ltp_ = 0;
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
 inline double LTPC::ltp() const {
-  // @@protoc_insertion_point(field_get:upstox.LTPC.ltp)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltp)
   return _internal_ltp();
 }
 inline void LTPC::set_ltp(double value) {
   _internal_set_ltp(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_set:upstox.LTPC.ltp)
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltp)
 }
 inline double LTPC::_internal_ltp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3675,16 +4207,16 @@ inline void LTPC::_internal_set_ltp(double value) {
 inline void LTPC::clear_ltt() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ltt_ = ::int64_t{0};
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
 inline ::int64_t LTPC::ltt() const {
-  // @@protoc_insertion_point(field_get:upstox.LTPC.ltt)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltt)
   return _internal_ltt();
 }
 inline void LTPC::set_ltt(::int64_t value) {
   _internal_set_ltt(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  // @@protoc_insertion_point(field_set:upstox.LTPC.ltt)
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltt)
 }
 inline ::int64_t LTPC::_internal_ltt() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3699,16 +4231,16 @@ inline void LTPC::_internal_set_ltt(::int64_t value) {
 inline void LTPC::clear_ltq() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.ltq_ = ::int64_t{0};
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
 inline ::int64_t LTPC::ltq() const {
-  // @@protoc_insertion_point(field_get:upstox.LTPC.ltq)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltq)
   return _internal_ltq();
 }
 inline void LTPC::set_ltq(::int64_t value) {
   _internal_set_ltq(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:upstox.LTPC.ltq)
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.ltq)
 }
 inline ::int64_t LTPC::_internal_ltq() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3723,16 +4255,16 @@ inline void LTPC::_internal_set_ltq(::int64_t value) {
 inline void LTPC::clear_cp() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.cp_ = 0;
-  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
 }
 inline double LTPC::cp() const {
-  // @@protoc_insertion_point(field_get:upstox.LTPC.cp)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.cp)
   return _internal_cp();
 }
 inline void LTPC::set_cp(double value) {
   _internal_set_cp(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.LTPC.cp)
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.cp)
 }
 inline double LTPC::_internal_cp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3743,11 +4275,104 @@ inline void LTPC::_internal_set_cp(double value) {
   _impl_.cp_ = value;
 }
 
+// .google.protobuf.DoubleValue iep = 5;
+inline bool LTPC::has_iep() const {
+  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
+  PROTOBUF_ASSUME(!value || _impl_.iep_ != nullptr);
+  return value;
+}
+inline const ::google::protobuf::DoubleValue& LTPC::_internal_iep() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::google::protobuf::DoubleValue* p = _impl_.iep_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::google::protobuf::DoubleValue>(&::google::protobuf::DoubleValue_globals_);
+}
+inline const ::google::protobuf::DoubleValue& LTPC::iep() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.iep)
+  return _internal_iep();
+}
+inline void LTPC::unsafe_arena_set_allocated_iep(
+    ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.iep_);
+  }
+  _impl_.iep_ = reinterpret_cast<::google::protobuf::DoubleValue*>(value);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.iep)
+}
+inline ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE LTPC::release_iep() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::google::protobuf::DoubleValue* released = _impl_.iep_;
+  _impl_.iep_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::google::protobuf::DoubleValue* PROTOBUF_NULLABLE LTPC::unsafe_arena_release_iep() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.iep)
+
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::google::protobuf::DoubleValue* temp = _impl_.iep_;
+  _impl_.iep_ = nullptr;
+  return temp;
+}
+inline ::google::protobuf::DoubleValue* PROTOBUF_NONNULL LTPC::_internal_mutable_iep() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.iep_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::google::protobuf::DoubleValue>(GetArena());
+    _impl_.iep_ = reinterpret_cast<::google::protobuf::DoubleValue*>(p);
+  }
+  return _impl_.iep_;
+}
+inline ::google::protobuf::DoubleValue* PROTOBUF_NONNULL LTPC::mutable_iep()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::google::protobuf::DoubleValue* _msg = _internal_mutable_iep();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.iep)
+  return _msg;
+}
+inline void LTPC::set_allocated_iep(::google::protobuf::DoubleValue* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.iep_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::Message*>(value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+
+  _impl_.iep_ = reinterpret_cast<::google::protobuf::DoubleValue*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC.iep)
+}
+
 // -------------------------------------------------------------------
 
 // MarketLevel
 
-// repeated .upstox.Quote bidAskQuote = 1;
+// repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
 inline int MarketLevel::_internal_bidaskquote_size() const {
   return _internal_bidaskquote().size();
 }
@@ -3759,44 +4384,44 @@ inline void MarketLevel::clear_bidaskquote() {
   _impl_.bidaskquote_.Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::Quote& MarketLevel::bidaskquote(int index) const
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& MarketLevel::bidaskquote(int index) const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketLevel.bidAskQuote)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel.bidAskQuote)
   return _internal_bidaskquote().Get(index);
 }
-inline ::upstox::Quote* PROTOBUF_NONNULL MarketLevel::mutable_bidaskquote(int index)
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL MarketLevel::mutable_bidaskquote(int index)
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable:upstox.MarketLevel.bidAskQuote)
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel.bidAskQuote)
   return _internal_mutable_bidaskquote()->Mutable(index);
 }
-inline ::upstox::Quote* PROTOBUF_NONNULL MarketLevel::add_bidaskquote()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL MarketLevel::add_bidaskquote()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  ::upstox::Quote* _add =
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* _add =
       _internal_mutable_bidaskquote()->InternalAddWithArena(
           ::google::protobuf::MessageLite::internal_visibility(), GetArena());
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_add:upstox.MarketLevel.bidAskQuote)
+  // @@protoc_insertion_point(field_add:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel.bidAskQuote)
   return _add;
 }
-inline const ::google::protobuf::RepeatedPtrField<::upstox::Quote>& MarketLevel::bidaskquote() const
+inline const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>& MarketLevel::bidaskquote() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_list:upstox.MarketLevel.bidAskQuote)
+  // @@protoc_insertion_point(field_list:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel.bidAskQuote)
   return _internal_bidaskquote();
 }
-inline ::google::protobuf::RepeatedPtrField<::upstox::Quote>* PROTOBUF_NONNULL
+inline ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>* PROTOBUF_NONNULL
 MarketLevel::mutable_bidaskquote() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_mutable_list:upstox.MarketLevel.bidAskQuote)
+  // @@protoc_insertion_point(field_mutable_list:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel.bidAskQuote)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _internal_mutable_bidaskquote();
 }
-inline const ::google::protobuf::RepeatedPtrField<::upstox::Quote>&
+inline const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>&
 MarketLevel::_internal_bidaskquote() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.bidaskquote_;
 }
-inline ::google::protobuf::RepeatedPtrField<::upstox::Quote>* PROTOBUF_NONNULL
+inline ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>* PROTOBUF_NONNULL
 MarketLevel::_internal_mutable_bidaskquote() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.bidaskquote_;
@@ -3806,7 +4431,7 @@ MarketLevel::_internal_mutable_bidaskquote() {
 
 // MarketOHLC
 
-// repeated .upstox.OHLC ohlc = 1;
+// repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
 inline int MarketOHLC::_internal_ohlc_size() const {
   return _internal_ohlc().size();
 }
@@ -3818,44 +4443,44 @@ inline void MarketOHLC::clear_ohlc() {
   _impl_.ohlc_.Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::OHLC& MarketOHLC::ohlc(int index) const
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC& MarketOHLC::ohlc(int index) const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketOHLC.ohlc)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC.ohlc)
   return _internal_ohlc().Get(index);
 }
-inline ::upstox::OHLC* PROTOBUF_NONNULL MarketOHLC::mutable_ohlc(int index)
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC* PROTOBUF_NONNULL MarketOHLC::mutable_ohlc(int index)
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_mutable:upstox.MarketOHLC.ohlc)
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC.ohlc)
   return _internal_mutable_ohlc()->Mutable(index);
 }
-inline ::upstox::OHLC* PROTOBUF_NONNULL MarketOHLC::add_ohlc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC* PROTOBUF_NONNULL MarketOHLC::add_ohlc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  ::upstox::OHLC* _add =
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC* _add =
       _internal_mutable_ohlc()->InternalAddWithArena(
           ::google::protobuf::MessageLite::internal_visibility(), GetArena());
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_add:upstox.MarketOHLC.ohlc)
+  // @@protoc_insertion_point(field_add:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC.ohlc)
   return _add;
 }
-inline const ::google::protobuf::RepeatedPtrField<::upstox::OHLC>& MarketOHLC::ohlc() const
+inline const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>& MarketOHLC::ohlc() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_list:upstox.MarketOHLC.ohlc)
+  // @@protoc_insertion_point(field_list:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC.ohlc)
   return _internal_ohlc();
 }
-inline ::google::protobuf::RepeatedPtrField<::upstox::OHLC>* PROTOBUF_NONNULL
+inline ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>* PROTOBUF_NONNULL
 MarketOHLC::mutable_ohlc() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_mutable_list:upstox.MarketOHLC.ohlc)
+  // @@protoc_insertion_point(field_mutable_list:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC.ohlc)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _internal_mutable_ohlc();
 }
-inline const ::google::protobuf::RepeatedPtrField<::upstox::OHLC>&
+inline const ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>&
 MarketOHLC::_internal_ohlc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.ohlc_;
 }
-inline ::google::protobuf::RepeatedPtrField<::upstox::OHLC>* PROTOBUF_NONNULL
+inline ::google::protobuf::RepeatedPtrField<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>* PROTOBUF_NONNULL
 MarketOHLC::_internal_mutable_ohlc() {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return &_impl_.ohlc_;
@@ -3872,13 +4497,13 @@ inline void Quote::clear_bidq() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
 inline ::int64_t Quote::bidq() const {
-  // @@protoc_insertion_point(field_get:upstox.Quote.bidQ)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.bidQ)
   return _internal_bidq();
 }
 inline void Quote::set_bidq(::int64_t value) {
   _internal_set_bidq(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_set:upstox.Quote.bidQ)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.bidQ)
 }
 inline ::int64_t Quote::_internal_bidq() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3896,13 +4521,13 @@ inline void Quote::clear_bidp() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
 inline double Quote::bidp() const {
-  // @@protoc_insertion_point(field_get:upstox.Quote.bidP)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.bidP)
   return _internal_bidp();
 }
 inline void Quote::set_bidp(double value) {
   _internal_set_bidp(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  // @@protoc_insertion_point(field_set:upstox.Quote.bidP)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.bidP)
 }
 inline double Quote::_internal_bidp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3920,13 +4545,13 @@ inline void Quote::clear_askq() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
 inline ::int64_t Quote::askq() const {
-  // @@protoc_insertion_point(field_get:upstox.Quote.askQ)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.askQ)
   return _internal_askq();
 }
 inline void Quote::set_askq(::int64_t value) {
   _internal_set_askq(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:upstox.Quote.askQ)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.askQ)
 }
 inline ::int64_t Quote::_internal_askq() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3944,13 +4569,13 @@ inline void Quote::clear_askp() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
 inline double Quote::askp() const {
-  // @@protoc_insertion_point(field_get:upstox.Quote.askP)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.askP)
   return _internal_askp();
 }
 inline void Quote::set_askp(double value) {
   _internal_set_askp(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.Quote.askP)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote.askP)
 }
 inline double Quote::_internal_askp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3972,13 +4597,13 @@ inline void OptionGreeks::clear_delta() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
 inline double OptionGreeks::delta() const {
-  // @@protoc_insertion_point(field_get:upstox.OptionGreeks.delta)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.delta)
   return _internal_delta();
 }
 inline void OptionGreeks::set_delta(double value) {
   _internal_set_delta(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_set:upstox.OptionGreeks.delta)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.delta)
 }
 inline double OptionGreeks::_internal_delta() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -3996,13 +4621,13 @@ inline void OptionGreeks::clear_theta() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
 inline double OptionGreeks::theta() const {
-  // @@protoc_insertion_point(field_get:upstox.OptionGreeks.theta)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.theta)
   return _internal_theta();
 }
 inline void OptionGreeks::set_theta(double value) {
   _internal_set_theta(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  // @@protoc_insertion_point(field_set:upstox.OptionGreeks.theta)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.theta)
 }
 inline double OptionGreeks::_internal_theta() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4020,13 +4645,13 @@ inline void OptionGreeks::clear_gamma() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
 inline double OptionGreeks::gamma() const {
-  // @@protoc_insertion_point(field_get:upstox.OptionGreeks.gamma)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.gamma)
   return _internal_gamma();
 }
 inline void OptionGreeks::set_gamma(double value) {
   _internal_set_gamma(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:upstox.OptionGreeks.gamma)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.gamma)
 }
 inline double OptionGreeks::_internal_gamma() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4044,13 +4669,13 @@ inline void OptionGreeks::clear_vega() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
 inline double OptionGreeks::vega() const {
-  // @@protoc_insertion_point(field_get:upstox.OptionGreeks.vega)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.vega)
   return _internal_vega();
 }
 inline void OptionGreeks::set_vega(double value) {
   _internal_set_vega(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.OptionGreeks.vega)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.vega)
 }
 inline double OptionGreeks::_internal_vega() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4068,13 +4693,13 @@ inline void OptionGreeks::clear_rho() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
 }
 inline double OptionGreeks::rho() const {
-  // @@protoc_insertion_point(field_get:upstox.OptionGreeks.rho)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.rho)
   return _internal_rho();
 }
 inline void OptionGreeks::set_rho(double value) {
   _internal_set_rho(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:upstox.OptionGreeks.rho)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks.rho)
 }
 inline double OptionGreeks::_internal_rho() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4097,7 +4722,7 @@ inline void OHLC::clear_interval() {
 }
 inline const ::std::string& OHLC::interval() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.interval)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval)
   return _internal_interval();
 }
 template <typename Arg_, typename... Args_>
@@ -4105,13 +4730,13 @@ PROTOBUF_ALWAYS_INLINE void OHLC::set_interval(Arg_&& arg, Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   _impl_.interval_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:upstox.OHLC.interval)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval)
 }
 inline ::std::string* PROTOBUF_NONNULL OHLC::mutable_interval()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   ::std::string* _s = _internal_mutable_interval();
-  // @@protoc_insertion_point(field_mutable:upstox.OHLC.interval)
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval)
   return _s;
 }
 inline const ::std::string& OHLC::_internal_interval() const {
@@ -4128,7 +4753,7 @@ inline ::std::string* PROTOBUF_NONNULL OHLC::_internal_mutable_interval() {
 }
 inline ::std::string* PROTOBUF_NULLABLE OHLC::release_interval() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.OHLC.interval)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval)
   if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
     return nullptr;
   }
@@ -4150,7 +4775,7 @@ inline void OHLC::set_allocated_interval(::std::string* PROTOBUF_NULLABLE value)
   if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.interval_.IsDefault()) {
     _impl_.interval_.Set("", GetArena());
   }
-  // @@protoc_insertion_point(field_set_allocated:upstox.OHLC.interval)
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval)
 }
 
 // double open = 2;
@@ -4160,13 +4785,13 @@ inline void OHLC::clear_open() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
 inline double OHLC::open() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.open)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.open)
   return _internal_open();
 }
 inline void OHLC::set_open(double value) {
   _internal_set_open(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.open)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.open)
 }
 inline double OHLC::_internal_open() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4184,13 +4809,13 @@ inline void OHLC::clear_high() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
 inline double OHLC::high() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.high)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.high)
   return _internal_high();
 }
 inline void OHLC::set_high(double value) {
   _internal_set_high(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.high)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.high)
 }
 inline double OHLC::_internal_high() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4208,13 +4833,13 @@ inline void OHLC::clear_low() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
 inline double OHLC::low() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.low)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.low)
   return _internal_low();
 }
 inline void OHLC::set_low(double value) {
   _internal_set_low(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.low)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.low)
 }
 inline double OHLC::_internal_low() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4232,13 +4857,13 @@ inline void OHLC::clear_close() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
 }
 inline double OHLC::close() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.close)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.close)
   return _internal_close();
 }
 inline void OHLC::set_close(double value) {
   _internal_set_close(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.close)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.close)
 }
 inline double OHLC::_internal_close() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4256,13 +4881,13 @@ inline void OHLC::clear_vol() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
 }
 inline ::int64_t OHLC::vol() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.vol)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.vol)
   return _internal_vol();
 }
 inline void OHLC::set_vol(::int64_t value) {
   _internal_set_vol(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000020U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.vol)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.vol)
 }
 inline ::int64_t OHLC::_internal_vol() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4280,13 +4905,13 @@ inline void OHLC::clear_ts() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
 }
 inline ::int64_t OHLC::ts() const {
-  // @@protoc_insertion_point(field_get:upstox.OHLC.ts)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.ts)
   return _internal_ts();
 }
 inline void OHLC::set_ts(::int64_t value) {
   _internal_set_ts(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000040U);
-  // @@protoc_insertion_point(field_set:upstox.OHLC.ts)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.ts)
 }
 inline ::int64_t OHLC::_internal_ts() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4301,7 +4926,7 @@ inline void OHLC::_internal_set_ts(::int64_t value) {
 
 // MarketFullFeed
 
-// .upstox.LTPC ltpc = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
 inline bool MarketFullFeed::has_ltpc() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.ltpc_ != nullptr);
@@ -4312,34 +4937,34 @@ inline void MarketFullFeed::clear_ltpc() {
   if (_impl_.ltpc_ != nullptr) _impl_.ltpc_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::LTPC& MarketFullFeed::_internal_ltpc() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& MarketFullFeed::_internal_ltpc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::LTPC* p = _impl_.ltpc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::LTPC>(&::upstox::LTPC_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* p = _impl_.ltpc_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_);
 }
-inline const ::upstox::LTPC& MarketFullFeed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.ltpc)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& MarketFullFeed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ltpc)
   return _internal_ltpc();
 }
 inline void MarketFullFeed::unsafe_arena_set_allocated_ltpc(
-    ::upstox::LTPC* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.ltpc_);
   }
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.MarketFullFeed.ltpc)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ltpc)
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE MarketFullFeed::release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE MarketFullFeed::release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* released = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* released = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4354,31 +4979,31 @@ inline ::upstox::LTPC* PROTOBUF_NULLABLE MarketFullFeed::release_ltpc() {
   }
   return released;
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.MarketFullFeed.ltpc)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ltpc)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* temp = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* temp = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   return temp;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.ltpc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::LTPC>(GetArena());
-    _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(GetArena());
+    _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(p);
   }
   return _impl_.ltpc_;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL MarketFullFeed::mutable_ltpc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL MarketFullFeed::mutable_ltpc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* _msg = _internal_mutable_ltpc();
-  // @@protoc_insertion_point(field_mutable:upstox.MarketFullFeed.ltpc)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* _msg = _internal_mutable_ltpc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ltpc)
   return _msg;
 }
-inline void MarketFullFeed::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value) {
+inline void MarketFullFeed::set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -4395,11 +5020,11 @@ inline void MarketFullFeed::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
 
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.MarketFullFeed.ltpc)
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ltpc)
 }
 
-// .upstox.MarketLevel marketLevel = 2;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
 inline bool MarketFullFeed::has_marketlevel() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.marketlevel_ != nullptr);
@@ -4410,34 +5035,34 @@ inline void MarketFullFeed::clear_marketlevel() {
   if (_impl_.marketlevel_ != nullptr) _impl_.marketlevel_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
-inline const ::upstox::MarketLevel& MarketFullFeed::_internal_marketlevel() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel& MarketFullFeed::_internal_marketlevel() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::MarketLevel* p = _impl_.marketlevel_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::MarketLevel>(&::upstox::MarketLevel_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* p = _impl_.marketlevel_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel_globals_);
 }
-inline const ::upstox::MarketLevel& MarketFullFeed::marketlevel() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.marketLevel)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel& MarketFullFeed::marketlevel() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketLevel)
   return _internal_marketlevel();
 }
 inline void MarketFullFeed::unsafe_arena_set_allocated_marketlevel(
-    ::upstox::MarketLevel* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketlevel_);
   }
-  _impl_.marketlevel_ = reinterpret_cast<::upstox::MarketLevel*>(value);
+  _impl_.marketlevel_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.MarketFullFeed.marketLevel)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketLevel)
 }
-inline ::upstox::MarketLevel* PROTOBUF_NULLABLE MarketFullFeed::release_marketlevel() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE MarketFullFeed::release_marketlevel() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketLevel* released = _impl_.marketlevel_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* released = _impl_.marketlevel_;
   _impl_.marketlevel_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4452,31 +5077,31 @@ inline ::upstox::MarketLevel* PROTOBUF_NULLABLE MarketFullFeed::release_marketle
   }
   return released;
 }
-inline ::upstox::MarketLevel* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_marketlevel() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_marketlevel() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.MarketFullFeed.marketLevel)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketLevel)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketLevel* temp = _impl_.marketlevel_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* temp = _impl_.marketlevel_;
   _impl_.marketlevel_ = nullptr;
   return temp;
 }
-inline ::upstox::MarketLevel* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_marketlevel() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_marketlevel() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.marketlevel_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::MarketLevel>(GetArena());
-    _impl_.marketlevel_ = reinterpret_cast<::upstox::MarketLevel*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel>(GetArena());
+    _impl_.marketlevel_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel*>(p);
   }
   return _impl_.marketlevel_;
 }
-inline ::upstox::MarketLevel* PROTOBUF_NONNULL MarketFullFeed::mutable_marketlevel()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NONNULL MarketFullFeed::mutable_marketlevel()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketLevel* _msg = _internal_mutable_marketlevel();
-  // @@protoc_insertion_point(field_mutable:upstox.MarketFullFeed.marketLevel)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* _msg = _internal_mutable_marketlevel();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketLevel)
   return _msg;
 }
-inline void MarketFullFeed::set_allocated_marketlevel(::upstox::MarketLevel* PROTOBUF_NULLABLE value) {
+inline void MarketFullFeed::set_allocated_marketlevel(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -4493,11 +5118,11 @@ inline void MarketFullFeed::set_allocated_marketlevel(::upstox::MarketLevel* PRO
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
 
-  _impl_.marketlevel_ = reinterpret_cast<::upstox::MarketLevel*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.MarketFullFeed.marketLevel)
+  _impl_.marketlevel_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketLevel)
 }
 
-// .upstox.OptionGreeks optionGreeks = 3;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
 inline bool MarketFullFeed::has_optiongreeks() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.optiongreeks_ != nullptr);
@@ -4508,34 +5133,34 @@ inline void MarketFullFeed::clear_optiongreeks() {
   if (_impl_.optiongreeks_ != nullptr) _impl_.optiongreeks_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
-inline const ::upstox::OptionGreeks& MarketFullFeed::_internal_optiongreeks() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& MarketFullFeed::_internal_optiongreeks() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::OptionGreeks* p = _impl_.optiongreeks_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::OptionGreeks>(&::upstox::OptionGreeks_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* p = _impl_.optiongreeks_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks_globals_);
 }
-inline const ::upstox::OptionGreeks& MarketFullFeed::optiongreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.optionGreeks)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& MarketFullFeed::optiongreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.optionGreeks)
   return _internal_optiongreeks();
 }
 inline void MarketFullFeed::unsafe_arena_set_allocated_optiongreeks(
-    ::upstox::OptionGreeks* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.optiongreeks_);
   }
-  _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(value);
+  _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.MarketFullFeed.optionGreeks)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.optionGreeks)
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE MarketFullFeed::release_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE MarketFullFeed::release_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* released = _impl_.optiongreeks_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* released = _impl_.optiongreeks_;
   _impl_.optiongreeks_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4550,31 +5175,31 @@ inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE MarketFullFeed::release_optiong
   }
   return released;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.MarketFullFeed.optionGreeks)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.optionGreeks)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* temp = _impl_.optiongreeks_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* temp = _impl_.optiongreeks_;
   _impl_.optiongreeks_ = nullptr;
   return temp;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.optiongreeks_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::OptionGreeks>(GetArena());
-    _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>(GetArena());
+    _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(p);
   }
   return _impl_.optiongreeks_;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NONNULL MarketFullFeed::mutable_optiongreeks()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL MarketFullFeed::mutable_optiongreeks()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* _msg = _internal_mutable_optiongreeks();
-  // @@protoc_insertion_point(field_mutable:upstox.MarketFullFeed.optionGreeks)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* _msg = _internal_mutable_optiongreeks();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.optionGreeks)
   return _msg;
 }
-inline void MarketFullFeed::set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value) {
+inline void MarketFullFeed::set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -4591,11 +5216,11 @@ inline void MarketFullFeed::set_allocated_optiongreeks(::upstox::OptionGreeks* P
     ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   }
 
-  _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.MarketFullFeed.optionGreeks)
+  _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.optionGreeks)
 }
 
-// .upstox.MarketOHLC marketOHLC = 4;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
 inline bool MarketFullFeed::has_marketohlc() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000008U);
   PROTOBUF_ASSUME(!value || _impl_.marketohlc_ != nullptr);
@@ -4606,34 +5231,34 @@ inline void MarketFullFeed::clear_marketohlc() {
   if (_impl_.marketohlc_ != nullptr) _impl_.marketohlc_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
-inline const ::upstox::MarketOHLC& MarketFullFeed::_internal_marketohlc() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& MarketFullFeed::_internal_marketohlc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::MarketOHLC* p = _impl_.marketohlc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::MarketOHLC>(&::upstox::MarketOHLC_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* p = _impl_.marketohlc_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC_globals_);
 }
-inline const ::upstox::MarketOHLC& MarketFullFeed::marketohlc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.marketOHLC)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& MarketFullFeed::marketohlc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketOHLC)
   return _internal_marketohlc();
 }
 inline void MarketFullFeed::unsafe_arena_set_allocated_marketohlc(
-    ::upstox::MarketOHLC* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketohlc_);
   }
-  _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(value);
+  _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.MarketFullFeed.marketOHLC)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketOHLC)
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE MarketFullFeed::release_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE MarketFullFeed::release_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
-  ::upstox::MarketOHLC* released = _impl_.marketohlc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* released = _impl_.marketohlc_;
   _impl_.marketohlc_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4648,31 +5273,31 @@ inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE MarketFullFeed::release_marketohl
   }
   return released;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE MarketFullFeed::unsafe_arena_release_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.MarketFullFeed.marketOHLC)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketOHLC)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
-  ::upstox::MarketOHLC* temp = _impl_.marketohlc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* temp = _impl_.marketohlc_;
   _impl_.marketohlc_ = nullptr;
   return temp;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL MarketFullFeed::_internal_mutable_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.marketohlc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::MarketOHLC>(GetArena());
-    _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>(GetArena());
+    _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(p);
   }
   return _impl_.marketohlc_;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NONNULL MarketFullFeed::mutable_marketohlc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL MarketFullFeed::mutable_marketohlc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  ::upstox::MarketOHLC* _msg = _internal_mutable_marketohlc();
-  // @@protoc_insertion_point(field_mutable:upstox.MarketFullFeed.marketOHLC)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* _msg = _internal_mutable_marketohlc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketOHLC)
   return _msg;
 }
-inline void MarketFullFeed::set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value) {
+inline void MarketFullFeed::set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -4689,8 +5314,8 @@ inline void MarketFullFeed::set_allocated_marketohlc(::upstox::MarketOHLC* PROTO
     ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
   }
 
-  _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.MarketFullFeed.marketOHLC)
+  _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.marketOHLC)
 }
 
 // double atp = 5;
@@ -4700,13 +5325,13 @@ inline void MarketFullFeed::clear_atp() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
 }
 inline double MarketFullFeed::atp() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.atp)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.atp)
   return _internal_atp();
 }
 inline void MarketFullFeed::set_atp(double value) {
   _internal_set_atp(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.atp)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.atp)
 }
 inline double MarketFullFeed::_internal_atp() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4724,13 +5349,13 @@ inline void MarketFullFeed::clear_vtt() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
 }
 inline ::int64_t MarketFullFeed::vtt() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.vtt)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.vtt)
   return _internal_vtt();
 }
 inline void MarketFullFeed::set_vtt(::int64_t value) {
   _internal_set_vtt(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000020U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.vtt)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.vtt)
 }
 inline ::int64_t MarketFullFeed::_internal_vtt() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4748,13 +5373,13 @@ inline void MarketFullFeed::clear_oi() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000040U);
 }
 inline double MarketFullFeed::oi() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.oi)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.oi)
   return _internal_oi();
 }
 inline void MarketFullFeed::set_oi(double value) {
   _internal_set_oi(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000040U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.oi)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.oi)
 }
 inline double MarketFullFeed::_internal_oi() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4772,13 +5397,13 @@ inline void MarketFullFeed::clear_iv() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000080U);
 }
 inline double MarketFullFeed::iv() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.iv)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iv)
   return _internal_iv();
 }
 inline void MarketFullFeed::set_iv(double value) {
   _internal_set_iv(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000080U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.iv)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iv)
 }
 inline double MarketFullFeed::_internal_iv() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4796,13 +5421,13 @@ inline void MarketFullFeed::clear_tbq() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000100U);
 }
 inline double MarketFullFeed::tbq() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.tbq)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.tbq)
   return _internal_tbq();
 }
 inline void MarketFullFeed::set_tbq(double value) {
   _internal_set_tbq(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000100U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.tbq)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.tbq)
 }
 inline double MarketFullFeed::_internal_tbq() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4820,13 +5445,13 @@ inline void MarketFullFeed::clear_tsq() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000200U);
 }
 inline double MarketFullFeed::tsq() const {
-  // @@protoc_insertion_point(field_get:upstox.MarketFullFeed.tsq)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.tsq)
   return _internal_tsq();
 }
 inline void MarketFullFeed::set_tsq(double value) {
   _internal_set_tsq(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000200U);
-  // @@protoc_insertion_point(field_set:upstox.MarketFullFeed.tsq)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.tsq)
 }
 inline double MarketFullFeed::_internal_tsq() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -4837,11 +5462,155 @@ inline void MarketFullFeed::_internal_set_tsq(double value) {
   _impl_.tsq_ = value;
 }
 
+// double iep = 11;
+inline void MarketFullFeed::clear_iep() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iep_ = 0;
+  ClearHasBit(_impl_._has_bits_[0], 0x00000400U);
+}
+inline double MarketFullFeed::iep() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iep)
+  return _internal_iep();
+}
+inline void MarketFullFeed::set_iep(double value) {
+  _internal_set_iep(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000400U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iep)
+}
+inline double MarketFullFeed::_internal_iep() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.iep_;
+}
+inline void MarketFullFeed::_internal_set_iep(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iep_ = value;
+}
+
+// double rp = 12;
+inline void MarketFullFeed::clear_rp() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rp_ = 0;
+  ClearHasBit(_impl_._has_bits_[0], 0x00000800U);
+}
+inline double MarketFullFeed::rp() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.rp)
+  return _internal_rp();
+}
+inline void MarketFullFeed::set_rp(double value) {
+  _internal_set_rp(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000800U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.rp)
+}
+inline double MarketFullFeed::_internal_rp() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.rp_;
+}
+inline void MarketFullFeed::_internal_set_rp(double value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.rp_ = value;
+}
+
+// int64 ieq = 13;
+inline void MarketFullFeed::clear_ieq() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.ieq_ = ::int64_t{0};
+  ClearHasBit(_impl_._has_bits_[0], 0x00001000U);
+}
+inline ::int64_t MarketFullFeed::ieq() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ieq)
+  return _internal_ieq();
+}
+inline void MarketFullFeed::set_ieq(::int64_t value) {
+  _internal_set_ieq(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00001000U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.ieq)
+}
+inline ::int64_t MarketFullFeed::_internal_ieq() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.ieq_;
+}
+inline void MarketFullFeed::_internal_set_ieq(::int64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.ieq_ = value;
+}
+
+// int64 iiqTotal = 14;
+inline void MarketFullFeed::clear_iiqtotal() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iiqtotal_ = ::int64_t{0};
+  ClearHasBit(_impl_._has_bits_[0], 0x00002000U);
+}
+inline ::int64_t MarketFullFeed::iiqtotal() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iiqTotal)
+  return _internal_iiqtotal();
+}
+inline void MarketFullFeed::set_iiqtotal(::int64_t value) {
+  _internal_set_iiqtotal(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00002000U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iiqTotal)
+}
+inline ::int64_t MarketFullFeed::_internal_iiqtotal() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.iiqtotal_;
+}
+inline void MarketFullFeed::_internal_set_iiqtotal(::int64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iiqtotal_ = value;
+}
+
+// int64 iiqM = 15;
+inline void MarketFullFeed::clear_iiqm() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iiqm_ = ::int64_t{0};
+  ClearHasBit(_impl_._has_bits_[0], 0x00004000U);
+}
+inline ::int64_t MarketFullFeed::iiqm() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iiqM)
+  return _internal_iiqm();
+}
+inline void MarketFullFeed::set_iiqm(::int64_t value) {
+  _internal_set_iiqm(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00004000U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.iiqM)
+}
+inline ::int64_t MarketFullFeed::_internal_iiqm() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.iiqm_;
+}
+inline void MarketFullFeed::_internal_set_iiqm(::int64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.iiqm_ = value;
+}
+
+// bool casEligible = 16;
+inline void MarketFullFeed::clear_caseligible() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.caseligible_ = false;
+  ClearHasBit(_impl_._has_bits_[0], 0x00008000U);
+}
+inline bool MarketFullFeed::caseligible() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.casEligible)
+  return _internal_caseligible();
+}
+inline void MarketFullFeed::set_caseligible(bool value) {
+  _internal_set_caseligible(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00008000U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed.casEligible)
+}
+inline bool MarketFullFeed::_internal_caseligible() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.caseligible_;
+}
+inline void MarketFullFeed::_internal_set_caseligible(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.caseligible_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // IndexFullFeed
 
-// .upstox.LTPC ltpc = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
 inline bool IndexFullFeed::has_ltpc() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.ltpc_ != nullptr);
@@ -4852,34 +5621,34 @@ inline void IndexFullFeed::clear_ltpc() {
   if (_impl_.ltpc_ != nullptr) _impl_.ltpc_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::LTPC& IndexFullFeed::_internal_ltpc() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& IndexFullFeed::_internal_ltpc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::LTPC* p = _impl_.ltpc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::LTPC>(&::upstox::LTPC_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* p = _impl_.ltpc_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_);
 }
-inline const ::upstox::LTPC& IndexFullFeed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.IndexFullFeed.ltpc)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& IndexFullFeed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.ltpc)
   return _internal_ltpc();
 }
 inline void IndexFullFeed::unsafe_arena_set_allocated_ltpc(
-    ::upstox::LTPC* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.ltpc_);
   }
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.IndexFullFeed.ltpc)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.ltpc)
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE IndexFullFeed::release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE IndexFullFeed::release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* released = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* released = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4894,31 +5663,31 @@ inline ::upstox::LTPC* PROTOBUF_NULLABLE IndexFullFeed::release_ltpc() {
   }
   return released;
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE IndexFullFeed::unsafe_arena_release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE IndexFullFeed::unsafe_arena_release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.IndexFullFeed.ltpc)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.ltpc)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* temp = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* temp = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   return temp;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL IndexFullFeed::_internal_mutable_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL IndexFullFeed::_internal_mutable_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.ltpc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::LTPC>(GetArena());
-    _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(GetArena());
+    _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(p);
   }
   return _impl_.ltpc_;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL IndexFullFeed::mutable_ltpc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL IndexFullFeed::mutable_ltpc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* _msg = _internal_mutable_ltpc();
-  // @@protoc_insertion_point(field_mutable:upstox.IndexFullFeed.ltpc)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* _msg = _internal_mutable_ltpc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.ltpc)
   return _msg;
 }
-inline void IndexFullFeed::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value) {
+inline void IndexFullFeed::set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -4935,11 +5704,11 @@ inline void IndexFullFeed::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE 
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
 
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.IndexFullFeed.ltpc)
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.ltpc)
 }
 
-// .upstox.MarketOHLC marketOHLC = 2;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
 inline bool IndexFullFeed::has_marketohlc() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.marketohlc_ != nullptr);
@@ -4950,34 +5719,34 @@ inline void IndexFullFeed::clear_marketohlc() {
   if (_impl_.marketohlc_ != nullptr) _impl_.marketohlc_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
-inline const ::upstox::MarketOHLC& IndexFullFeed::_internal_marketohlc() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& IndexFullFeed::_internal_marketohlc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::MarketOHLC* p = _impl_.marketohlc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::MarketOHLC>(&::upstox::MarketOHLC_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* p = _impl_.marketohlc_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC_globals_);
 }
-inline const ::upstox::MarketOHLC& IndexFullFeed::marketohlc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.IndexFullFeed.marketOHLC)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& IndexFullFeed::marketohlc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.marketOHLC)
   return _internal_marketohlc();
 }
 inline void IndexFullFeed::unsafe_arena_set_allocated_marketohlc(
-    ::upstox::MarketOHLC* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketohlc_);
   }
-  _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(value);
+  _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.IndexFullFeed.marketOHLC)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.marketOHLC)
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE IndexFullFeed::release_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE IndexFullFeed::release_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketOHLC* released = _impl_.marketohlc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* released = _impl_.marketohlc_;
   _impl_.marketohlc_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -4992,31 +5761,31 @@ inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE IndexFullFeed::release_marketohlc
   }
   return released;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NULLABLE IndexFullFeed::unsafe_arena_release_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE IndexFullFeed::unsafe_arena_release_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.IndexFullFeed.marketOHLC)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.marketOHLC)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketOHLC* temp = _impl_.marketohlc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* temp = _impl_.marketohlc_;
   _impl_.marketohlc_ = nullptr;
   return temp;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NONNULL IndexFullFeed::_internal_mutable_marketohlc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL IndexFullFeed::_internal_mutable_marketohlc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.marketohlc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::MarketOHLC>(GetArena());
-    _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>(GetArena());
+    _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(p);
   }
   return _impl_.marketohlc_;
 }
-inline ::upstox::MarketOHLC* PROTOBUF_NONNULL IndexFullFeed::mutable_marketohlc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NONNULL IndexFullFeed::mutable_marketohlc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::MarketOHLC* _msg = _internal_mutable_marketohlc();
-  // @@protoc_insertion_point(field_mutable:upstox.IndexFullFeed.marketOHLC)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* _msg = _internal_mutable_marketohlc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.marketOHLC)
   return _msg;
 }
-inline void IndexFullFeed::set_allocated_marketohlc(::upstox::MarketOHLC* PROTOBUF_NULLABLE value) {
+inline void IndexFullFeed::set_allocated_marketohlc(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -5033,215 +5802,192 @@ inline void IndexFullFeed::set_allocated_marketohlc(::upstox::MarketOHLC* PROTOB
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
 
-  _impl_.marketohlc_ = reinterpret_cast<::upstox::MarketOHLC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.IndexFullFeed.marketOHLC)
+  _impl_.marketohlc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed.marketOHLC)
 }
 
 // -------------------------------------------------------------------
 
 // FullFeed
 
-// .upstox.MarketFullFeed marketFF = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed marketFF = 1;
 inline bool FullFeed::has_marketff() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
-  PROTOBUF_ASSUME(!value || _impl_.marketff_ != nullptr);
-  return value;
+  return FullFeedUnion_case() == kMarketFF;
+}
+inline bool FullFeed::_internal_has_marketff() const {
+  return FullFeedUnion_case() == kMarketFF;
+}
+inline void FullFeed::set_has_marketff() {
+  _impl_._oneof_case_[0] = kMarketFF;
 }
 inline void FullFeed::clear_marketff() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.marketff_ != nullptr) _impl_.marketff_->Clear();
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  if (FullFeedUnion_case() == kMarketFF) {
+    if (GetArena() == nullptr) {
+      delete _impl_.FullFeedUnion_.marketff_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FullFeedUnion_.marketff_);
+    }
+    clear_has_FullFeedUnion();
+  }
 }
-inline const ::upstox::MarketFullFeed& FullFeed::_internal_marketff() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::MarketFullFeed* p = _impl_.marketff_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::MarketFullFeed>(&::upstox::MarketFullFeed_globals_);
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE FullFeed::release_marketff() {
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
+  if (FullFeedUnion_case() == kMarketFF) {
+    clear_has_FullFeedUnion();
+    auto* temp = _impl_.FullFeedUnion_.marketff_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.FullFeedUnion_.marketff_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline const ::upstox::MarketFullFeed& FullFeed::marketff() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FullFeed.marketFF)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed& FullFeed::_internal_marketff() const {
+  return FullFeedUnion_case() == kMarketFF ? static_cast<const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed&>(*_impl_.FullFeedUnion_.marketff_)
+                     : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed_globals_);
+}
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed& FullFeed::marketff() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
   return _internal_marketff();
 }
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE FullFeed::unsafe_arena_release_marketff() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
+  if (FullFeedUnion_case() == kMarketFF) {
+    clear_has_FullFeedUnion();
+    auto* temp = _impl_.FullFeedUnion_.marketff_;
+    _impl_.FullFeedUnion_.marketff_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
 inline void FullFeed::unsafe_arena_set_allocated_marketff(
-    ::upstox::MarketFullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketff_);
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_FullFeedUnion();
+  if (value) {
+    set_has_marketff();
+    _impl_.FullFeedUnion_.marketff_ = value;
   }
-  _impl_.marketff_ = reinterpret_cast<::upstox::MarketFullFeed*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
+}
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NONNULL FullFeed::_internal_mutable_marketff() {
+  if (FullFeedUnion_case() != kMarketFF) {
+    clear_FullFeedUnion();
+    set_has_marketff();
+    _impl_.FullFeedUnion_.marketff_ = 
+        ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed>(GetArena());
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FullFeed.marketFF)
+  return _impl_.FullFeedUnion_.marketff_;
 }
-inline ::upstox::MarketFullFeed* PROTOBUF_NULLABLE FullFeed::release_marketff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketFullFeed* released = _impl_.marketff_;
-  _impl_.marketff_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::upstox::MarketFullFeed* PROTOBUF_NULLABLE FullFeed::unsafe_arena_release_marketff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FullFeed.marketFF)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketFullFeed* temp = _impl_.marketff_;
-  _impl_.marketff_ = nullptr;
-  return temp;
-}
-inline ::upstox::MarketFullFeed* PROTOBUF_NONNULL FullFeed::_internal_mutable_marketff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.marketff_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::MarketFullFeed>(GetArena());
-    _impl_.marketff_ = reinterpret_cast<::upstox::MarketFullFeed*>(p);
-  }
-  return _impl_.marketff_;
-}
-inline ::upstox::MarketFullFeed* PROTOBUF_NONNULL FullFeed::mutable_marketff()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NONNULL FullFeed::mutable_marketff()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketFullFeed* _msg = _internal_mutable_marketff();
-  // @@protoc_insertion_point(field_mutable:upstox.FullFeed.marketFF)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* _msg = _internal_mutable_marketff();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
   return _msg;
 }
-inline void FullFeed::set_allocated_marketff(::upstox::MarketFullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketff_);
-  }
 
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = value->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  }
-
-  _impl_.marketff_ = reinterpret_cast<::upstox::MarketFullFeed*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FullFeed.marketFF)
-}
-
-// .upstox.IndexFullFeed indexFF = 2;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed indexFF = 2;
 inline bool FullFeed::has_indexff() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
-  PROTOBUF_ASSUME(!value || _impl_.indexff_ != nullptr);
-  return value;
+  return FullFeedUnion_case() == kIndexFF;
+}
+inline bool FullFeed::_internal_has_indexff() const {
+  return FullFeedUnion_case() == kIndexFF;
+}
+inline void FullFeed::set_has_indexff() {
+  _impl_._oneof_case_[0] = kIndexFF;
 }
 inline void FullFeed::clear_indexff() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.indexff_ != nullptr) _impl_.indexff_->Clear();
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  if (FullFeedUnion_case() == kIndexFF) {
+    if (GetArena() == nullptr) {
+      delete _impl_.FullFeedUnion_.indexff_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FullFeedUnion_.indexff_);
+    }
+    clear_has_FullFeedUnion();
+  }
 }
-inline const ::upstox::IndexFullFeed& FullFeed::_internal_indexff() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::IndexFullFeed* p = _impl_.indexff_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::IndexFullFeed>(&::upstox::IndexFullFeed_globals_);
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE FullFeed::release_indexff() {
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
+  if (FullFeedUnion_case() == kIndexFF) {
+    clear_has_FullFeedUnion();
+    auto* temp = _impl_.FullFeedUnion_.indexff_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.FullFeedUnion_.indexff_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline const ::upstox::IndexFullFeed& FullFeed::indexff() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FullFeed.indexFF)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed& FullFeed::_internal_indexff() const {
+  return FullFeedUnion_case() == kIndexFF ? static_cast<const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed&>(*_impl_.FullFeedUnion_.indexff_)
+                     : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed_globals_);
+}
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed& FullFeed::indexff() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
   return _internal_indexff();
 }
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE FullFeed::unsafe_arena_release_indexff() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
+  if (FullFeedUnion_case() == kIndexFF) {
+    clear_has_FullFeedUnion();
+    auto* temp = _impl_.FullFeedUnion_.indexff_;
+    _impl_.FullFeedUnion_.indexff_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
 inline void FullFeed::unsafe_arena_set_allocated_indexff(
-    ::upstox::IndexFullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.indexff_);
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_FullFeedUnion();
+  if (value) {
+    set_has_indexff();
+    _impl_.FullFeedUnion_.indexff_ = value;
   }
-  _impl_.indexff_ = reinterpret_cast<::upstox::IndexFullFeed*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
+}
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NONNULL FullFeed::_internal_mutable_indexff() {
+  if (FullFeedUnion_case() != kIndexFF) {
+    clear_FullFeedUnion();
+    set_has_indexff();
+    _impl_.FullFeedUnion_.indexff_ = 
+        ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed>(GetArena());
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FullFeed.indexFF)
+  return _impl_.FullFeedUnion_.indexff_;
 }
-inline ::upstox::IndexFullFeed* PROTOBUF_NULLABLE FullFeed::release_indexff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::IndexFullFeed* released = _impl_.indexff_;
-  _impl_.indexff_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::upstox::IndexFullFeed* PROTOBUF_NULLABLE FullFeed::unsafe_arena_release_indexff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FullFeed.indexFF)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::IndexFullFeed* temp = _impl_.indexff_;
-  _impl_.indexff_ = nullptr;
-  return temp;
-}
-inline ::upstox::IndexFullFeed* PROTOBUF_NONNULL FullFeed::_internal_mutable_indexff() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.indexff_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::IndexFullFeed>(GetArena());
-    _impl_.indexff_ = reinterpret_cast<::upstox::IndexFullFeed*>(p);
-  }
-  return _impl_.indexff_;
-}
-inline ::upstox::IndexFullFeed* PROTOBUF_NONNULL FullFeed::mutable_indexff()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NONNULL FullFeed::mutable_indexff()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::IndexFullFeed* _msg = _internal_mutable_indexff();
-  // @@protoc_insertion_point(field_mutable:upstox.FullFeed.indexFF)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* _msg = _internal_mutable_indexff();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
   return _msg;
 }
-inline void FullFeed::set_allocated_indexff(::upstox::IndexFullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.indexff_);
-  }
 
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = value->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-
-  _impl_.indexff_ = reinterpret_cast<::upstox::IndexFullFeed*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FullFeed.indexFF)
+inline bool FullFeed::has_FullFeedUnion() const {
+  return FullFeedUnion_case() != FULLFEEDUNION_NOT_SET;
 }
-
+inline void FullFeed::clear_has_FullFeedUnion() {
+  _impl_._oneof_case_[0] = FULLFEEDUNION_NOT_SET;
+}
+inline FullFeed::FullFeedUnionCase FullFeed::FullFeedUnion_case() const {
+  return FullFeed::FullFeedUnionCase(_impl_._oneof_case_[0]);
+}
 // -------------------------------------------------------------------
 
 // FirstLevelWithGreeks
 
-// .upstox.LTPC ltpc = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
 inline bool FirstLevelWithGreeks::has_ltpc() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.ltpc_ != nullptr);
@@ -5252,34 +5998,34 @@ inline void FirstLevelWithGreeks::clear_ltpc() {
   if (_impl_.ltpc_ != nullptr) _impl_.ltpc_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::LTPC& FirstLevelWithGreeks::_internal_ltpc() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& FirstLevelWithGreeks::_internal_ltpc() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::LTPC* p = _impl_.ltpc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::LTPC>(&::upstox::LTPC_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* p = _impl_.ltpc_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_);
 }
-inline const ::upstox::LTPC& FirstLevelWithGreeks::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.ltpc)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& FirstLevelWithGreeks::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.ltpc)
   return _internal_ltpc();
 }
 inline void FirstLevelWithGreeks::unsafe_arena_set_allocated_ltpc(
-    ::upstox::LTPC* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.ltpc_);
   }
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FirstLevelWithGreeks.ltpc)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.ltpc)
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* released = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* released = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -5294,31 +6040,31 @@ inline ::upstox::LTPC* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_ltpc() {
   }
   return released;
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FirstLevelWithGreeks.ltpc)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.ltpc)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* temp = _impl_.ltpc_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* temp = _impl_.ltpc_;
   _impl_.ltpc_ = nullptr;
   return temp;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_ltpc() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.ltpc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::LTPC>(GetArena());
-    _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(GetArena());
+    _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(p);
   }
   return _impl_.ltpc_;
 }
-inline ::upstox::LTPC* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_ltpc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_ltpc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* _msg = _internal_mutable_ltpc();
-  // @@protoc_insertion_point(field_mutable:upstox.FirstLevelWithGreeks.ltpc)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* _msg = _internal_mutable_ltpc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.ltpc)
   return _msg;
 }
-inline void FirstLevelWithGreeks::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value) {
+inline void FirstLevelWithGreeks::set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -5335,11 +6081,11 @@ inline void FirstLevelWithGreeks::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NU
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
 
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FirstLevelWithGreeks.ltpc)
+  _impl_.ltpc_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.ltpc)
 }
 
-// .upstox.Quote firstDepth = 2;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
 inline bool FirstLevelWithGreeks::has_firstdepth() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
   PROTOBUF_ASSUME(!value || _impl_.firstdepth_ != nullptr);
@@ -5350,34 +6096,34 @@ inline void FirstLevelWithGreeks::clear_firstdepth() {
   if (_impl_.firstdepth_ != nullptr) _impl_.firstdepth_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
-inline const ::upstox::Quote& FirstLevelWithGreeks::_internal_firstdepth() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& FirstLevelWithGreeks::_internal_firstdepth() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::Quote* p = _impl_.firstdepth_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::Quote>(&::upstox::Quote_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* p = _impl_.firstdepth_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote_globals_);
 }
-inline const ::upstox::Quote& FirstLevelWithGreeks::firstdepth() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.firstDepth)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote& FirstLevelWithGreeks::firstdepth() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.firstDepth)
   return _internal_firstdepth();
 }
 inline void FirstLevelWithGreeks::unsafe_arena_set_allocated_firstdepth(
-    ::upstox::Quote* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.firstdepth_);
   }
-  _impl_.firstdepth_ = reinterpret_cast<::upstox::Quote*>(value);
+  _impl_.firstdepth_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000002U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FirstLevelWithGreeks.firstDepth)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.firstDepth)
 }
-inline ::upstox::Quote* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_firstdepth() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_firstdepth() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::Quote* released = _impl_.firstdepth_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* released = _impl_.firstdepth_;
   _impl_.firstdepth_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -5392,31 +6138,31 @@ inline ::upstox::Quote* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_firstdep
   }
   return released;
 }
-inline ::upstox::Quote* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_firstdepth() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_firstdepth() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FirstLevelWithGreeks.firstDepth)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.firstDepth)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::Quote* temp = _impl_.firstdepth_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* temp = _impl_.firstdepth_;
   _impl_.firstdepth_ = nullptr;
   return temp;
 }
-inline ::upstox::Quote* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_firstdepth() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_firstdepth() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.firstdepth_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::Quote>(GetArena());
-    _impl_.firstdepth_ = reinterpret_cast<::upstox::Quote*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>(GetArena());
+    _impl_.firstdepth_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote*>(p);
   }
   return _impl_.firstdepth_;
 }
-inline ::upstox::Quote* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_firstdepth()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_firstdepth()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::Quote* _msg = _internal_mutable_firstdepth();
-  // @@protoc_insertion_point(field_mutable:upstox.FirstLevelWithGreeks.firstDepth)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* _msg = _internal_mutable_firstdepth();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.firstDepth)
   return _msg;
 }
-inline void FirstLevelWithGreeks::set_allocated_firstdepth(::upstox::Quote* PROTOBUF_NULLABLE value) {
+inline void FirstLevelWithGreeks::set_allocated_firstdepth(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -5433,11 +6179,11 @@ inline void FirstLevelWithGreeks::set_allocated_firstdepth(::upstox::Quote* PROT
     ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
   }
 
-  _impl_.firstdepth_ = reinterpret_cast<::upstox::Quote*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FirstLevelWithGreeks.firstDepth)
+  _impl_.firstdepth_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.firstDepth)
 }
 
-// .upstox.OptionGreeks optionGreeks = 3;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
 inline bool FirstLevelWithGreeks::has_optiongreeks() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
   PROTOBUF_ASSUME(!value || _impl_.optiongreeks_ != nullptr);
@@ -5448,34 +6194,34 @@ inline void FirstLevelWithGreeks::clear_optiongreeks() {
   if (_impl_.optiongreeks_ != nullptr) _impl_.optiongreeks_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
-inline const ::upstox::OptionGreeks& FirstLevelWithGreeks::_internal_optiongreeks() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& FirstLevelWithGreeks::_internal_optiongreeks() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::OptionGreeks* p = _impl_.optiongreeks_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::OptionGreeks>(&::upstox::OptionGreeks_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* p = _impl_.optiongreeks_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks_globals_);
 }
-inline const ::upstox::OptionGreeks& FirstLevelWithGreeks::optiongreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.optionGreeks)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks& FirstLevelWithGreeks::optiongreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.optionGreeks)
   return _internal_optiongreeks();
 }
 inline void FirstLevelWithGreeks::unsafe_arena_set_allocated_optiongreeks(
-    ::upstox::OptionGreeks* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.optiongreeks_);
   }
-  _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(value);
+  _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000004U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FirstLevelWithGreeks.optionGreeks)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.optionGreeks)
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* released = _impl_.optiongreeks_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* released = _impl_.optiongreeks_;
   _impl_.optiongreeks_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -5490,31 +6236,31 @@ inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE FirstLevelWithGreeks::release_o
   }
   return released;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE FirstLevelWithGreeks::unsafe_arena_release_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FirstLevelWithGreeks.optionGreeks)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.optionGreeks)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* temp = _impl_.optiongreeks_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* temp = _impl_.optiongreeks_;
   _impl_.optiongreeks_ = nullptr;
   return temp;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_optiongreeks() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL FirstLevelWithGreeks::_internal_mutable_optiongreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.optiongreeks_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::OptionGreeks>(GetArena());
-    _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>(GetArena());
+    _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(p);
   }
   return _impl_.optiongreeks_;
 }
-inline ::upstox::OptionGreeks* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_optiongreeks()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NONNULL FirstLevelWithGreeks::mutable_optiongreeks()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::OptionGreeks* _msg = _internal_mutable_optiongreeks();
-  // @@protoc_insertion_point(field_mutable:upstox.FirstLevelWithGreeks.optionGreeks)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* _msg = _internal_mutable_optiongreeks();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.optionGreeks)
   return _msg;
 }
-inline void FirstLevelWithGreeks::set_allocated_optiongreeks(::upstox::OptionGreeks* PROTOBUF_NULLABLE value) {
+inline void FirstLevelWithGreeks::set_allocated_optiongreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -5531,8 +6277,8 @@ inline void FirstLevelWithGreeks::set_allocated_optiongreeks(::upstox::OptionGre
     ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
   }
 
-  _impl_.optiongreeks_ = reinterpret_cast<::upstox::OptionGreeks*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FirstLevelWithGreeks.optionGreeks)
+  _impl_.optiongreeks_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.optionGreeks)
 }
 
 // int64 vtt = 4;
@@ -5542,13 +6288,13 @@ inline void FirstLevelWithGreeks::clear_vtt() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
 inline ::int64_t FirstLevelWithGreeks::vtt() const {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.vtt)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.vtt)
   return _internal_vtt();
 }
 inline void FirstLevelWithGreeks::set_vtt(::int64_t value) {
   _internal_set_vtt(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.FirstLevelWithGreeks.vtt)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.vtt)
 }
 inline ::int64_t FirstLevelWithGreeks::_internal_vtt() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -5566,13 +6312,13 @@ inline void FirstLevelWithGreeks::clear_oi() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000010U);
 }
 inline double FirstLevelWithGreeks::oi() const {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.oi)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.oi)
   return _internal_oi();
 }
 inline void FirstLevelWithGreeks::set_oi(double value) {
   _internal_set_oi(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000010U);
-  // @@protoc_insertion_point(field_set:upstox.FirstLevelWithGreeks.oi)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.oi)
 }
 inline double FirstLevelWithGreeks::_internal_oi() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -5590,13 +6336,13 @@ inline void FirstLevelWithGreeks::clear_iv() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000020U);
 }
 inline double FirstLevelWithGreeks::iv() const {
-  // @@protoc_insertion_point(field_get:upstox.FirstLevelWithGreeks.iv)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.iv)
   return _internal_iv();
 }
 inline void FirstLevelWithGreeks::set_iv(double value) {
   _internal_set_iv(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000020U);
-  // @@protoc_insertion_point(field_set:upstox.FirstLevelWithGreeks.iv)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks.iv)
 }
 inline double FirstLevelWithGreeks::_internal_iv() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -5611,323 +6357,380 @@ inline void FirstLevelWithGreeks::_internal_set_iv(double value) {
 
 // Feed
 
-// .upstox.LTPC ltpc = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
 inline bool Feed::has_ltpc() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
-  PROTOBUF_ASSUME(!value || _impl_.ltpc_ != nullptr);
-  return value;
+  return FeedUnion_case() == kLtpc;
+}
+inline bool Feed::_internal_has_ltpc() const {
+  return FeedUnion_case() == kLtpc;
+}
+inline void Feed::set_has_ltpc() {
+  _impl_._oneof_case_[0] = kLtpc;
 }
 inline void Feed::clear_ltpc() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.ltpc_ != nullptr) _impl_.ltpc_->Clear();
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  if (FeedUnion_case() == kLtpc) {
+    if (GetArena() == nullptr) {
+      delete _impl_.FeedUnion_.ltpc_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.ltpc_);
+    }
+    clear_has_FeedUnion();
+  }
 }
-inline const ::upstox::LTPC& Feed::_internal_ltpc() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::LTPC* p = _impl_.ltpc_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::LTPC>(&::upstox::LTPC_globals_);
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE Feed::release_ltpc() {
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
+  if (FeedUnion_case() == kLtpc) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(_impl_.FeedUnion_.ltpc_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.FeedUnion_.ltpc_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline const ::upstox::LTPC& Feed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.Feed.ltpc)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& Feed::_internal_ltpc() const {
+  return FeedUnion_case() == kLtpc ? static_cast<const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC&>(*reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(_impl_.FeedUnion_.ltpc_))
+                     : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_);
+}
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& Feed::ltpc() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
   return _internal_ltpc();
 }
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE Feed::unsafe_arena_release_ltpc() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
+  if (FeedUnion_case() == kLtpc) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(_impl_.FeedUnion_.ltpc_);
+    _impl_.FeedUnion_.ltpc_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
 inline void Feed::unsafe_arena_set_allocated_ltpc(
-    ::upstox::LTPC* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.ltpc_);
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_FeedUnion();
+  if (value) {
+    set_has_ltpc();
+    _impl_.FeedUnion_.ltpc_ = reinterpret_cast<::google::protobuf::Message*>(value);
   }
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
+}
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL Feed::_internal_mutable_ltpc() {
+  if (FeedUnion_case() != kLtpc) {
+    clear_FeedUnion();
+    set_has_ltpc();
+    _impl_.FeedUnion_.ltpc_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(GetArena()));
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.Feed.ltpc)
+  return reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC*>(_impl_.FeedUnion_.ltpc_);
 }
-inline ::upstox::LTPC* PROTOBUF_NULLABLE Feed::release_ltpc() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* released = _impl_.ltpc_;
-  _impl_.ltpc_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::upstox::LTPC* PROTOBUF_NULLABLE Feed::unsafe_arena_release_ltpc() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.Feed.ltpc)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* temp = _impl_.ltpc_;
-  _impl_.ltpc_ = nullptr;
-  return temp;
-}
-inline ::upstox::LTPC* PROTOBUF_NONNULL Feed::_internal_mutable_ltpc() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.ltpc_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::LTPC>(GetArena());
-    _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(p);
-  }
-  return _impl_.ltpc_;
-}
-inline ::upstox::LTPC* PROTOBUF_NONNULL Feed::mutable_ltpc()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NONNULL Feed::mutable_ltpc()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::LTPC* _msg = _internal_mutable_ltpc();
-  // @@protoc_insertion_point(field_mutable:upstox.Feed.ltpc)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* _msg = _internal_mutable_ltpc();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
   return _msg;
 }
-inline void Feed::set_allocated_ltpc(::upstox::LTPC* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.ltpc_);
-  }
 
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = value->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  }
-
-  _impl_.ltpc_ = reinterpret_cast<::upstox::LTPC*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.Feed.ltpc)
-}
-
-// .upstox.FullFeed fullFeed = 2;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed fullFeed = 2;
 inline bool Feed::has_fullfeed() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000002U);
-  PROTOBUF_ASSUME(!value || _impl_.fullfeed_ != nullptr);
-  return value;
+  return FeedUnion_case() == kFullFeed;
+}
+inline bool Feed::_internal_has_fullfeed() const {
+  return FeedUnion_case() == kFullFeed;
+}
+inline void Feed::set_has_fullfeed() {
+  _impl_._oneof_case_[0] = kFullFeed;
 }
 inline void Feed::clear_fullfeed() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.fullfeed_ != nullptr) _impl_.fullfeed_->Clear();
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  if (FeedUnion_case() == kFullFeed) {
+    if (GetArena() == nullptr) {
+      delete _impl_.FeedUnion_.fullfeed_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.fullfeed_);
+    }
+    clear_has_FeedUnion();
+  }
 }
-inline const ::upstox::FullFeed& Feed::_internal_fullfeed() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::FullFeed* p = _impl_.fullfeed_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::FullFeed>(&::upstox::FullFeed_globals_);
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE Feed::release_fullfeed() {
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
+  if (FeedUnion_case() == kFullFeed) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed*>(_impl_.FeedUnion_.fullfeed_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.FeedUnion_.fullfeed_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline const ::upstox::FullFeed& Feed::fullfeed() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.Feed.fullFeed)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed& Feed::_internal_fullfeed() const {
+  return FeedUnion_case() == kFullFeed ? static_cast<const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed&>(*reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed*>(_impl_.FeedUnion_.fullfeed_))
+                     : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed_globals_);
+}
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed& Feed::fullfeed() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
   return _internal_fullfeed();
 }
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE Feed::unsafe_arena_release_fullfeed() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
+  if (FeedUnion_case() == kFullFeed) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed*>(_impl_.FeedUnion_.fullfeed_);
+    _impl_.FeedUnion_.fullfeed_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
 inline void Feed::unsafe_arena_set_allocated_fullfeed(
-    ::upstox::FullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.fullfeed_);
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_FeedUnion();
+  if (value) {
+    set_has_fullfeed();
+    _impl_.FeedUnion_.fullfeed_ = reinterpret_cast<::google::protobuf::Message*>(value);
   }
-  _impl_.fullfeed_ = reinterpret_cast<::upstox::FullFeed*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
+}
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NONNULL Feed::_internal_mutable_fullfeed() {
+  if (FeedUnion_case() != kFullFeed) {
+    clear_FeedUnion();
+    set_has_fullfeed();
+    _impl_.FeedUnion_.fullfeed_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed>(GetArena()));
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.Feed.fullFeed)
+  return reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed*>(_impl_.FeedUnion_.fullfeed_);
 }
-inline ::upstox::FullFeed* PROTOBUF_NULLABLE Feed::release_fullfeed() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::FullFeed* released = _impl_.fullfeed_;
-  _impl_.fullfeed_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::upstox::FullFeed* PROTOBUF_NULLABLE Feed::unsafe_arena_release_fullfeed() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.Feed.fullFeed)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::FullFeed* temp = _impl_.fullfeed_;
-  _impl_.fullfeed_ = nullptr;
-  return temp;
-}
-inline ::upstox::FullFeed* PROTOBUF_NONNULL Feed::_internal_mutable_fullfeed() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.fullfeed_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::FullFeed>(GetArena());
-    _impl_.fullfeed_ = reinterpret_cast<::upstox::FullFeed*>(p);
-  }
-  return _impl_.fullfeed_;
-}
-inline ::upstox::FullFeed* PROTOBUF_NONNULL Feed::mutable_fullfeed()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NONNULL Feed::mutable_fullfeed()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::upstox::FullFeed* _msg = _internal_mutable_fullfeed();
-  // @@protoc_insertion_point(field_mutable:upstox.Feed.fullFeed)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* _msg = _internal_mutable_fullfeed();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
   return _msg;
 }
-inline void Feed::set_allocated_fullfeed(::upstox::FullFeed* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.fullfeed_);
-  }
 
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = value->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-
-  _impl_.fullfeed_ = reinterpret_cast<::upstox::FullFeed*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.Feed.fullFeed)
-}
-
-// .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks firstLevelWithGreeks = 3;
 inline bool Feed::has_firstlevelwithgreeks() const {
-  bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000004U);
-  PROTOBUF_ASSUME(!value || _impl_.firstlevelwithgreeks_ != nullptr);
-  return value;
+  return FeedUnion_case() == kFirstLevelWithGreeks;
+}
+inline bool Feed::_internal_has_firstlevelwithgreeks() const {
+  return FeedUnion_case() == kFirstLevelWithGreeks;
+}
+inline void Feed::set_has_firstlevelwithgreeks() {
+  _impl_._oneof_case_[0] = kFirstLevelWithGreeks;
 }
 inline void Feed::clear_firstlevelwithgreeks() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.firstlevelwithgreeks_ != nullptr) _impl_.firstlevelwithgreeks_->Clear();
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  if (FeedUnion_case() == kFirstLevelWithGreeks) {
+    if (GetArena() == nullptr) {
+      delete _impl_.FeedUnion_.firstlevelwithgreeks_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.firstlevelwithgreeks_);
+    }
+    clear_has_FeedUnion();
+  }
 }
-inline const ::upstox::FirstLevelWithGreeks& Feed::_internal_firstlevelwithgreeks() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::FirstLevelWithGreeks* p = _impl_.firstlevelwithgreeks_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::FirstLevelWithGreeks>(&::upstox::FirstLevelWithGreeks_globals_);
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE Feed::release_firstlevelwithgreeks() {
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
+  if (FeedUnion_case() == kFirstLevelWithGreeks) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks*>(_impl_.FeedUnion_.firstlevelwithgreeks_);
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.FeedUnion_.firstlevelwithgreeks_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline const ::upstox::FirstLevelWithGreeks& Feed::firstlevelwithgreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.Feed.firstLevelWithGreeks)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks& Feed::_internal_firstlevelwithgreeks() const {
+  return FeedUnion_case() == kFirstLevelWithGreeks ? static_cast<const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks&>(*reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks*>(_impl_.FeedUnion_.firstlevelwithgreeks_))
+                     : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks_globals_);
+}
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks& Feed::firstlevelwithgreeks() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
   return _internal_firstlevelwithgreeks();
 }
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE Feed::unsafe_arena_release_firstlevelwithgreeks() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
+  if (FeedUnion_case() == kFirstLevelWithGreeks) {
+    clear_has_FeedUnion();
+    auto* temp = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks*>(_impl_.FeedUnion_.firstlevelwithgreeks_);
+    _impl_.FeedUnion_.firstlevelwithgreeks_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
 inline void Feed::unsafe_arena_set_allocated_firstlevelwithgreeks(
-    ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.firstlevelwithgreeks_);
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_FeedUnion();
+  if (value) {
+    set_has_firstlevelwithgreeks();
+    _impl_.FeedUnion_.firstlevelwithgreeks_ = reinterpret_cast<::google::protobuf::Message*>(value);
   }
-  _impl_.firstlevelwithgreeks_ = reinterpret_cast<::upstox::FirstLevelWithGreeks*>(value);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
+}
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NONNULL Feed::_internal_mutable_firstlevelwithgreeks() {
+  if (FeedUnion_case() != kFirstLevelWithGreeks) {
+    clear_FeedUnion();
+    set_has_firstlevelwithgreeks();
+    _impl_.FeedUnion_.firstlevelwithgreeks_ = reinterpret_cast<::google::protobuf::Message*>(
+        ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks>(GetArena()));
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.Feed.firstLevelWithGreeks)
+  return reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks*>(_impl_.FeedUnion_.firstlevelwithgreeks_);
 }
-inline ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE Feed::release_firstlevelwithgreeks() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::FirstLevelWithGreeks* released = _impl_.firstlevelwithgreeks_;
-  _impl_.firstlevelwithgreeks_ = nullptr;
-  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
-    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
-    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    if (GetArena() == nullptr) {
-      delete old;
-    }
-  } else {
-    if (GetArena() != nullptr) {
-      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
-    }
-  }
-  return released;
-}
-inline ::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE Feed::unsafe_arena_release_firstlevelwithgreeks() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.Feed.firstLevelWithGreeks)
-
-  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::FirstLevelWithGreeks* temp = _impl_.firstlevelwithgreeks_;
-  _impl_.firstlevelwithgreeks_ = nullptr;
-  return temp;
-}
-inline ::upstox::FirstLevelWithGreeks* PROTOBUF_NONNULL Feed::_internal_mutable_firstlevelwithgreeks() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (_impl_.firstlevelwithgreeks_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::FirstLevelWithGreeks>(GetArena());
-    _impl_.firstlevelwithgreeks_ = reinterpret_cast<::upstox::FirstLevelWithGreeks*>(p);
-  }
-  return _impl_.firstlevelwithgreeks_;
-}
-inline ::upstox::FirstLevelWithGreeks* PROTOBUF_NONNULL Feed::mutable_firstlevelwithgreeks()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NONNULL Feed::mutable_firstlevelwithgreeks()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  ::upstox::FirstLevelWithGreeks* _msg = _internal_mutable_firstlevelwithgreeks();
-  // @@protoc_insertion_point(field_mutable:upstox.Feed.firstLevelWithGreeks)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* _msg = _internal_mutable_firstlevelwithgreeks();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
   return _msg;
 }
-inline void Feed::set_allocated_firstlevelwithgreeks(::upstox::FirstLevelWithGreeks* PROTOBUF_NULLABLE value) {
-  ::google::protobuf::Arena* message_arena = GetArena();
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (message_arena == nullptr) {
-    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.firstlevelwithgreeks_);
-  }
 
-  if (value != nullptr) {
-    ::google::protobuf::Arena* submessage_arena = value->GetArena();
-    if (message_arena != submessage_arena) {
-      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
-    }
-    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
-  }
-
-  _impl_.firstlevelwithgreeks_ = reinterpret_cast<::upstox::FirstLevelWithGreeks*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.Feed.firstLevelWithGreeks)
-}
-
-// .upstox.RequestMode requestMode = 4;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
 inline void Feed::clear_requestmode() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.requestmode_ = 0;
-  ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline ::upstox::RequestMode Feed::requestmode() const {
-  // @@protoc_insertion_point(field_get:upstox.Feed.requestMode)
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode Feed::requestmode() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.requestMode)
   return _internal_requestmode();
 }
-inline void Feed::set_requestmode(::upstox::RequestMode value) {
+inline void Feed::set_requestmode(::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode value) {
   _internal_set_requestmode(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_set:upstox.Feed.requestMode)
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.requestMode)
 }
-inline ::upstox::RequestMode Feed::_internal_requestmode() const {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode Feed::_internal_requestmode() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::upstox::RequestMode>(_impl_.requestmode_);
+  return static_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode>(_impl_.requestmode_);
 }
-inline void Feed::_internal_set_requestmode(::upstox::RequestMode value) {
+inline void Feed::_internal_set_requestmode(::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.requestmode_ = value;
 }
+
+inline bool Feed::has_FeedUnion() const {
+  return FeedUnion_case() != FEEDUNION_NOT_SET;
+}
+inline void Feed::clear_has_FeedUnion() {
+  _impl_._oneof_case_[0] = FEEDUNION_NOT_SET;
+}
+inline Feed::FeedUnionCase Feed::FeedUnion_case() const {
+  return Feed::FeedUnionCase(_impl_._oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// StatusInfo
+
+// string status = 1;
+inline void StatusInfo::clear_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+}
+inline const ::std::string& StatusInfo::status() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status)
+  return _internal_status();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void StatusInfo::set_status(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  _impl_.status_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status)
+}
+inline ::std::string* PROTOBUF_NONNULL StatusInfo::mutable_status()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  ::std::string* _s = _internal_mutable_status();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status)
+  return _s;
+}
+inline const ::std::string& StatusInfo::_internal_status() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.status_.Get();
+}
+inline void StatusInfo::_internal_set_status(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.status_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL StatusInfo::_internal_mutable_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.status_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE StatusInfo::release_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000001U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  auto* released = _impl_.status_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.status_.Set("", GetArena());
+  }
+  return released;
+}
+inline void StatusInfo::set_allocated_status(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000001U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+  }
+  _impl_.status_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.status_.IsDefault()) {
+    _impl_.status_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status)
+}
+
+// int64 updatedTime = 2;
+inline void StatusInfo::clear_updatedtime() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.updatedtime_ = ::int64_t{0};
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+}
+inline ::int64_t StatusInfo::updatedtime() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.updatedTime)
+  return _internal_updatedtime();
+}
+inline void StatusInfo::set_updatedtime(::int64_t value) {
+  _internal_set_updatedtime(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.updatedTime)
+}
+inline ::int64_t StatusInfo::_internal_updatedtime() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.updatedtime_;
+}
+inline void StatusInfo::_internal_set_updatedtime(::int64_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.updatedtime_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
 
@@ -5935,7 +6738,7 @@ inline void Feed::_internal_set_requestmode(::upstox::RequestMode value) {
 
 // MarketInfo
 
-// map<string, .upstox.MarketStatus> segmentStatus = 1;
+// map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus> segmentStatus = 1;
 inline int MarketInfo::_internal_segmentstatus_size() const {
   return _internal_segmentstatus().size();
 }
@@ -5947,23 +6750,85 @@ inline void MarketInfo::clear_segmentstatus() {
   _impl_.segmentstatus_.Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>& MarketInfo::_internal_segmentstatus() const {
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>& MarketInfo::_internal_segmentstatus() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.segmentstatus_.GetMap();
 }
-inline const ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>& MarketInfo::segmentstatus() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_map:upstox.MarketInfo.segmentStatus)
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>& MarketInfo::segmentstatus() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.segmentStatus)
   return _internal_segmentstatus();
 }
-inline ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>* PROTOBUF_NONNULL MarketInfo::_internal_mutable_segmentstatus() {
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>* PROTOBUF_NONNULL MarketInfo::_internal_mutable_segmentstatus() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _impl_.segmentstatus_.MutableMap();
 }
-inline ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>* PROTOBUF_NONNULL MarketInfo::mutable_segmentstatus()
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>* PROTOBUF_NONNULL MarketInfo::mutable_segmentstatus()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  // @@protoc_insertion_point(field_mutable_map:upstox.MarketInfo.segmentStatus)
+  // @@protoc_insertion_point(field_mutable_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.segmentStatus)
   return _internal_mutable_segmentstatus();
+}
+
+// map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> casMarketStatus = 2;
+inline int MarketInfo::_internal_casmarketstatus_size() const {
+  return _internal_casmarketstatus().size();
+}
+inline int MarketInfo::casmarketstatus_size() const {
+  return _internal_casmarketstatus_size();
+}
+inline void MarketInfo::clear_casmarketstatus() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.casmarketstatus_.Clear();
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+}
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& MarketInfo::_internal_casmarketstatus() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.casmarketstatus_.GetMap();
+}
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& MarketInfo::casmarketstatus() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.casMarketStatus)
+  return _internal_casmarketstatus();
+}
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL MarketInfo::_internal_mutable_casmarketstatus() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.casmarketstatus_.MutableMap();
+}
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL MarketInfo::mutable_casmarketstatus()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  // @@protoc_insertion_point(field_mutable_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.casMarketStatus)
+  return _internal_mutable_casmarketstatus();
+}
+
+// map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> preOpenSessionStatus = 3;
+inline int MarketInfo::_internal_preopensessionstatus_size() const {
+  return _internal_preopensessionstatus().size();
+}
+inline int MarketInfo::preopensessionstatus_size() const {
+  return _internal_preopensessionstatus_size();
+}
+inline void MarketInfo::clear_preopensessionstatus() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.preopensessionstatus_.Clear();
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+}
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& MarketInfo::_internal_preopensessionstatus() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.preopensessionstatus_.GetMap();
+}
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>& MarketInfo::preopensessionstatus() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.preOpenSessionStatus)
+  return _internal_preopensessionstatus();
+}
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL MarketInfo::_internal_mutable_preopensessionstatus() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.preopensessionstatus_.MutableMap();
+}
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>* PROTOBUF_NONNULL MarketInfo::mutable_preopensessionstatus()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_mutable_map:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.preOpenSessionStatus)
+  return _internal_mutable_preopensessionstatus();
 }
 
 // -------------------------------------------------------------------
@@ -5972,31 +6837,31 @@ inline ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>* PROTOBUF_
 
 // FeedResponse
 
-// .upstox.Type type = 1;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
 inline void FeedResponse::clear_type() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = 0;
   ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
 }
-inline ::upstox::Type FeedResponse::type() const {
-  // @@protoc_insertion_point(field_get:upstox.FeedResponse.type)
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type FeedResponse::type() const {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.type)
   return _internal_type();
 }
-inline void FeedResponse::set_type(::upstox::Type value) {
+inline void FeedResponse::set_type(::com::upstox::marketdatafeederv3udapi::rpc::proto::Type value) {
   _internal_set_type(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000004U);
-  // @@protoc_insertion_point(field_set:upstox.FeedResponse.type)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.type)
 }
-inline ::upstox::Type FeedResponse::_internal_type() const {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type FeedResponse::_internal_type() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return static_cast<::upstox::Type>(_impl_.type_);
+  return static_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::Type>(_impl_.type_);
 }
-inline void FeedResponse::_internal_set_type(::upstox::Type value) {
+inline void FeedResponse::_internal_set_type(::com::upstox::marketdatafeederv3udapi::rpc::proto::Type value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.type_ = value;
 }
 
-// map<string, .upstox.Feed> feeds = 2;
+// map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed> feeds = 2;
 inline int FeedResponse::_internal_feeds_size() const {
   return _internal_feeds().size();
 }
@@ -6008,22 +6873,22 @@ inline void FeedResponse::clear_feeds() {
   _impl_.feeds_.Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000008U);
 }
-inline const ::google::protobuf::Map<::std::string, ::upstox::Feed>& FeedResponse::_internal_feeds() const {
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>& FeedResponse::_internal_feeds() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.feeds_.GetMap();
 }
-inline const ::google::protobuf::Map<::std::string, ::upstox::Feed>& FeedResponse::feeds() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_map:upstox.FeedResponse.feeds)
+inline const ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>& FeedResponse::feeds() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_map:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.feeds)
   return _internal_feeds();
 }
-inline ::google::protobuf::Map<::std::string, ::upstox::Feed>* PROTOBUF_NONNULL FeedResponse::_internal_mutable_feeds() {
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>* PROTOBUF_NONNULL FeedResponse::_internal_mutable_feeds() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   return _impl_.feeds_.MutableMap();
 }
-inline ::google::protobuf::Map<::std::string, ::upstox::Feed>* PROTOBUF_NONNULL FeedResponse::mutable_feeds()
+inline ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>* PROTOBUF_NONNULL FeedResponse::mutable_feeds()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000008U);
-  // @@protoc_insertion_point(field_mutable_map:upstox.FeedResponse.feeds)
+  // @@protoc_insertion_point(field_mutable_map:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.feeds)
   return _internal_mutable_feeds();
 }
 
@@ -6034,13 +6899,13 @@ inline void FeedResponse::clear_currentts() {
   ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
 }
 inline ::int64_t FeedResponse::currentts() const {
-  // @@protoc_insertion_point(field_get:upstox.FeedResponse.currentTs)
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.currentTs)
   return _internal_currentts();
 }
 inline void FeedResponse::set_currentts(::int64_t value) {
   _internal_set_currentts(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  // @@protoc_insertion_point(field_set:upstox.FeedResponse.currentTs)
+  // @@protoc_insertion_point(field_set:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.currentTs)
 }
 inline ::int64_t FeedResponse::_internal_currentts() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -6051,7 +6916,7 @@ inline void FeedResponse::_internal_set_currentts(::int64_t value) {
   _impl_.currentts_ = value;
 }
 
-// .upstox.MarketInfo marketInfo = 4;
+// .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
 inline bool FeedResponse::has_marketinfo() const {
   bool value = CheckHasBit(_impl_._has_bits_[0], 0x00000001U);
   PROTOBUF_ASSUME(!value || _impl_.marketinfo_ != nullptr);
@@ -6062,34 +6927,34 @@ inline void FeedResponse::clear_marketinfo() {
   if (_impl_.marketinfo_ != nullptr) _impl_.marketinfo_->Clear();
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
 }
-inline const ::upstox::MarketInfo& FeedResponse::_internal_marketinfo() const {
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo& FeedResponse::_internal_marketinfo() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  const ::upstox::MarketInfo* p = _impl_.marketinfo_;
-  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::upstox::MarketInfo>(&::upstox::MarketInfo_globals_);
+  const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* p = _impl_.marketinfo_;
+  return p != nullptr ? *p : *::google::protobuf::internal::MessageGlobalsBase::ToDefaultInstance<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo>(&::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_globals_);
 }
-inline const ::upstox::MarketInfo& FeedResponse::marketinfo() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:upstox.FeedResponse.marketInfo)
+inline const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo& FeedResponse::marketinfo() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.marketInfo)
   return _internal_marketinfo();
 }
 inline void FeedResponse::unsafe_arena_set_allocated_marketinfo(
-    ::upstox::MarketInfo* PROTOBUF_NULLABLE value) {
+    ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (GetArena() == nullptr) {
     delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.marketinfo_);
   }
-  _impl_.marketinfo_ = reinterpret_cast<::upstox::MarketInfo*>(value);
+  _impl_.marketinfo_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo*>(value);
   if (value != nullptr) {
     SetHasBit(_impl_._has_bits_[0], 0x00000001U);
   } else {
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:upstox.FeedResponse.marketInfo)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.marketInfo)
 }
-inline ::upstox::MarketInfo* PROTOBUF_NULLABLE FeedResponse::release_marketinfo() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE FeedResponse::release_marketinfo() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketInfo* released = _impl_.marketinfo_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* released = _impl_.marketinfo_;
   _impl_.marketinfo_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
     auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
@@ -6104,31 +6969,31 @@ inline ::upstox::MarketInfo* PROTOBUF_NULLABLE FeedResponse::release_marketinfo(
   }
   return released;
 }
-inline ::upstox::MarketInfo* PROTOBUF_NULLABLE FeedResponse::unsafe_arena_release_marketinfo() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE FeedResponse::unsafe_arena_release_marketinfo() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:upstox.FeedResponse.marketInfo)
+  // @@protoc_insertion_point(field_release:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.marketInfo)
 
   ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketInfo* temp = _impl_.marketinfo_;
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* temp = _impl_.marketinfo_;
   _impl_.marketinfo_ = nullptr;
   return temp;
 }
-inline ::upstox::MarketInfo* PROTOBUF_NONNULL FeedResponse::_internal_mutable_marketinfo() {
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NONNULL FeedResponse::_internal_mutable_marketinfo() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.marketinfo_ == nullptr) {
-    auto* p = ::google::protobuf::Message::DefaultConstruct<::upstox::MarketInfo>(GetArena());
-    _impl_.marketinfo_ = reinterpret_cast<::upstox::MarketInfo*>(p);
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo>(GetArena());
+    _impl_.marketinfo_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo*>(p);
   }
   return _impl_.marketinfo_;
 }
-inline ::upstox::MarketInfo* PROTOBUF_NONNULL FeedResponse::mutable_marketinfo()
+inline ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NONNULL FeedResponse::mutable_marketinfo()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
   SetHasBit(_impl_._has_bits_[0], 0x00000001U);
-  ::upstox::MarketInfo* _msg = _internal_mutable_marketinfo();
-  // @@protoc_insertion_point(field_mutable:upstox.FeedResponse.marketInfo)
+  ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* _msg = _internal_mutable_marketinfo();
+  // @@protoc_insertion_point(field_mutable:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.marketInfo)
   return _msg;
 }
-inline void FeedResponse::set_allocated_marketinfo(::upstox::MarketInfo* PROTOBUF_NULLABLE value) {
+inline void FeedResponse::set_allocated_marketinfo(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo* PROTOBUF_NULLABLE value) {
   ::google::protobuf::Arena* message_arena = GetArena();
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (message_arena == nullptr) {
@@ -6145,8 +7010,8 @@ inline void FeedResponse::set_allocated_marketinfo(::upstox::MarketInfo* PROTOBU
     ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
   }
 
-  _impl_.marketinfo_ = reinterpret_cast<::upstox::MarketInfo*>(value);
-  // @@protoc_insertion_point(field_set_allocated:upstox.FeedResponse.marketInfo)
+  _impl_.marketinfo_ = reinterpret_cast<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo*>(value);
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.marketInfo)
 }
 
 #ifdef __GNUC__
@@ -6154,29 +7019,33 @@ inline void FeedResponse::set_allocated_marketinfo(::upstox::MarketInfo* PROTOBU
 #endif  // __GNUC__
 
 // @@protoc_insertion_point(namespace_scope)
+}  // namespace proto
+}  // namespace rpc
+}  // namespace marketdatafeederv3udapi
 }  // namespace upstox
+}  // namespace com
 
 
 namespace google {
 namespace protobuf {
 
 template <>
-struct is_proto_enum<::upstox::Type> : std::true_type {};
+struct is_proto_enum<::com::upstox::marketdatafeederv3udapi::rpc::proto::Type> : std::true_type {};
 template <>
-inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::upstox::Type>() {
-  return ::upstox::Type_descriptor();
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::com::upstox::marketdatafeederv3udapi::rpc::proto::Type>() {
+  return ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type_descriptor();
 }
 template <>
-struct is_proto_enum<::upstox::RequestMode> : std::true_type {};
+struct is_proto_enum<::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode> : std::true_type {};
 template <>
-inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::upstox::RequestMode>() {
-  return ::upstox::RequestMode_descriptor();
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode>() {
+  return ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode_descriptor();
 }
 template <>
-struct is_proto_enum<::upstox::MarketStatus> : std::true_type {};
+struct is_proto_enum<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus> : std::true_type {};
 template <>
-inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::upstox::MarketStatus>() {
-  return ::upstox::MarketStatus_descriptor();
+inline const EnumDescriptor* PROTOBUF_NONNULL GetEnumDescriptor<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>() {
+  return ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus_descriptor();
 }
 
 }  // namespace protobuf

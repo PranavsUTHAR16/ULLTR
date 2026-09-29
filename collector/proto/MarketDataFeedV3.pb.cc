@@ -29,40 +29,203 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 namespace {
 PROTOBUF_CONSTINIT ::google::protobuf::internal::ReflectionData
     file_reflection_data[] = {
-        // ::upstox::LTPC
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::MarketLevel
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::MarketOHLC
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::Quote
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::OptionGreeks
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::OHLC
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::MarketFullFeed
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::IndexFullFeed
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::FullFeed
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::FirstLevelWithGreeks
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::Feed
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::MarketInfo_SegmentStatusEntry_DoNotUse
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::MarketInfo
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::FeedResponse_FeedsEntry_DoNotUse
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
-        // ::upstox::FeedResponse
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse
+        {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo
+        {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse
+        {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
+        // ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse
         {&::_pbi::kDescriptorMethods, &::descriptor_table_MarketDataFeedV3_2eproto, /* tracker*/ nullptr,},
 };
 }  // namespace
 #endif
+namespace com {
 namespace upstox {
+namespace marketdatafeederv3udapi {
+namespace rpc {
+namespace proto {
+class StatusInfo::_Internal {
+ public:
+  using HasBits = decltype(::std::declval<StatusInfo>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_._has_bits_);
+};
+
+constexpr StatusInfo::ParseTableT_ StatusInfo::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
+  return ParseTableT_{
+    {
+      PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_._has_bits_),
+      0, // no _extensions_
+      2, 8,  // max_field_number, fast_idx_mask
+      offsetof(ParseTableT_, field_lookup_table),
+      4294967292,  // skipmap
+      offsetof(ParseTableT_, field_entries),
+      2,  // num_field_entries
+      0,  // num_aux_entries
+      offsetof(ParseTableT_, field_names),  // no aux_entries
+      class_data,
+      nullptr,  // post_loop_handler
+      ::_pbi::TcParser::GenericFallback,  // fallback
+      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>(),  // to_prefetch
+      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+    }, {{
+      // int64 updatedTime = 2;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(StatusInfo, _impl_.updatedtime_), 1>(),
+       {16, 1, 0,
+        PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_.updatedtime_)}},
+      // string status = 1;
+      {::_pbi::TcParser::FastUS1,
+       {10, 0, 0,
+        PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_.status_)}},
+    }}, {{
+      65535, 65535
+    }}, {{
+      // string status = 1;
+      {PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_.status_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+      // int64 updatedTime = 2;
+      {PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_.updatedtime_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+    }},
+    // no aux_entries
+    {{
+      "\67\6\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo"
+      "status"
+    }},
+  };
+}
+
+
+inline constexpr StatusInfo::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        status_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        updatedtime_{::int64_t{0}} {}
+
+template <typename>
+constexpr StatusInfo::StatusInfo(::_pbi::ConstantInitialized,
+                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
+    : ::google::protobuf::Message(
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          class_data
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          ),
+      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
+}
+inline void* PROTOBUF_NONNULL StatusInfo::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) StatusInfo(arena);
+}
+constexpr auto StatusInfo::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(StatusInfo), alignof(StatusInfo));
+}
+constexpr auto StatusInfo::InternalGenerateClassData_(
+    const MessageLite& prototype,
+    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &prototype,
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+          &_table_.header,
+#else
+          tc_table,
+#endif
+          nullptr,  // IsInitialized
+          &StatusInfo::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<StatusInfo>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &StatusInfo::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<StatusInfo>(), &StatusInfo::ByteSizeLong,
+              &StatusInfo::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(StatusInfo, _impl_._cached_size_),
+          false,
+      },
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+      &file_reflection_data[11],
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+      &::_pbi::kDescriptorMethods,
+      &descriptor_table_MarketDataFeedV3_2eproto,
+      nullptr,  // tracker
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  };
+}
+struct StatusInfoGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
+  constexpr StatusInfoGlobalsTypeInternal()
+      :
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+        _default(::_pbi::ConstantInitialized{},
+                 StatusInfo_class_data_.base())
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+        MessageGlobalsBase(StatusInfo::InternalGenerateClassData_(
+            _default, &StatusInfo_globals_._table.header)),
+        _default(::_pbi::ConstantInitialized{}, GetClassData()),
+        _table(::_pbi::PrivateAccess::GenerateParseTable<StatusInfo>(
+            GetClassData()))
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  {
+  }
+  ~StatusInfoGlobalsTypeInternal() {}
+  union {
+    alignas(::_pbi::kMaxMessageAlignment) StatusInfo _default;
+  };
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  decltype(::_pbi::PrivateAccess::GenerateParseTable<StatusInfo>(
+      ::std::declval<const ::_pbi::ClassData*>())) _table;
+#endif
+};
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+static_assert(PROTOBUF_FIELD_OFFSET(StatusInfoGlobalsTypeInternal, _default) ==
+              ::_pbi::MessageGlobalsBase::OffsetToDefault());
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST StatusInfoGlobalsTypeInternal StatusInfo_globals_
+        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+namespace {
+const ::_pbi::ClassData* StatusInfo_get_class_data() {
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  return StatusInfo_globals_.GetClassData();
+#else
+  return StatusInfo_class_data_.base();
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}
+}  // namespace
+#endif  // PROTOBUF_CUSTOM_VTABLE
 class Quote::_Internal {
  public:
   using HasBits = decltype(::std::declval<Quote>()._impl_._has_bits_);
@@ -86,7 +249,7 @@ constexpr Quote::ParseTableT_ Quote::InternalGenerateParseTable_(const ::_pbi::C
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::Quote>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
       // double askP = 4;
@@ -248,7 +411,7 @@ constexpr OptionGreeks::ParseTableT_ OptionGreeks::InternalGenerateParseTable_(c
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::OptionGreeks>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
       {::_pbi::TcParser::MiniParse, {}},
@@ -420,7 +583,7 @@ constexpr OHLC::ParseTableT_ OHLC::InternalGenerateParseTable_(const ::_pbi::Cla
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::OHLC>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
       {::_pbi::TcParser::MiniParse, {}},
@@ -472,8 +635,8 @@ constexpr OHLC::ParseTableT_ OHLC::InternalGenerateParseTable_(const ::_pbi::Cla
     }},
     // no aux_entries
     {{
-      "\13\10\0\0\0\0\0\0"
-      "upstox.OHLC"
+      "\61\10\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC"
       "interval"
     }},
   };
@@ -602,10 +765,10 @@ constexpr MarketInfo_SegmentStatusEntry_DoNotUse::ParseTableT_ MarketInfo_Segmen
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::MarketInfo_SegmentStatusEntry_DoNotUse>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.MarketStatus value = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus value = 2;
       {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.value_), 1>(),
        {16, 1, 0,
         PROTOBUF_FIELD_OFFSET(MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.value_)}},
@@ -618,13 +781,13 @@ constexpr MarketInfo_SegmentStatusEntry_DoNotUse::ParseTableT_ MarketInfo_Segmen
     }}, {{
       // string key = 1;
       {PROTOBUF_FIELD_OFFSET(MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.key_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-      // .upstox.MarketStatus value = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus value = 2;
       {PROTOBUF_FIELD_OFFSET(MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
     }},
     // no aux_entries
     {{
-      "\44\3\0\0\0\0\0\0"
-      "upstox.MarketInfo.SegmentStatusEntry"
+      "\112\3\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.SegmentStatusEntry"
       "key"
     }},
   };
@@ -671,7 +834,7 @@ constexpr auto MarketInfo_SegmentStatusEntry_DoNotUse::InternalGenerateClassData
           false,
       },
 #ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[11],
+      &file_reflection_data[12],
 #else   // !PROTOBUF_MESSAGE_GLOBALS
       &::_pbi::kDescriptorMethods,
       &descriptor_table_MarketDataFeedV3_2eproto,
@@ -722,168 +885,6 @@ const ::_pbi::ClassData* MarketInfo_SegmentStatusEntry_DoNotUse_get_class_data()
 }
 }  // namespace
 #endif  // PROTOBUF_CUSTOM_VTABLE
-class LTPC::_Internal {
- public:
-  using HasBits = decltype(::std::declval<LTPC>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-      8 * PROTOBUF_FIELD_OFFSET(LTPC, _impl_._has_bits_);
-};
-
-constexpr LTPC::ParseTableT_ LTPC::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
-  return ParseTableT_{
-    {
-      PROTOBUF_FIELD_OFFSET(LTPC, _impl_._has_bits_),
-      0, // no _extensions_
-      4, 24,  // max_field_number, fast_idx_mask
-      offsetof(ParseTableT_, field_lookup_table),
-      4294967280,  // skipmap
-      offsetof(ParseTableT_, field_entries),
-      4,  // num_field_entries
-      0,  // num_aux_entries
-      offsetof(ParseTableT_, field_names),  // no aux_entries
-      class_data,
-      nullptr,  // post_loop_handler
-      ::_pbi::TcParser::GenericFallback,  // fallback
-      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::LTPC>(),  // to_prefetch
-      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-    }, {{
-      // double cp = 4;
-      {::_pbi::TcParser::FastF64S1,
-       {33, 3, 0,
-        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.cp_)}},
-      // double ltp = 1;
-      {::_pbi::TcParser::FastF64S1,
-       {9, 0, 0,
-        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltp_)}},
-      // int64 ltt = 2;
-      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(LTPC, _impl_.ltt_), 1>(),
-       {16, 1, 0,
-        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltt_)}},
-      // int64 ltq = 3;
-      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(LTPC, _impl_.ltq_), 2>(),
-       {24, 2, 0,
-        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltq_)}},
-    }}, {{
-      65535, 65535
-    }}, {{
-      // double ltp = 1;
-      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltp_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-      // int64 ltt = 2;
-      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltt_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
-      // int64 ltq = 3;
-      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltq_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
-      // double cp = 4;
-      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.cp_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    }},
-    // no aux_entries
-    {{
-    }},
-  };
-}
-
-
-inline constexpr LTPC::Impl_::Impl_(
-    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        ltp_{0},
-        ltt_{::int64_t{0}},
-        ltq_{::int64_t{0}},
-        cp_{0} {}
-
-template <typename>
-constexpr LTPC::LTPC(::_pbi::ConstantInitialized,
-                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
-    : ::google::protobuf::Message(
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-          class_data
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          ),
-      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
-}
-inline void* PROTOBUF_NONNULL LTPC::PlacementNew_(
-    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
-  return ::new (mem) LTPC(arena);
-}
-constexpr auto LTPC::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(LTPC), alignof(LTPC));
-}
-constexpr auto LTPC::InternalGenerateClassData_(
-    const MessageLite& prototype,
-    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
-  return ::google::protobuf::internal::ClassDataFull{
-      ::google::protobuf::internal::ClassData{
-          &prototype,
-#ifndef PROTOBUF_MESSAGE_GLOBALS
-          &_table_.header,
-#else
-          tc_table,
-#endif
-          nullptr,  // IsInitialized
-          &LTPC::MergeImpl,
-          ::google::protobuf::Message::GetNewImpl<LTPC>(),
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-          &LTPC::SharedDtor,
-          ::google::protobuf::Message::GetClearImpl<LTPC>(), &LTPC::ByteSizeLong,
-              &LTPC::_InternalSerialize,
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          PROTOBUF_FIELD_OFFSET(LTPC, _impl_._cached_size_),
-          false,
-      },
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[0],
-#else   // !PROTOBUF_MESSAGE_GLOBALS
-      &::_pbi::kDescriptorMethods,
-      &descriptor_table_MarketDataFeedV3_2eproto,
-      nullptr,  // tracker
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-  };
-}
-struct LTPCGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
-  constexpr LTPCGlobalsTypeInternal()
-      :
-#ifndef PROTOBUF_MESSAGE_GLOBALS
-        _default(::_pbi::ConstantInitialized{},
-                 LTPC_class_data_.base())
-#else   // !PROTOBUF_MESSAGE_GLOBALS
-        MessageGlobalsBase(LTPC::InternalGenerateClassData_(
-            _default, &LTPC_globals_._table.header)),
-        _default(::_pbi::ConstantInitialized{}, GetClassData()),
-        _table(::_pbi::PrivateAccess::GenerateParseTable<LTPC>(
-            GetClassData()))
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-  {
-  }
-  ~LTPCGlobalsTypeInternal() {}
-  union {
-    alignas(::_pbi::kMaxMessageAlignment) LTPC _default;
-  };
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-  decltype(::_pbi::PrivateAccess::GenerateParseTable<LTPC>(
-      ::std::declval<const ::_pbi::ClassData*>())) _table;
-#endif
-};
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-static_assert(PROTOBUF_FIELD_OFFSET(LTPCGlobalsTypeInternal, _default) ==
-              ::_pbi::MessageGlobalsBase::OffsetToDefault());
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST LTPCGlobalsTypeInternal LTPC_globals_
-        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-namespace {
-const ::_pbi::ClassData* LTPC_get_class_data() {
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-  return LTPC_globals_.GetClassData();
-#else
-  return LTPC_class_data_.base();
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-}
-}  // namespace
-#endif  // PROTOBUF_CUSTOM_VTABLE
 class MarketOHLC::_Internal {
  public:
   using HasBits = decltype(::std::declval<MarketOHLC>()._impl_._has_bits_);
@@ -907,24 +908,24 @@ constexpr MarketOHLC::ParseTableT_ MarketOHLC::InternalGenerateParseTable_(const
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::MarketOHLC>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // repeated .upstox.OHLC ohlc = 1;
+      // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
       {::_pbi::TcParser::FastMtR1,
        {10, 0, 0,
         PROTOBUF_FIELD_OFFSET(MarketOHLC, _impl_.ohlc_)}},
     }}, {{
       65535, 65535
     }}, {{
-      // repeated .upstox.OHLC ohlc = 1;
+      // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
       {PROTOBUF_FIELD_OFFSET(MarketOHLC, _impl_.ohlc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::OHLC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::OHLC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC_globals_},
         #endif
     }},
     {{
@@ -938,8 +939,8 @@ inline constexpr MarketOHLC::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         ohlc_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketOHLC,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketOHLC, _impl_.ohlc_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC, _impl_.ohlc_)>()
          }
      {}
 
@@ -1058,24 +1059,24 @@ constexpr MarketLevel::ParseTableT_ MarketLevel::InternalGenerateParseTable_(con
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::MarketLevel>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // repeated .upstox.Quote bidAskQuote = 1;
+      // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
       {::_pbi::TcParser::FastMtR1,
        {10, 0, 0,
         PROTOBUF_FIELD_OFFSET(MarketLevel, _impl_.bidaskquote_)}},
     }}, {{
       65535, 65535
     }}, {{
-      // repeated .upstox.Quote bidAskQuote = 1;
+      // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
       {PROTOBUF_FIELD_OFFSET(MarketLevel, _impl_.bidaskquote_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::Quote>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::Quote_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote_globals_},
         #endif
     }},
     {{
@@ -1089,8 +1090,8 @@ inline constexpr MarketLevel::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         bidaskquote_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketLevel,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketLevel, _impl_.bidaskquote_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel, _impl_.bidaskquote_)>()
          }
      {}
 
@@ -1186,6 +1187,468 @@ const ::_pbi::ClassData* MarketLevel_get_class_data() {
 }
 }  // namespace
 #endif  // PROTOBUF_CUSTOM_VTABLE
+constexpr MarketInfo_PreOpenSessionStatusEntry_DoNotUse::ParseTableT_ MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
+  return ParseTableT_{
+    {
+      PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_._has_bits_),
+      0, // no _extensions_
+      2, 8,  // max_field_number, fast_idx_mask
+      offsetof(ParseTableT_, field_lookup_table),
+      4294967292,  // skipmap
+      offsetof(ParseTableT_, field_entries),
+      2,  // num_field_entries
+      1,  // num_aux_entries
+      offsetof(ParseTableT_, aux_entries),
+      class_data,
+      nullptr,  // post_loop_handler
+      ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
+      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse>(),  // to_prefetch
+      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+    }, {{
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo value = 2;
+      {::_pbi::TcParser::FastMtS1,
+       {18, 1, 0,
+        PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.value_)}},
+      // string key = 1;
+      {::_pbi::TcParser::FastUS1,
+       {10, 0, 0,
+        PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.key_)}},
+    }}, {{
+      65535, 65535
+    }}, {{
+      // string key = 1;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.key_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo value = 2;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    }},
+    {{
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo_globals_},
+        #endif
+    }},
+    {{
+      "\121\3\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.PreOpenSessionStatusEntry"
+      "key"
+    }},
+  };
+}
+
+template <typename>
+constexpr MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MarketInfo_PreOpenSessionStatusEntry_DoNotUse(::_pbi::ConstantInitialized,
+                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
+    : MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MapEntry(
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          class_data
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      ) {
+}
+inline void* PROTOBUF_NONNULL MarketInfo_PreOpenSessionStatusEntry_DoNotUse::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) MarketInfo_PreOpenSessionStatusEntry_DoNotUse(arena);
+}
+constexpr auto MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(MarketInfo_PreOpenSessionStatusEntry_DoNotUse), alignof(MarketInfo_PreOpenSessionStatusEntry_DoNotUse));
+}
+constexpr auto MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalGenerateClassData_(
+    const MessageLite& prototype,
+    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &prototype,
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+          &_table_.header,
+#else
+          tc_table,
+#endif
+          nullptr,  // IsInitialized
+          &MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<MarketInfo_PreOpenSessionStatusEntry_DoNotUse>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &MarketInfo_PreOpenSessionStatusEntry_DoNotUse::SharedDtor,
+          static_cast<void (::google::protobuf::MessageLite::*)()>(&MarketInfo_PreOpenSessionStatusEntry_DoNotUse::ClearImpl),
+              ::google::protobuf::Message::ByteSizeLongImpl, ::google::protobuf::Message::_InternalSerializeImpl
+              ,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_._cached_size_),
+          false,
+      },
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+      &file_reflection_data[14],
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+      &::_pbi::kDescriptorMethods,
+      &descriptor_table_MarketDataFeedV3_2eproto,
+      nullptr,  // tracker
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  };
+}
+struct MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
+  constexpr MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal()
+      :
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+        _default(::_pbi::ConstantInitialized{},
+                 MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_.base())
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+        MessageGlobalsBase(MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalGenerateClassData_(
+            _default, &MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_._table.header)),
+        _default(::_pbi::ConstantInitialized{}, GetClassData()),
+        _table(::_pbi::PrivateAccess::GenerateParseTable<MarketInfo_PreOpenSessionStatusEntry_DoNotUse>(
+            GetClassData()))
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  {
+  }
+  ~MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal() {}
+  union {
+    alignas(::_pbi::kMaxMessageAlignment) MarketInfo_PreOpenSessionStatusEntry_DoNotUse _default;
+  };
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  decltype(::_pbi::PrivateAccess::GenerateParseTable<MarketInfo_PreOpenSessionStatusEntry_DoNotUse>(
+      ::std::declval<const ::_pbi::ClassData*>())) _table;
+#endif
+};
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+static_assert(PROTOBUF_FIELD_OFFSET(MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal, _default) ==
+              ::_pbi::MessageGlobalsBase::OffsetToDefault());
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST MarketInfo_PreOpenSessionStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_
+        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+namespace {
+const ::_pbi::ClassData* MarketInfo_PreOpenSessionStatusEntry_DoNotUse_get_class_data() {
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  return MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_.GetClassData();
+#else
+  return MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_.base();
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}
+}  // namespace
+#endif  // PROTOBUF_CUSTOM_VTABLE
+constexpr MarketInfo_CasMarketStatusEntry_DoNotUse::ParseTableT_ MarketInfo_CasMarketStatusEntry_DoNotUse::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
+  return ParseTableT_{
+    {
+      PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_._has_bits_),
+      0, // no _extensions_
+      2, 8,  // max_field_number, fast_idx_mask
+      offsetof(ParseTableT_, field_lookup_table),
+      4294967292,  // skipmap
+      offsetof(ParseTableT_, field_entries),
+      2,  // num_field_entries
+      1,  // num_aux_entries
+      offsetof(ParseTableT_, aux_entries),
+      class_data,
+      nullptr,  // post_loop_handler
+      ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
+      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse>(),  // to_prefetch
+      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+    }, {{
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo value = 2;
+      {::_pbi::TcParser::FastMtS1,
+       {18, 1, 0,
+        PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.value_)}},
+      // string key = 1;
+      {::_pbi::TcParser::FastUS1,
+       {10, 0, 0,
+        PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.key_)}},
+    }}, {{
+      65535, 65535
+    }}, {{
+      // string key = 1;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.key_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo value = 2;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    }},
+    {{
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo_globals_},
+        #endif
+    }},
+    {{
+      "\114\3\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.CasMarketStatusEntry"
+      "key"
+    }},
+  };
+}
+
+template <typename>
+constexpr MarketInfo_CasMarketStatusEntry_DoNotUse::MarketInfo_CasMarketStatusEntry_DoNotUse(::_pbi::ConstantInitialized,
+                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
+    : MarketInfo_CasMarketStatusEntry_DoNotUse::MapEntry(
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          class_data
+#endif  // PROTOBUF_CUSTOM_VTABLE
+      ) {
+}
+inline void* PROTOBUF_NONNULL MarketInfo_CasMarketStatusEntry_DoNotUse::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) MarketInfo_CasMarketStatusEntry_DoNotUse(arena);
+}
+constexpr auto MarketInfo_CasMarketStatusEntry_DoNotUse::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::CopyInit(sizeof(MarketInfo_CasMarketStatusEntry_DoNotUse), alignof(MarketInfo_CasMarketStatusEntry_DoNotUse));
+}
+constexpr auto MarketInfo_CasMarketStatusEntry_DoNotUse::InternalGenerateClassData_(
+    const MessageLite& prototype,
+    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &prototype,
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+          &_table_.header,
+#else
+          tc_table,
+#endif
+          nullptr,  // IsInitialized
+          &MarketInfo_CasMarketStatusEntry_DoNotUse::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<MarketInfo_CasMarketStatusEntry_DoNotUse>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &MarketInfo_CasMarketStatusEntry_DoNotUse::SharedDtor,
+          static_cast<void (::google::protobuf::MessageLite::*)()>(&MarketInfo_CasMarketStatusEntry_DoNotUse::ClearImpl),
+              ::google::protobuf::Message::ByteSizeLongImpl, ::google::protobuf::Message::_InternalSerializeImpl
+              ,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_._cached_size_),
+          false,
+      },
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+      &file_reflection_data[13],
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+      &::_pbi::kDescriptorMethods,
+      &descriptor_table_MarketDataFeedV3_2eproto,
+      nullptr,  // tracker
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  };
+}
+struct MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
+  constexpr MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal()
+      :
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+        _default(::_pbi::ConstantInitialized{},
+                 MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_.base())
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+        MessageGlobalsBase(MarketInfo_CasMarketStatusEntry_DoNotUse::InternalGenerateClassData_(
+            _default, &MarketInfo_CasMarketStatusEntry_DoNotUse_globals_._table.header)),
+        _default(::_pbi::ConstantInitialized{}, GetClassData()),
+        _table(::_pbi::PrivateAccess::GenerateParseTable<MarketInfo_CasMarketStatusEntry_DoNotUse>(
+            GetClassData()))
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  {
+  }
+  ~MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal() {}
+  union {
+    alignas(::_pbi::kMaxMessageAlignment) MarketInfo_CasMarketStatusEntry_DoNotUse _default;
+  };
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  decltype(::_pbi::PrivateAccess::GenerateParseTable<MarketInfo_CasMarketStatusEntry_DoNotUse>(
+      ::std::declval<const ::_pbi::ClassData*>())) _table;
+#endif
+};
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+static_assert(PROTOBUF_FIELD_OFFSET(MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal, _default) ==
+              ::_pbi::MessageGlobalsBase::OffsetToDefault());
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST MarketInfo_CasMarketStatusEntry_DoNotUseGlobalsTypeInternal MarketInfo_CasMarketStatusEntry_DoNotUse_globals_
+        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+namespace {
+const ::_pbi::ClassData* MarketInfo_CasMarketStatusEntry_DoNotUse_get_class_data() {
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  return MarketInfo_CasMarketStatusEntry_DoNotUse_globals_.GetClassData();
+#else
+  return MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_.base();
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}
+}  // namespace
+#endif  // PROTOBUF_CUSTOM_VTABLE
+class LTPC::_Internal {
+ public:
+  using HasBits = decltype(::std::declval<LTPC>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(LTPC, _impl_._has_bits_);
+};
+
+constexpr LTPC::ParseTableT_ LTPC::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
+  return ParseTableT_{
+    {
+      PROTOBUF_FIELD_OFFSET(LTPC, _impl_._has_bits_),
+      0, // no _extensions_
+      5, 56,  // max_field_number, fast_idx_mask
+      offsetof(ParseTableT_, field_lookup_table),
+      4294967264,  // skipmap
+      offsetof(ParseTableT_, field_entries),
+      5,  // num_field_entries
+      1,  // num_aux_entries
+      offsetof(ParseTableT_, aux_entries),
+      class_data,
+      nullptr,  // post_loop_handler
+      ::_pbi::TcParser::GenericFallback,  // fallback
+      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>(),  // to_prefetch
+      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+    }, {{
+      {::_pbi::TcParser::MiniParse, {}},
+      // double ltp = 1;
+      {::_pbi::TcParser::FastF64S1,
+       {9, 1, 0,
+        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltp_)}},
+      // int64 ltt = 2;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(LTPC, _impl_.ltt_), 2>(),
+       {16, 2, 0,
+        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltt_)}},
+      // int64 ltq = 3;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(LTPC, _impl_.ltq_), 3>(),
+       {24, 3, 0,
+        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltq_)}},
+      // double cp = 4;
+      {::_pbi::TcParser::FastF64S1,
+       {33, 4, 0,
+        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.cp_)}},
+      // .google.protobuf.DoubleValue iep = 5;
+      {::_pbi::TcParser::FastMtS1,
+       {42, 0, 0,
+        PROTOBUF_FIELD_OFFSET(LTPC, _impl_.iep_)}},
+      {::_pbi::TcParser::MiniParse, {}},
+      {::_pbi::TcParser::MiniParse, {}},
+    }}, {{
+      65535, 65535
+    }}, {{
+      // double ltp = 1;
+      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltp_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // int64 ltt = 2;
+      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltt_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // int64 ltq = 3;
+      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltq_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // double cp = 4;
+      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.cp_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // .google.protobuf.DoubleValue iep = 5;
+      {PROTOBUF_FIELD_OFFSET(LTPC, _impl_.iep_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    }},
+    {{
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::google::protobuf::DoubleValue>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::google::protobuf::DoubleValue_globals_},
+        #endif
+    }},
+    {{
+    }},
+  };
+}
+
+
+inline constexpr LTPC::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        iep_{nullptr},
+        ltp_{0},
+        ltt_{::int64_t{0}},
+        ltq_{::int64_t{0}},
+        cp_{0} {}
+
+template <typename>
+constexpr LTPC::LTPC(::_pbi::ConstantInitialized,
+                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
+    : ::google::protobuf::Message(
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          class_data
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          ),
+      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
+}
+inline void* PROTOBUF_NONNULL LTPC::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) LTPC(arena);
+}
+constexpr auto LTPC::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(LTPC), alignof(LTPC));
+}
+constexpr auto LTPC::InternalGenerateClassData_(
+    const MessageLite& prototype,
+    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &prototype,
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+          &_table_.header,
+#else
+          tc_table,
+#endif
+          nullptr,  // IsInitialized
+          &LTPC::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<LTPC>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &LTPC::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<LTPC>(), &LTPC::ByteSizeLong,
+              &LTPC::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(LTPC, _impl_._cached_size_),
+          false,
+      },
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+      &file_reflection_data[0],
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+      &::_pbi::kDescriptorMethods,
+      &descriptor_table_MarketDataFeedV3_2eproto,
+      nullptr,  // tracker
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  };
+}
+struct LTPCGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
+  constexpr LTPCGlobalsTypeInternal()
+      :
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+        _default(::_pbi::ConstantInitialized{},
+                 LTPC_class_data_.base())
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+        MessageGlobalsBase(LTPC::InternalGenerateClassData_(
+            _default, &LTPC_globals_._table.header)),
+        _default(::_pbi::ConstantInitialized{}, GetClassData()),
+        _table(::_pbi::PrivateAccess::GenerateParseTable<LTPC>(
+            GetClassData()))
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  {
+  }
+  ~LTPCGlobalsTypeInternal() {}
+  union {
+    alignas(::_pbi::kMaxMessageAlignment) LTPC _default;
+  };
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  decltype(::_pbi::PrivateAccess::GenerateParseTable<LTPC>(
+      ::std::declval<const ::_pbi::ClassData*>())) _table;
+#endif
+};
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+static_assert(PROTOBUF_FIELD_OFFSET(LTPCGlobalsTypeInternal, _default) ==
+              ::_pbi::MessageGlobalsBase::OffsetToDefault());
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST LTPCGlobalsTypeInternal LTPC_globals_
+        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+namespace {
+const ::_pbi::ClassData* LTPC_get_class_data() {
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  return LTPC_globals_.GetClassData();
+#else
+  return LTPC_class_data_.base();
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}
+}  // namespace
+#endif  // PROTOBUF_CUSTOM_VTABLE
 class MarketInfo::_Internal {
  public:
   using HasBits = decltype(::std::declval<MarketInfo>()._impl_._has_bits_);
@@ -1198,35 +1661,55 @@ constexpr MarketInfo::ParseTableT_ MarketInfo::InternalGenerateParseTable_(const
     {
       PROTOBUF_FIELD_OFFSET(MarketInfo, _impl_._has_bits_),
       0, // no _extensions_
-      1, 0,  // max_field_number, fast_idx_mask
+      3, 0,  // max_field_number, fast_idx_mask
       offsetof(ParseTableT_, field_lookup_table),
-      4294967294,  // skipmap
+      4294967288,  // skipmap
       offsetof(ParseTableT_, field_entries),
-      1,  // num_field_entries
-      1,  // num_aux_entries
+      3,  // num_field_entries
+      5,  // num_aux_entries
       offsetof(ParseTableT_, aux_entries),
       class_data,
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::MarketInfo>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
       {::_pbi::TcParser::MiniParse, {}},
     }}, {{
       65535, 65535
     }}, {{
-      // map<string, .upstox.MarketStatus> segmentStatus = 1;
+      // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus> segmentStatus = 1;
       {PROTOBUF_FIELD_OFFSET(MarketInfo, _impl_.segmentstatus_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
+      // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> casMarketStatus = 2;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo, _impl_.casmarketstatus_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
+      // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> preOpenSessionStatus = 3;
+      {PROTOBUF_FIELD_OFFSET(MarketInfo, _impl_.preopensessionstatus_), _Internal::kHasBitsOffset + 2, 3, (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     }},
     {{
         {::_pbi::TcParser::GetMapAuxInfo(
             1, 0, 9, 14, 0)},
+        {::_pbi::TcParser::GetMapAuxInfo(
+            1, 0, 9, 11, 0)},
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo_globals_},
+        #endif
+        {::_pbi::TcParser::GetMapAuxInfo(
+            1, 0, 9, 11, 0)},
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo_globals_},
+        #endif
     }},
     {{
-      "\21\15\0\0\0\0\0\0"
-      "upstox.MarketInfo"
+      "\67\15\17\24\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo"
       "segmentStatus"
+      "casMarketStatus"
+      "preOpenSessionStatus"
     }},
   };
 }
@@ -1237,8 +1720,18 @@ inline constexpr MarketInfo::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
         segmentstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketInfo,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo, _impl_.segmentstatus_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.segmentstatus_)>()
+         }
+        ,
+        casmarketstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.casmarketstatus_)>()
+         }
+        ,
+        preopensessionstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.preopensessionstatus_)>()
          }
      {}
 
@@ -1283,7 +1776,7 @@ constexpr auto MarketInfo::InternalGenerateClassData_(
           false,
       },
 #ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[12],
+      &file_reflection_data[15],
 #else   // !PROTOBUF_MESSAGE_GLOBALS
       &::_pbi::kDescriptorMethods,
       &descriptor_table_MarketDataFeedV3_2eproto,
@@ -1334,200 +1827,6 @@ const ::_pbi::ClassData* MarketInfo_get_class_data() {
 }
 }  // namespace
 #endif  // PROTOBUF_CUSTOM_VTABLE
-class FirstLevelWithGreeks::_Internal {
- public:
-  using HasBits = decltype(::std::declval<FirstLevelWithGreeks>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-      8 * PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._has_bits_);
-};
-
-constexpr FirstLevelWithGreeks::ParseTableT_ FirstLevelWithGreeks::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
-  return ParseTableT_{
-    {
-      PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._has_bits_),
-      0, // no _extensions_
-      6, 56,  // max_field_number, fast_idx_mask
-      offsetof(ParseTableT_, field_lookup_table),
-      4294967232,  // skipmap
-      offsetof(ParseTableT_, field_entries),
-      6,  // num_field_entries
-      3,  // num_aux_entries
-      offsetof(ParseTableT_, aux_entries),
-      class_data,
-      nullptr,  // post_loop_handler
-      ::_pbi::TcParser::GenericFallback,  // fallback
-      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::FirstLevelWithGreeks>(),  // to_prefetch
-      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
-    }, {{
-      {::_pbi::TcParser::MiniParse, {}},
-      // .upstox.LTPC ltpc = 1;
-      {::_pbi::TcParser::FastMtS1,
-       {10, 0, 0,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.ltpc_)}},
-      // .upstox.Quote firstDepth = 2;
-      {::_pbi::TcParser::FastMtS1,
-       {18, 1, 1,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.firstdepth_)}},
-      // .upstox.OptionGreeks optionGreeks = 3;
-      {::_pbi::TcParser::FastMtS1,
-       {26, 2, 2,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.optiongreeks_)}},
-      // int64 vtt = 4;
-      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(FirstLevelWithGreeks, _impl_.vtt_), 3>(),
-       {32, 3, 0,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.vtt_)}},
-      // double oi = 5;
-      {::_pbi::TcParser::FastF64S1,
-       {41, 4, 0,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.oi_)}},
-      // double iv = 6;
-      {::_pbi::TcParser::FastF64S1,
-       {49, 5, 0,
-        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.iv_)}},
-      {::_pbi::TcParser::MiniParse, {}},
-    }}, {{
-      65535, 65535
-    }}, {{
-      // .upstox.LTPC ltpc = 1;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.ltpc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.Quote firstDepth = 2;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.firstdepth_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.OptionGreeks optionGreeks = 3;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.optiongreeks_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // int64 vtt = 4;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.vtt_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
-      // double oi = 5;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.oi_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-      // double iv = 6;
-      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.iv_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
-    }},
-    {{
-        #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::LTPC>()},
-        #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::LTPC_globals_},
-        #endif
-        #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::Quote>()},
-        #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::Quote_globals_},
-        #endif
-        #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::OptionGreeks>()},
-        #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::OptionGreeks_globals_},
-        #endif
-    }},
-    {{
-    }},
-  };
-}
-
-
-inline constexpr FirstLevelWithGreeks::Impl_::Impl_(
-    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
-    ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        ltpc_{nullptr},
-        firstdepth_{nullptr},
-        optiongreeks_{nullptr},
-        vtt_{::int64_t{0}},
-        oi_{0},
-        iv_{0} {}
-
-template <typename>
-constexpr FirstLevelWithGreeks::FirstLevelWithGreeks(::_pbi::ConstantInitialized,
-                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
-    : ::google::protobuf::Message(
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-          class_data
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          ),
-      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
-}
-inline void* PROTOBUF_NONNULL FirstLevelWithGreeks::PlacementNew_(
-    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
-  return ::new (mem) FirstLevelWithGreeks(arena);
-}
-constexpr auto FirstLevelWithGreeks::InternalNewImpl_() {
-  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(FirstLevelWithGreeks), alignof(FirstLevelWithGreeks));
-}
-constexpr auto FirstLevelWithGreeks::InternalGenerateClassData_(
-    const MessageLite& prototype,
-    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
-  return ::google::protobuf::internal::ClassDataFull{
-      ::google::protobuf::internal::ClassData{
-          &prototype,
-#ifndef PROTOBUF_MESSAGE_GLOBALS
-          &_table_.header,
-#else
-          tc_table,
-#endif
-          nullptr,  // IsInitialized
-          &FirstLevelWithGreeks::MergeImpl,
-          ::google::protobuf::Message::GetNewImpl<FirstLevelWithGreeks>(),
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-          &FirstLevelWithGreeks::SharedDtor,
-          ::google::protobuf::Message::GetClearImpl<FirstLevelWithGreeks>(), &FirstLevelWithGreeks::ByteSizeLong,
-              &FirstLevelWithGreeks::_InternalSerialize,
-#endif  // PROTOBUF_CUSTOM_VTABLE
-          PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._cached_size_),
-          false,
-      },
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[9],
-#else   // !PROTOBUF_MESSAGE_GLOBALS
-      &::_pbi::kDescriptorMethods,
-      &descriptor_table_MarketDataFeedV3_2eproto,
-      nullptr,  // tracker
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-  };
-}
-struct FirstLevelWithGreeksGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
-  constexpr FirstLevelWithGreeksGlobalsTypeInternal()
-      :
-#ifndef PROTOBUF_MESSAGE_GLOBALS
-        _default(::_pbi::ConstantInitialized{},
-                 FirstLevelWithGreeks_class_data_.base())
-#else   // !PROTOBUF_MESSAGE_GLOBALS
-        MessageGlobalsBase(FirstLevelWithGreeks::InternalGenerateClassData_(
-            _default, &FirstLevelWithGreeks_globals_._table.header)),
-        _default(::_pbi::ConstantInitialized{}, GetClassData()),
-        _table(::_pbi::PrivateAccess::GenerateParseTable<FirstLevelWithGreeks>(
-            GetClassData()))
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-  {
-  }
-  ~FirstLevelWithGreeksGlobalsTypeInternal() {}
-  union {
-    alignas(::_pbi::kMaxMessageAlignment) FirstLevelWithGreeks _default;
-  };
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-  decltype(::_pbi::PrivateAccess::GenerateParseTable<FirstLevelWithGreeks>(
-      ::std::declval<const ::_pbi::ClassData*>())) _table;
-#endif
-};
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-static_assert(PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeksGlobalsTypeInternal, _default) ==
-              ::_pbi::MessageGlobalsBase::OffsetToDefault());
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
-    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST FirstLevelWithGreeksGlobalsTypeInternal FirstLevelWithGreeks_globals_
-        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
-#if defined(PROTOBUF_CUSTOM_VTABLE)
-namespace {
-const ::_pbi::ClassData* FirstLevelWithGreeks_get_class_data() {
-#ifdef PROTOBUF_MESSAGE_GLOBALS
-  return FirstLevelWithGreeks_globals_.GetClassData();
-#else
-  return FirstLevelWithGreeks_class_data_.base();
-#endif  // PROTOBUF_MESSAGE_GLOBALS
-}
-}  // namespace
-#endif  // PROTOBUF_CUSTOM_VTABLE
 class MarketFullFeed::_Internal {
  public:
   using HasBits = decltype(::std::declval<MarketFullFeed>()._impl_._has_bits_);
@@ -1540,34 +1839,37 @@ constexpr MarketFullFeed::ParseTableT_ MarketFullFeed::InternalGenerateParseTabl
     {
       PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_._has_bits_),
       0, // no _extensions_
-      10, 120,  // max_field_number, fast_idx_mask
+      16, 120,  // max_field_number, fast_idx_mask
       offsetof(ParseTableT_, field_lookup_table),
-      4294966272,  // skipmap
+      4294901760,  // skipmap
       offsetof(ParseTableT_, field_entries),
-      10,  // num_field_entries
+      16,  // num_field_entries
       4,  // num_aux_entries
       offsetof(ParseTableT_, aux_entries),
       class_data,
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::MarketFullFeed>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      {::_pbi::TcParser::MiniParse, {}},
-      // .upstox.LTPC ltpc = 1;
+      // bool casEligible = 16;
+      {::_pbi::TcParser::FastV8S2,
+       {384, 15, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.caseligible_)}},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
       {::_pbi::TcParser::FastMtS1,
        {10, 0, 0,
         PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.ltpc_)}},
-      // .upstox.MarketLevel marketLevel = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
       {::_pbi::TcParser::FastMtS1,
        {18, 1, 1,
         PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.marketlevel_)}},
-      // .upstox.OptionGreeks optionGreeks = 3;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
       {::_pbi::TcParser::FastMtS1,
        {26, 2, 2,
         PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.optiongreeks_)}},
-      // .upstox.MarketOHLC marketOHLC = 4;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
       {::_pbi::TcParser::FastMtS1,
        {34, 3, 3,
         PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.marketohlc_)}},
@@ -1595,21 +1897,36 @@ constexpr MarketFullFeed::ParseTableT_ MarketFullFeed::InternalGenerateParseTabl
       {::_pbi::TcParser::FastF64S1,
        {81, 9, 0,
         PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.tsq_)}},
-      {::_pbi::TcParser::MiniParse, {}},
-      {::_pbi::TcParser::MiniParse, {}},
-      {::_pbi::TcParser::MiniParse, {}},
-      {::_pbi::TcParser::MiniParse, {}},
-      {::_pbi::TcParser::MiniParse, {}},
+      // double iep = 11;
+      {::_pbi::TcParser::FastF64S1,
+       {89, 10, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iep_)}},
+      // double rp = 12;
+      {::_pbi::TcParser::FastF64S1,
+       {97, 11, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.rp_)}},
+      // int64 ieq = 13;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MarketFullFeed, _impl_.ieq_), 12>(),
+       {104, 12, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.ieq_)}},
+      // int64 iiqTotal = 14;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MarketFullFeed, _impl_.iiqtotal_), 13>(),
+       {112, 13, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iiqtotal_)}},
+      // int64 iiqM = 15;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(MarketFullFeed, _impl_.iiqm_), 14>(),
+       {120, 14, 0,
+        PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iiqm_)}},
     }}, {{
       65535, 65535
     }}, {{
-      // .upstox.LTPC ltpc = 1;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.ltpc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.MarketLevel marketLevel = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.marketlevel_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.OptionGreeks optionGreeks = 3;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.optiongreeks_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.MarketOHLC marketOHLC = 4;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.marketohlc_), _Internal::kHasBitsOffset + 3, 3, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
       // double atp = 5;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.atp_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
@@ -1623,27 +1940,39 @@ constexpr MarketFullFeed::ParseTableT_ MarketFullFeed::InternalGenerateParseTabl
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.tbq_), _Internal::kHasBitsOffset + 8, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
       // double tsq = 10;
       {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.tsq_), _Internal::kHasBitsOffset + 9, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // double iep = 11;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iep_), _Internal::kHasBitsOffset + 10, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // double rp = 12;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.rp_), _Internal::kHasBitsOffset + 11, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // int64 ieq = 13;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.ieq_), _Internal::kHasBitsOffset + 12, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // int64 iiqTotal = 14;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iiqtotal_), _Internal::kHasBitsOffset + 13, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // int64 iiqM = 15;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.iiqm_), _Internal::kHasBitsOffset + 14, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // bool casEligible = 16;
+      {PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.caseligible_), _Internal::kHasBitsOffset + 15, 0, (0 | ::_fl::kFcOptional | ::_fl::kBool)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::LTPC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::LTPC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::MarketLevel>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::MarketLevel_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::OptionGreeks>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::OptionGreeks_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::MarketOHLC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::MarketOHLC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC_globals_},
         #endif
     }},
     {{
@@ -1665,7 +1994,13 @@ inline constexpr MarketFullFeed::Impl_::Impl_(
         oi_{0},
         iv_{0},
         tbq_{0},
-        tsq_{0} {}
+        tsq_{0},
+        iep_{0},
+        rp_{0},
+        ieq_{::int64_t{0}},
+        iiqtotal_{::int64_t{0}},
+        iiqm_{::int64_t{0}},
+        caseligible_{false} {}
 
 template <typename>
 constexpr MarketFullFeed::MarketFullFeed(::_pbi::ConstantInitialized,
@@ -1782,35 +2117,35 @@ constexpr IndexFullFeed::ParseTableT_ IndexFullFeed::InternalGenerateParseTable_
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::IndexFullFeed>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.MarketOHLC marketOHLC = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
       {::_pbi::TcParser::FastMtS1,
        {18, 1, 1,
         PROTOBUF_FIELD_OFFSET(IndexFullFeed, _impl_.marketohlc_)}},
-      // .upstox.LTPC ltpc = 1;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
       {::_pbi::TcParser::FastMtS1,
        {10, 0, 0,
         PROTOBUF_FIELD_OFFSET(IndexFullFeed, _impl_.ltpc_)}},
     }}, {{
       65535, 65535
     }}, {{
-      // .upstox.LTPC ltpc = 1;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
       {PROTOBUF_FIELD_OFFSET(IndexFullFeed, _impl_.ltpc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.MarketOHLC marketOHLC = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
       {PROTOBUF_FIELD_OFFSET(IndexFullFeed, _impl_.marketohlc_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::LTPC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::LTPC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::MarketOHLC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::MarketOHLC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC_globals_},
         #endif
     }},
     {{
@@ -1918,19 +2253,213 @@ const ::_pbi::ClassData* IndexFullFeed_get_class_data() {
 }
 }  // namespace
 #endif  // PROTOBUF_CUSTOM_VTABLE
+class FirstLevelWithGreeks::_Internal {
+ public:
+  using HasBits = decltype(::std::declval<FirstLevelWithGreeks>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._has_bits_);
+};
+
+constexpr FirstLevelWithGreeks::ParseTableT_ FirstLevelWithGreeks::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
+  return ParseTableT_{
+    {
+      PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._has_bits_),
+      0, // no _extensions_
+      6, 56,  // max_field_number, fast_idx_mask
+      offsetof(ParseTableT_, field_lookup_table),
+      4294967232,  // skipmap
+      offsetof(ParseTableT_, field_entries),
+      6,  // num_field_entries
+      3,  // num_aux_entries
+      offsetof(ParseTableT_, aux_entries),
+      class_data,
+      nullptr,  // post_loop_handler
+      ::_pbi::TcParser::GenericFallback,  // fallback
+      #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks>(),  // to_prefetch
+      #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
+    }, {{
+      {::_pbi::TcParser::MiniParse, {}},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
+      {::_pbi::TcParser::FastMtS1,
+       {10, 0, 0,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.ltpc_)}},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
+      {::_pbi::TcParser::FastMtS1,
+       {18, 1, 1,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.firstdepth_)}},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
+      {::_pbi::TcParser::FastMtS1,
+       {26, 2, 2,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.optiongreeks_)}},
+      // int64 vtt = 4;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(FirstLevelWithGreeks, _impl_.vtt_), 3>(),
+       {32, 3, 0,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.vtt_)}},
+      // double oi = 5;
+      {::_pbi::TcParser::FastF64S1,
+       {41, 4, 0,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.oi_)}},
+      // double iv = 6;
+      {::_pbi::TcParser::FastF64S1,
+       {49, 5, 0,
+        PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.iv_)}},
+      {::_pbi::TcParser::MiniParse, {}},
+    }}, {{
+      65535, 65535
+    }}, {{
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.ltpc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.firstdepth_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.optiongreeks_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+      // int64 vtt = 4;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.vtt_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
+      // double oi = 5;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.oi_), _Internal::kHasBitsOffset + 4, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+      // double iv = 6;
+      {PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_.iv_), _Internal::kHasBitsOffset + 5, 0, (0 | ::_fl::kFcOptional | ::_fl::kDouble)},
+    }},
+    {{
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_},
+        #endif
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote_globals_},
+        #endif
+        #ifndef PROTOBUF_MESSAGE_GLOBALS
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks>()},
+        #else
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks_globals_},
+        #endif
+    }},
+    {{
+    }},
+  };
+}
+
+
+inline constexpr FirstLevelWithGreeks::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        ltpc_{nullptr},
+        firstdepth_{nullptr},
+        optiongreeks_{nullptr},
+        vtt_{::int64_t{0}},
+        oi_{0},
+        iv_{0} {}
+
+template <typename>
+constexpr FirstLevelWithGreeks::FirstLevelWithGreeks(::_pbi::ConstantInitialized,
+                       const ::_pbi::ClassData* PROTOBUF_NONNULL class_data)
+    : ::google::protobuf::Message(
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          class_data
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          ),
+      _impl_(internal_visibility(), ::_pbi::ConstantInitialized()) {
+}
+inline void* PROTOBUF_NONNULL FirstLevelWithGreeks::PlacementNew_(
+    const void* PROTOBUF_NONNULL, void* PROTOBUF_NONNULL mem,
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena) {
+  return ::new (mem) FirstLevelWithGreeks(arena);
+}
+constexpr auto FirstLevelWithGreeks::InternalNewImpl_() {
+  return ::google::protobuf::internal::MessageCreator::ZeroInit(sizeof(FirstLevelWithGreeks), alignof(FirstLevelWithGreeks));
+}
+constexpr auto FirstLevelWithGreeks::InternalGenerateClassData_(
+    const MessageLite& prototype,
+    const ::google::protobuf::internal::TcParseTableBase* tc_table) {
+  return ::google::protobuf::internal::ClassDataFull{
+      ::google::protobuf::internal::ClassData{
+          &prototype,
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+          &_table_.header,
+#else
+          tc_table,
+#endif
+          nullptr,  // IsInitialized
+          &FirstLevelWithGreeks::MergeImpl,
+          ::google::protobuf::Message::GetNewImpl<FirstLevelWithGreeks>(),
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+          &FirstLevelWithGreeks::SharedDtor,
+          ::google::protobuf::Message::GetClearImpl<FirstLevelWithGreeks>(), &FirstLevelWithGreeks::ByteSizeLong,
+              &FirstLevelWithGreeks::_InternalSerialize,
+#endif  // PROTOBUF_CUSTOM_VTABLE
+          PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeks, _impl_._cached_size_),
+          false,
+      },
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+      &file_reflection_data[9],
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+      &::_pbi::kDescriptorMethods,
+      &descriptor_table_MarketDataFeedV3_2eproto,
+      nullptr,  // tracker
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  };
+}
+struct FirstLevelWithGreeksGlobalsTypeInternal : ::_pbi::MessageGlobalsBase {
+  constexpr FirstLevelWithGreeksGlobalsTypeInternal()
+      :
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+        _default(::_pbi::ConstantInitialized{},
+                 FirstLevelWithGreeks_class_data_.base())
+#else   // !PROTOBUF_MESSAGE_GLOBALS
+        MessageGlobalsBase(FirstLevelWithGreeks::InternalGenerateClassData_(
+            _default, &FirstLevelWithGreeks_globals_._table.header)),
+        _default(::_pbi::ConstantInitialized{}, GetClassData()),
+        _table(::_pbi::PrivateAccess::GenerateParseTable<FirstLevelWithGreeks>(
+            GetClassData()))
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+  {
+  }
+  ~FirstLevelWithGreeksGlobalsTypeInternal() {}
+  union {
+    alignas(::_pbi::kMaxMessageAlignment) FirstLevelWithGreeks _default;
+  };
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  decltype(::_pbi::PrivateAccess::GenerateParseTable<FirstLevelWithGreeks>(
+      ::std::declval<const ::_pbi::ClassData*>())) _table;
+#endif
+};
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+static_assert(PROTOBUF_FIELD_OFFSET(FirstLevelWithGreeksGlobalsTypeInternal, _default) ==
+              ::_pbi::MessageGlobalsBase::OffsetToDefault());
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PROTOBUF_MESSAGE_GLOBALS_CONST FirstLevelWithGreeksGlobalsTypeInternal FirstLevelWithGreeks_globals_
+        PROTOBUF_MESSAGE_GLOBALS_SECTION(.data.rel.ro);
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+namespace {
+const ::_pbi::ClassData* FirstLevelWithGreeks_get_class_data() {
+#ifdef PROTOBUF_MESSAGE_GLOBALS
+  return FirstLevelWithGreeks_globals_.GetClassData();
+#else
+  return FirstLevelWithGreeks_class_data_.base();
+#endif  // PROTOBUF_MESSAGE_GLOBALS
+}
+}  // namespace
+#endif  // PROTOBUF_CUSTOM_VTABLE
 class FullFeed::_Internal {
  public:
-  using HasBits = decltype(::std::declval<FullFeed>()._impl_._has_bits_);
-  static constexpr ::int32_t kHasBitsOffset =
-      8 * PROTOBUF_FIELD_OFFSET(FullFeed, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed, _impl_._oneof_case_);
 };
 
 constexpr FullFeed::ParseTableT_ FullFeed::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
   return ParseTableT_{
     {
-      PROTOBUF_FIELD_OFFSET(FullFeed, _impl_._has_bits_),
+      PROTOBUF_FIELD_OFFSET(FullFeed,
+                            _impl_._cached_size_),  // no hasbits
       0, // no _extensions_
-      2, 8,  // max_field_number, fast_idx_mask
+      2, 0,  // max_field_number, fast_idx_mask
       offsetof(ParseTableT_, field_lookup_table),
       4294967292,  // skipmap
       offsetof(ParseTableT_, field_entries),
@@ -1941,35 +2470,28 @@ constexpr FullFeed::ParseTableT_ FullFeed::InternalGenerateParseTable_(const ::_
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::FullFeed>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.IndexFullFeed indexFF = 2;
-      {::_pbi::TcParser::FastMtS1,
-       {18, 1, 1,
-        PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.indexff_)}},
-      // .upstox.MarketFullFeed marketFF = 1;
-      {::_pbi::TcParser::FastMtS1,
-       {10, 0, 0,
-        PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.marketff_)}},
+      {::_pbi::TcParser::MiniParse, {}},
     }}, {{
       65535, 65535
     }}, {{
-      // .upstox.MarketFullFeed marketFF = 1;
-      {PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.marketff_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.IndexFullFeed indexFF = 2;
-      {PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.indexff_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed marketFF = 1;
+      {PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.FullFeedUnion_.marketff_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed indexFF = 2;
+      {PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.FullFeedUnion_.indexff_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::MarketFullFeed>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::MarketFullFeed_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::IndexFullFeed>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::IndexFullFeed_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed_globals_},
         #endif
     }},
     {{
@@ -1981,9 +2503,9 @@ constexpr FullFeed::ParseTableT_ FullFeed::InternalGenerateParseTable_(const ::_
 inline constexpr FullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     ::_pbi::ConstantInitialized) noexcept
-      : _cached_size_{0},
-        marketff_{nullptr},
-        indexff_{nullptr} {}
+      : FullFeedUnion_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 template <typename>
 constexpr FullFeed::FullFeed(::_pbi::ConstantInitialized,
@@ -2082,6 +2604,8 @@ class Feed::_Internal {
   using HasBits = decltype(::std::declval<Feed>()._impl_._has_bits_);
   static constexpr ::int32_t kHasBitsOffset =
       8 * PROTOBUF_FIELD_OFFSET(Feed, _impl_._has_bits_);
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_._oneof_case_);
 };
 
 constexpr Feed::ParseTableT_ Feed::InternalGenerateParseTable_(const ::_pbi::ClassData* class_data) {
@@ -2089,7 +2613,7 @@ constexpr Feed::ParseTableT_ Feed::InternalGenerateParseTable_(const ::_pbi::Cla
     {
       PROTOBUF_FIELD_OFFSET(Feed, _impl_._has_bits_),
       0, // no _extensions_
-      4, 24,  // max_field_number, fast_idx_mask
+      4, 0,  // max_field_number, fast_idx_mask
       offsetof(ParseTableT_, field_lookup_table),
       4294967280,  // skipmap
       offsetof(ParseTableT_, field_entries),
@@ -2100,52 +2624,40 @@ constexpr Feed::ParseTableT_ Feed::InternalGenerateParseTable_(const ::_pbi::Cla
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::Feed>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.RequestMode requestMode = 4;
-      {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Feed, _impl_.requestmode_), 3>(),
-       {32, 3, 0,
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
+      {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Feed, _impl_.requestmode_), 0>(),
+       {32, 0, 0,
         PROTOBUF_FIELD_OFFSET(Feed, _impl_.requestmode_)}},
-      // .upstox.LTPC ltpc = 1;
-      {::_pbi::TcParser::FastMtS1,
-       {10, 0, 0,
-        PROTOBUF_FIELD_OFFSET(Feed, _impl_.ltpc_)}},
-      // .upstox.FullFeed fullFeed = 2;
-      {::_pbi::TcParser::FastMtS1,
-       {18, 1, 1,
-        PROTOBUF_FIELD_OFFSET(Feed, _impl_.fullfeed_)}},
-      // .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
-      {::_pbi::TcParser::FastMtS1,
-       {26, 2, 2,
-        PROTOBUF_FIELD_OFFSET(Feed, _impl_.firstlevelwithgreeks_)}},
     }}, {{
       65535, 65535
     }}, {{
-      // .upstox.LTPC ltpc = 1;
-      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.ltpc_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.FullFeed fullFeed = 2;
-      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.fullfeed_), _Internal::kHasBitsOffset + 1, 1, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
-      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.firstlevelwithgreeks_), _Internal::kHasBitsOffset + 2, 2, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
-      // .upstox.RequestMode requestMode = 4;
-      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.requestmode_), _Internal::kHasBitsOffset + 3, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
+      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.FeedUnion_.ltpc_), _Internal::kOneofCaseOffset + 0, 0, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed fullFeed = 2;
+      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.FeedUnion_.fullfeed_), _Internal::kOneofCaseOffset + 0, 1, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks firstLevelWithGreeks = 3;
+      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.FeedUnion_.firstlevelwithgreeks_), _Internal::kOneofCaseOffset + 0, 2, (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
+      {PROTOBUF_FIELD_OFFSET(Feed, _impl_.requestmode_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::LTPC>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::LTPC_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::FullFeed>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::FullFeed_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed_globals_},
         #endif
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::FirstLevelWithGreeks>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::FirstLevelWithGreeks_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks_globals_},
         #endif
     }},
     {{
@@ -2158,10 +2670,9 @@ inline constexpr Feed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     ::_pbi::ConstantInitialized) noexcept
       : _cached_size_{0},
-        ltpc_{nullptr},
-        fullfeed_{nullptr},
-        firstlevelwithgreeks_{nullptr},
-        requestmode_{static_cast< ::upstox::RequestMode >(0)} {}
+        requestmode_{static_cast< ::com::upstox::marketdatafeederv3udapi::rpc::proto::RequestMode >(0)},
+        FeedUnion_{},
+        _oneof_case_{} {}
 
 template <typename>
 constexpr Feed::Feed(::_pbi::ConstantInitialized,
@@ -2271,10 +2782,10 @@ constexpr FeedResponse_FeedsEntry_DoNotUse::ParseTableT_ FeedResponse_FeedsEntry
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::DiscardEverythingFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::FeedResponse_FeedsEntry_DoNotUse>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.Feed value = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed value = 2;
       {::_pbi::TcParser::FastMtS1,
        {18, 1, 0,
         PROTOBUF_FIELD_OFFSET(FeedResponse_FeedsEntry_DoNotUse, _impl_.value_)}},
@@ -2287,19 +2798,19 @@ constexpr FeedResponse_FeedsEntry_DoNotUse::ParseTableT_ FeedResponse_FeedsEntry
     }}, {{
       // string key = 1;
       {PROTOBUF_FIELD_OFFSET(FeedResponse_FeedsEntry_DoNotUse, _impl_.key_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
-      // .upstox.Feed value = 2;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed value = 2;
       {PROTOBUF_FIELD_OFFSET(FeedResponse_FeedsEntry_DoNotUse, _impl_.value_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::Feed>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::Feed_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed_globals_},
         #endif
     }},
     {{
-      "\36\3\0\0\0\0\0\0"
-      "upstox.FeedResponse.FeedsEntry"
+      "\104\3\0\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.FeedsEntry"
       "key"
     }},
   };
@@ -2346,7 +2857,7 @@ constexpr auto FeedResponse_FeedsEntry_DoNotUse::InternalGenerateClassData_(
           false,
       },
 #ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[13],
+      &file_reflection_data[16],
 #else   // !PROTOBUF_MESSAGE_GLOBALS
       &::_pbi::kDescriptorMethods,
       &descriptor_table_MarketDataFeedV3_2eproto,
@@ -2420,14 +2931,14 @@ constexpr FeedResponse::ParseTableT_ FeedResponse::InternalGenerateParseTable_(c
       nullptr,  // post_loop_handler
       ::_pbi::TcParser::GenericFallback,  // fallback
       #ifdef PROTOBUF_PREFETCH_PARSE_TABLE
-      ::_pbi::TcParser::GetTable<::upstox::FeedResponse>(),  // to_prefetch
+      ::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse>(),  // to_prefetch
       #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
     }, {{
-      // .upstox.MarketInfo marketInfo = 4;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
       {::_pbi::TcParser::FastMtS1,
        {34, 0, 0,
         PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.marketinfo_)}},
-      // .upstox.Type type = 1;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
       {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(FeedResponse, _impl_.type_), 2>(),
        {8, 2, 0,
         PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.type_)}},
@@ -2439,32 +2950,32 @@ constexpr FeedResponse::ParseTableT_ FeedResponse::InternalGenerateParseTable_(c
     }}, {{
       65535, 65535
     }}, {{
-      // .upstox.Type type = 1;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
       {PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.type_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kOpenEnum)},
-      // map<string, .upstox.Feed> feeds = 2;
+      // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed> feeds = 2;
       {PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.feeds_), _Internal::kHasBitsOffset + 3, 1, (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
       // int64 currentTs = 3;
       {PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.currentts_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kInt64)},
-      // .upstox.MarketInfo marketInfo = 4;
+      // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
       {PROTOBUF_FIELD_OFFSET(FeedResponse, _impl_.marketinfo_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     }},
     {{
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::MarketInfo>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::MarketInfo_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_globals_},
         #endif
         {::_pbi::TcParser::GetMapAuxInfo(
             1, 0, 9, 11, 0)},
         #ifndef PROTOBUF_MESSAGE_GLOBALS
-        {::_pbi::TcParser::GetTable<::upstox::Feed>()},
+        {::_pbi::TcParser::GetTable<::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>()},
         #else
-        {::_pbi::FieldAuxMessageGlobals(), &::upstox::Feed_globals_},
+        {::_pbi::FieldAuxMessageGlobals(), &::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed_globals_},
         #endif
     }},
     {{
-      "\23\0\5\0\0\0\0\0"
-      "upstox.FeedResponse"
+      "\71\0\5\0\0\0\0\0"
+      "com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse"
       "feeds"
     }},
   };
@@ -2477,10 +2988,10 @@ inline constexpr FeedResponse::Impl_::Impl_(
       : _cached_size_{0},
         marketinfo_{nullptr},
         currentts_{::int64_t{0}},
-        type_{static_cast< ::upstox::Type >(0)},
+        type_{static_cast< ::com::upstox::marketdatafeederv3udapi::rpc::proto::Type >(0)},
         feeds_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::FeedResponse,
-            PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.feeds_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.feeds_)>()
          }
      {}
 
@@ -2525,7 +3036,7 @@ constexpr auto FeedResponse::InternalGenerateClassData_(
           false,
       },
 #ifdef PROTOBUF_MESSAGE_GLOBALS
-      &file_reflection_data[14],
+      &file_reflection_data[17],
 #else   // !PROTOBUF_MESSAGE_GLOBALS
       &::_pbi::kDescriptorMethods,
       &descriptor_table_MarketDataFeedV3_2eproto,
@@ -2576,7 +3087,11 @@ const ::_pbi::ClassData* FeedResponse_get_class_data() {
 }
 }  // namespace
 #endif  // PROTOBUF_CUSTOM_VTABLE
+}  // namespace proto
+}  // namespace rpc
+}  // namespace marketdatafeederv3udapi
 }  // namespace upstox
+}  // namespace com
 static const ::_pb::EnumDescriptor* PROTOBUF_NONNULL
     file_level_enum_descriptors_MarketDataFeedV3_2eproto[3];
 static constexpr const ::_pb::ServiceDescriptor* PROTOBUF_NONNULL* PROTOBUF_NULLABLE
@@ -2585,60 +3100,62 @@ const ::uint32_t
     TableStruct_MarketDataFeedV3_2eproto::offsets[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
         protodesc_cold) = {
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::LTPC, _impl_._has_bits_),
-        7, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::LTPC, _impl_.ltp_),
-        PROTOBUF_FIELD_OFFSET(::upstox::LTPC, _impl_.ltt_),
-        PROTOBUF_FIELD_OFFSET(::upstox::LTPC, _impl_.ltq_),
-        PROTOBUF_FIELD_OFFSET(::upstox::LTPC, _impl_.cp_),
-        0,
-        1,
-        2,
-        3,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketLevel, _impl_._has_bits_),
-        4, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketLevel, _impl_.bidaskquote_),
-        0,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketOHLC, _impl_._has_bits_),
-        4, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketOHLC, _impl_.ohlc_),
-        0,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::Quote, _impl_._has_bits_),
-        7, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::Quote, _impl_.bidq_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Quote, _impl_.bidp_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Quote, _impl_.askq_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Quote, _impl_.askp_),
-        0,
-        1,
-        2,
-        3,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_._has_bits_),
         8, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_.delta_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_.theta_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_.gamma_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_.vega_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OptionGreeks, _impl_.rho_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_.ltp_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_.ltt_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_.ltq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_.cp_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC, _impl_.iep_),
+        1,
+        2,
+        3,
+        4,
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel, _impl_.bidaskquote_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC, _impl_._has_bits_),
+        4, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC, _impl_.ohlc_),
+        0,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote, _impl_._has_bits_),
+        7, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote, _impl_.bidq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote, _impl_.bidp_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote, _impl_.askq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote, _impl_.askp_),
+        0,
+        1,
+        2,
+        3,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_._has_bits_),
+        8, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_.delta_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_.theta_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_.gamma_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_.vega_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks, _impl_.rho_),
         0,
         1,
         2,
         3,
         4,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_._has_bits_),
         10, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.interval_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.open_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.high_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.low_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.close_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.vol_),
-        PROTOBUF_FIELD_OFFSET(::upstox::OHLC, _impl_.ts_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.interval_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.open_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.high_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.low_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.close_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.vol_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC, _impl_.ts_),
         0,
         1,
         2,
@@ -2647,18 +3164,24 @@ const ::uint32_t
         5,
         6,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_._has_bits_),
-        13, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.ltpc_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.marketlevel_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.optiongreeks_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.marketohlc_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.atp_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.vtt_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.oi_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.iv_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.tbq_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketFullFeed, _impl_.tsq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_._has_bits_),
+        19, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.ltpc_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.marketlevel_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.optiongreeks_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.marketohlc_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.atp_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.vtt_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.oi_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.iv_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.tbq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.tsq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.iep_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.rp_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.ieq_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.iiqtotal_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.iiqm_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed, _impl_.caseligible_),
         0,
         1,
         2,
@@ -2669,72 +3192,103 @@ const ::uint32_t
         7,
         8,
         9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::IndexFullFeed, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed, _impl_._has_bits_),
         5, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::IndexFullFeed, _impl_.ltpc_),
-        PROTOBUF_FIELD_OFFSET(::upstox::IndexFullFeed, _impl_.marketohlc_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed, _impl_.ltpc_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed, _impl_.marketohlc_),
         0,
         1,
+        0x004, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed, _impl_._oneof_case_[0]),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed, _impl_.FullFeedUnion_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed, _impl_.FullFeedUnion_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed, _impl_.FullFeedUnion_),
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::FullFeed, _impl_._has_bits_),
-        5, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::FullFeed, _impl_.marketff_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FullFeed, _impl_.indexff_),
-        0,
-        1,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_._has_bits_),
         9, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.ltpc_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.firstdepth_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.optiongreeks_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.vtt_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.oi_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FirstLevelWithGreeks, _impl_.iv_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.ltpc_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.firstdepth_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.optiongreeks_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.vtt_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.oi_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks, _impl_.iv_),
         0,
         1,
         2,
         3,
         4,
         5,
+        0x085, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_._oneof_case_[0]),
+        9, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_.FeedUnion_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_.FeedUnion_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_.FeedUnion_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_.requestmode_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed, _impl_.FeedUnion_),
+        ~0u,
+        ~0u,
+        ~0u,
+        0,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::Feed, _impl_._has_bits_),
-        7, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::Feed, _impl_.ltpc_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Feed, _impl_.fullfeed_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Feed, _impl_.firstlevelwithgreeks_),
-        PROTOBUF_FIELD_OFFSET(::upstox::Feed, _impl_.requestmode_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo, _impl_.status_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo, _impl_.updatedtime_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.key_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.value_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.key_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse, _impl_.value_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_._has_bits_),
+        5, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.key_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse, _impl_.value_),
+        0,
+        1,
+        0x081, // bitmap
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_._has_bits_),
+        6, // hasbit index offset
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.segmentstatus_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.casmarketstatus_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.preopensessionstatus_),
         0,
         1,
         2,
-        3,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse, _impl_._has_bits_),
         5, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.key_),
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo_SegmentStatusEntry_DoNotUse, _impl_.value_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse, _impl_.key_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse, _impl_.value_),
         0,
         1,
         0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo, _impl_._has_bits_),
-        4, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo, _impl_.segmentstatus_),
-        0,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse_FeedsEntry_DoNotUse, _impl_._has_bits_),
-        5, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse_FeedsEntry_DoNotUse, _impl_.key_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse_FeedsEntry_DoNotUse, _impl_.value_),
-        0,
-        1,
-        0x081, // bitmap
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_._has_bits_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_._has_bits_),
         7, // hasbit index offset
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.type_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.feeds_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.currentts_),
-        PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.marketinfo_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.type_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.feeds_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.currentts_),
+        PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.marketinfo_),
         2,
         3,
         1,
@@ -2743,108 +3297,162 @@ const ::uint32_t
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-        {0, sizeof(::upstox::LTPC)},
-        {11, sizeof(::upstox::MarketLevel)},
-        {16, sizeof(::upstox::MarketOHLC)},
-        {21, sizeof(::upstox::Quote)},
-        {32, sizeof(::upstox::OptionGreeks)},
-        {45, sizeof(::upstox::OHLC)},
-        {62, sizeof(::upstox::MarketFullFeed)},
-        {85, sizeof(::upstox::IndexFullFeed)},
-        {92, sizeof(::upstox::FullFeed)},
-        {99, sizeof(::upstox::FirstLevelWithGreeks)},
-        {114, sizeof(::upstox::Feed)},
-        {125, sizeof(::upstox::MarketInfo_SegmentStatusEntry_DoNotUse)},
-        {132, sizeof(::upstox::MarketInfo)},
-        {137, sizeof(::upstox::FeedResponse_FeedsEntry_DoNotUse)},
-        {144, sizeof(::upstox::FeedResponse)},
+        {0, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC)},
+        {13, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel)},
+        {18, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC)},
+        {23, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote)},
+        {34, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks)},
+        {47, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC)},
+        {64, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed)},
+        {99, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed)},
+        {106, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed)},
+        {111, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks)},
+        {126, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed)},
+        {139, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo)},
+        {146, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse)},
+        {153, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse)},
+        {160, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse)},
+        {167, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo)},
+        {176, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse)},
+        {183, sizeof(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse)},
 };
 static const ::_pbi::MessageGlobalsBase* PROTOBUF_NONNULL const
     file_message_globals[] = {
-        &::upstox::LTPC_globals_,
-        &::upstox::MarketLevel_globals_,
-        &::upstox::MarketOHLC_globals_,
-        &::upstox::Quote_globals_,
-        &::upstox::OptionGreeks_globals_,
-        &::upstox::OHLC_globals_,
-        &::upstox::MarketFullFeed_globals_,
-        &::upstox::IndexFullFeed_globals_,
-        &::upstox::FullFeed_globals_,
-        &::upstox::FirstLevelWithGreeks_globals_,
-        &::upstox::Feed_globals_,
-        &::upstox::MarketInfo_SegmentStatusEntry_DoNotUse_globals_,
-        &::upstox::MarketInfo_globals_,
-        &::upstox::FeedResponse_FeedsEntry_DoNotUse_globals_,
-        &::upstox::FeedResponse_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::Quote_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::OptionGreeks_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_SegmentStatusEntry_DoNotUse_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_CasMarketStatusEntry_DoNotUse_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_FeedsEntry_DoNotUse_globals_,
+        &::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse_globals_,
 };
 const char descriptor_table_protodef_MarketDataFeedV3_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\026MarketDataFeedV3.proto\022\006upstox\"9\n\004LTPC"
-    "\022\013\n\003ltp\030\001 \001(\001\022\013\n\003ltt\030\002 \001(\003\022\013\n\003ltq\030\003 \001(\003\022"
-    "\n\n\002cp\030\004 \001(\001\"1\n\013MarketLevel\022\"\n\013bidAskQuot"
-    "e\030\001 \003(\0132\r.upstox.Quote\"(\n\nMarketOHLC\022\032\n\004"
-    "ohlc\030\001 \003(\0132\014.upstox.OHLC\"\?\n\005Quote\022\014\n\004bid"
-    "Q\030\001 \001(\003\022\014\n\004bidP\030\002 \001(\001\022\014\n\004askQ\030\003 \001(\003\022\014\n\004a"
-    "skP\030\004 \001(\001\"V\n\014OptionGreeks\022\r\n\005delta\030\001 \001(\001"
-    "\022\r\n\005theta\030\002 \001(\001\022\r\n\005gamma\030\003 \001(\001\022\014\n\004vega\030\004"
-    " \001(\001\022\013\n\003rho\030\005 \001(\001\"i\n\004OHLC\022\020\n\010interval\030\001 "
-    "\001(\t\022\014\n\004open\030\002 \001(\001\022\014\n\004high\030\003 \001(\001\022\013\n\003low\030\004"
-    " \001(\001\022\r\n\005close\030\005 \001(\001\022\013\n\003vol\030\006 \001(\003\022\n\n\002ts\030\007"
-    " \001(\003\"\366\001\n\016MarketFullFeed\022\032\n\004ltpc\030\001 \001(\0132\014."
-    "upstox.LTPC\022(\n\013marketLevel\030\002 \001(\0132\023.upsto"
-    "x.MarketLevel\022*\n\014optionGreeks\030\003 \001(\0132\024.up"
-    "stox.OptionGreeks\022&\n\nmarketOHLC\030\004 \001(\0132\022."
-    "upstox.MarketOHLC\022\013\n\003atp\030\005 \001(\001\022\013\n\003vtt\030\006 "
-    "\001(\003\022\n\n\002oi\030\007 \001(\001\022\n\n\002iv\030\010 \001(\001\022\013\n\003tbq\030\t \001(\001"
-    "\022\013\n\003tsq\030\n \001(\001\"S\n\rIndexFullFeed\022\032\n\004ltpc\030\001"
-    " \001(\0132\014.upstox.LTPC\022&\n\nmarketOHLC\030\002 \001(\0132\022"
-    ".upstox.MarketOHLC\"\\\n\010FullFeed\022(\n\010market"
-    "FF\030\001 \001(\0132\026.upstox.MarketFullFeed\022&\n\007inde"
-    "xFF\030\002 \001(\0132\025.upstox.IndexFullFeed\"\246\001\n\024Fir"
-    "stLevelWithGreeks\022\032\n\004ltpc\030\001 \001(\0132\014.upstox"
-    ".LTPC\022!\n\nfirstDepth\030\002 \001(\0132\r.upstox.Quote"
-    "\022*\n\014optionGreeks\030\003 \001(\0132\024.upstox.OptionGr"
-    "eeks\022\013\n\003vtt\030\004 \001(\003\022\n\n\002oi\030\005 \001(\001\022\n\n\002iv\030\006 \001("
-    "\001\"\254\001\n\004Feed\022\032\n\004ltpc\030\001 \001(\0132\014.upstox.LTPC\022\""
-    "\n\010fullFeed\030\002 \001(\0132\020.upstox.FullFeed\022:\n\024fi"
-    "rstLevelWithGreeks\030\003 \001(\0132\034.upstox.FirstL"
-    "evelWithGreeks\022(\n\013requestMode\030\004 \001(\0162\023.up"
-    "stox.RequestMode\"\226\001\n\nMarketInfo\022<\n\rsegme"
-    "ntStatus\030\001 \003(\0132%.upstox.MarketInfo.Segme"
-    "ntStatusEntry\032J\n\022SegmentStatusEntry\022\013\n\003k"
-    "ey\030\001 \001(\t\022#\n\005value\030\002 \001(\0162\024.upstox.MarketS"
-    "tatus:\0028\001\"\321\001\n\014FeedResponse\022\032\n\004type\030\001 \001(\016"
-    "2\014.upstox.Type\022.\n\005feeds\030\002 \003(\0132\037.upstox.F"
-    "eedResponse.FeedsEntry\022\021\n\tcurrentTs\030\003 \001("
-    "\003\022&\n\nmarketInfo\030\004 \001(\0132\022.upstox.MarketInf"
-    "o\032:\n\nFeedsEntry\022\013\n\003key\030\001 \001(\t\022\033\n\005value\030\002 "
-    "\001(\0132\014.upstox.Feed:\0028\001*8\n\004Type\022\020\n\014initial"
-    "_feed\020\000\022\r\n\tlive_feed\020\001\022\017\n\013market_info\020\002*"
-    "E\n\013RequestMode\022\010\n\004ltpc\020\000\022\013\n\007full_d5\020\001\022\021\n"
-    "\roption_greeks\020\002\022\014\n\010full_d30\020\003*{\n\014Market"
-    "Status\022\022\n\016PRE_OPEN_START\020\000\022\020\n\014PRE_OPEN_E"
-    "ND\020\001\022\017\n\013NORMAL_OPEN\020\002\022\020\n\014NORMAL_CLOSE\020\003\022"
-    "\021\n\rCLOSING_START\020\004\022\017\n\013CLOSING_END\020\005b\006pro"
-    "to3"
+    "\n\026MarketDataFeedV3.proto\022,com.upstox.mar"
+    "ketdatafeederv3udapi.rpc.proto\032\036google/p"
+    "rotobuf/wrappers.proto\"d\n\004LTPC\022\013\n\003ltp\030\001 "
+    "\001(\001\022\013\n\003ltt\030\002 \001(\003\022\013\n\003ltq\030\003 \001(\003\022\n\n\002cp\030\004 \001("
+    "\001\022)\n\003iep\030\005 \001(\0132\034.google.protobuf.DoubleV"
+    "alue\"W\n\013MarketLevel\022H\n\013bidAskQuote\030\001 \003(\013"
+    "23.com.upstox.marketdatafeederv3udapi.rp"
+    "c.proto.Quote\"N\n\nMarketOHLC\022@\n\004ohlc\030\001 \003("
+    "\01322.com.upstox.marketdatafeederv3udapi.r"
+    "pc.proto.OHLC\"\?\n\005Quote\022\014\n\004bidQ\030\001 \001(\003\022\014\n\004"
+    "bidP\030\002 \001(\001\022\014\n\004askQ\030\003 \001(\003\022\014\n\004askP\030\004 \001(\001\"V"
+    "\n\014OptionGreeks\022\r\n\005delta\030\001 \001(\001\022\r\n\005theta\030\002"
+    " \001(\001\022\r\n\005gamma\030\003 \001(\001\022\014\n\004vega\030\004 \001(\001\022\013\n\003rho"
+    "\030\005 \001(\001\"i\n\004OHLC\022\020\n\010interval\030\001 \001(\t\022\014\n\004open"
+    "\030\002 \001(\001\022\014\n\004high\030\003 \001(\001\022\013\n\003low\030\004 \001(\001\022\r\n\005clo"
+    "se\030\005 \001(\001\022\013\n\003vol\030\006 \001(\003\022\n\n\002ts\030\007 \001(\003\"\351\003\n\016Ma"
+    "rketFullFeed\022@\n\004ltpc\030\001 \001(\01322.com.upstox."
+    "marketdatafeederv3udapi.rpc.proto.LTPC\022N"
+    "\n\013marketLevel\030\002 \001(\01329.com.upstox.marketd"
+    "atafeederv3udapi.rpc.proto.MarketLevel\022P"
+    "\n\014optionGreeks\030\003 \001(\0132:.com.upstox.market"
+    "datafeederv3udapi.rpc.proto.OptionGreeks"
+    "\022L\n\nmarketOHLC\030\004 \001(\01328.com.upstox.market"
+    "datafeederv3udapi.rpc.proto.MarketOHLC\022\013"
+    "\n\003atp\030\005 \001(\001\022\013\n\003vtt\030\006 \001(\003\022\n\n\002oi\030\007 \001(\001\022\n\n\002"
+    "iv\030\010 \001(\001\022\013\n\003tbq\030\t \001(\001\022\013\n\003tsq\030\n \001(\001\022\013\n\003ie"
+    "p\030\013 \001(\001\022\n\n\002rp\030\014 \001(\001\022\013\n\003ieq\030\r \001(\003\022\020\n\010iiqT"
+    "otal\030\016 \001(\003\022\014\n\004iiqM\030\017 \001(\003\022\023\n\013casEligible\030"
+    "\020 \001(\010\"\237\001\n\rIndexFullFeed\022@\n\004ltpc\030\001 \001(\01322."
+    "com.upstox.marketdatafeederv3udapi.rpc.p"
+    "roto.LTPC\022L\n\nmarketOHLC\030\002 \001(\01328.com.upst"
+    "ox.marketdatafeederv3udapi.rpc.proto.Mar"
+    "ketOHLC\"\275\001\n\010FullFeed\022P\n\010marketFF\030\001 \001(\0132<"
+    ".com.upstox.marketdatafeederv3udapi.rpc."
+    "proto.MarketFullFeedH\000\022N\n\007indexFF\030\002 \001(\0132"
+    ";.com.upstox.marketdatafeederv3udapi.rpc"
+    ".proto.IndexFullFeedH\000B\017\n\rFullFeedUnion\""
+    "\230\002\n\024FirstLevelWithGreeks\022@\n\004ltpc\030\001 \001(\01322"
+    ".com.upstox.marketdatafeederv3udapi.rpc."
+    "proto.LTPC\022G\n\nfirstDepth\030\002 \001(\01323.com.ups"
+    "tox.marketdatafeederv3udapi.rpc.proto.Qu"
+    "ote\022P\n\014optionGreeks\030\003 \001(\0132:.com.upstox.m"
+    "arketdatafeederv3udapi.rpc.proto.OptionG"
+    "reeks\022\013\n\003vtt\030\004 \001(\003\022\n\n\002oi\030\005 \001(\001\022\n\n\002iv\030\006 \001"
+    "(\001\"\327\002\n\004Feed\022B\n\004ltpc\030\001 \001(\01322.com.upstox.m"
+    "arketdatafeederv3udapi.rpc.proto.LTPCH\000\022"
+    "J\n\010fullFeed\030\002 \001(\01326.com.upstox.marketdat"
+    "afeederv3udapi.rpc.proto.FullFeedH\000\022b\n\024f"
+    "irstLevelWithGreeks\030\003 \001(\0132B.com.upstox.m"
+    "arketdatafeederv3udapi.rpc.proto.FirstLe"
+    "velWithGreeksH\000\022N\n\013requestMode\030\004 \001(\01629.c"
+    "om.upstox.marketdatafeederv3udapi.rpc.pr"
+    "oto.RequestModeB\013\n\tFeedUnion\"1\n\nStatusIn"
+    "fo\022\016\n\006status\030\001 \001(\t\022\023\n\013updatedTime\030\002 \001(\003\""
+    "\245\005\n\nMarketInfo\022b\n\rsegmentStatus\030\001 \003(\0132K."
+    "com.upstox.marketdatafeederv3udapi.rpc.p"
+    "roto.MarketInfo.SegmentStatusEntry\022f\n\017ca"
+    "sMarketStatus\030\002 \003(\0132M.com.upstox.marketd"
+    "atafeederv3udapi.rpc.proto.MarketInfo.Ca"
+    "sMarketStatusEntry\022p\n\024preOpenSessionStat"
+    "us\030\003 \003(\0132R.com.upstox.marketdatafeederv3"
+    "udapi.rpc.proto.MarketInfo.PreOpenSessio"
+    "nStatusEntry\032p\n\022SegmentStatusEntry\022\013\n\003ke"
+    "y\030\001 \001(\t\022I\n\005value\030\002 \001(\0162:.com.upstox.mark"
+    "etdatafeederv3udapi.rpc.proto.MarketStat"
+    "us:\0028\001\032p\n\024CasMarketStatusEntry\022\013\n\003key\030\001 "
+    "\001(\t\022G\n\005value\030\002 \001(\01328.com.upstox.marketda"
+    "tafeederv3udapi.rpc.proto.StatusInfo:\0028\001"
+    "\032u\n\031PreOpenSessionStatusEntry\022\013\n\003key\030\001 \001"
+    "(\t\022G\n\005value\030\002 \001(\01328.com.upstox.marketdat"
+    "afeederv3udapi.rpc.proto.StatusInfo:\0028\001\""
+    "\351\002\n\014FeedResponse\022@\n\004type\030\001 \001(\01622.com.ups"
+    "tox.marketdatafeederv3udapi.rpc.proto.Ty"
+    "pe\022T\n\005feeds\030\002 \003(\0132E.com.upstox.marketdat"
+    "afeederv3udapi.rpc.proto.FeedResponse.Fe"
+    "edsEntry\022\021\n\tcurrentTs\030\003 \001(\003\022L\n\nmarketInf"
+    "o\030\004 \001(\01328.com.upstox.marketdatafeederv3u"
+    "dapi.rpc.proto.MarketInfo\032`\n\nFeedsEntry\022"
+    "\013\n\003key\030\001 \001(\t\022A\n\005value\030\002 \001(\01322.com.upstox"
+    ".marketdatafeederv3udapi.rpc.proto.Feed:"
+    "\0028\001*8\n\004Type\022\020\n\014initial_feed\020\000\022\r\n\tlive_fe"
+    "ed\020\001\022\017\n\013market_info\020\002*E\n\013RequestMode\022\010\n\004"
+    "ltpc\020\000\022\013\n\007full_d5\020\001\022\021\n\roption_greeks\020\002\022\014"
+    "\n\010full_d30\020\003*{\n\014MarketStatus\022\022\n\016PRE_OPEN"
+    "_START\020\000\022\020\n\014PRE_OPEN_END\020\001\022\017\n\013NORMAL_OPE"
+    "N\020\002\022\020\n\014NORMAL_CLOSE\020\003\022\021\n\rCLOSING_START\020\004"
+    "\022\017\n\013CLOSING_END\020\005b\006proto3"
+};
+static const ::_pbi::DescriptorTable* PROTOBUF_NONNULL const
+    descriptor_table_MarketDataFeedV3_2eproto_deps[1] = {
+        &::descriptor_table_google_2fprotobuf_2fwrappers_2eproto,
 };
 static ::absl::once_flag descriptor_table_MarketDataFeedV3_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_MarketDataFeedV3_2eproto = {
     false,
     false,
-    1843,
+    3465,
     descriptor_table_protodef_MarketDataFeedV3_2eproto,
     "MarketDataFeedV3.proto",
     &descriptor_table_MarketDataFeedV3_2eproto_once,
-    nullptr,
-    0,
-    15,
+    descriptor_table_MarketDataFeedV3_2eproto_deps,
+    1,
+    18,
     schemas,
     file_message_globals,
     TableStruct_MarketDataFeedV3_2eproto::offsets,
     file_level_enum_descriptors_MarketDataFeedV3_2eproto,
     file_level_service_descriptors_MarketDataFeedV3_2eproto,
 };
+namespace com {
 namespace upstox {
+namespace marketdatafeederv3udapi {
+namespace rpc {
+namespace proto {
 [[nodiscard]] const ::google::protobuf::EnumDescriptor* PROTOBUF_NONNULL
 Type_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&descriptor_table_MarketDataFeedV3_2eproto);
@@ -2868,6 +3476,11 @@ PROTOBUF_CONSTINIT const uint32_t MarketStatus_internal_data_[] = {
     393216u, 0u, };
 // ===================================================================
 
+void LTPC::clear_iep() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.iep_ != nullptr) _impl_.iep_->Clear();
+  ClearHasBit(_impl_._has_bits_[0], 0x00000001U);
+}
 LTPC::LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, LTPC_get_class_data()) {
@@ -2875,18 +3488,42 @@ LTPC::LTPC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.LTPC)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
 }
+PROTOBUF_NDEBUG_INLINE LTPC::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0} {}
+
 LTPC::LTPC(
-    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const LTPC& from)
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const LTPC& from)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
-    : ::google::protobuf::Message(arena, LTPC_get_class_data()),
+    : ::google::protobuf::Message(arena, LTPC_get_class_data()) {
+
 #else   // PROTOBUF_CUSTOM_VTABLE
-    : ::google::protobuf::Message(arena),
+    : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
-      _impl_(from._impl_) {
+  LTPC* const _this = this;
+  (void)_this;
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.iep_ = (CheckHasBit(cached_has_bits, 0x00000001U))
+                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.iep_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char*>(&_impl_) +
+               offsetof(Impl_, ltp_),
+           reinterpret_cast<const char*>(&from._impl_) +
+               offsetof(Impl_, ltp_),
+           offsetof(Impl_, cp_) -
+               offsetof(Impl_, ltp_) +
+               sizeof(Impl_::cp_));
+
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
 }
 PROTOBUF_NDEBUG_INLINE LTPC::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
@@ -2896,14 +3533,14 @@ PROTOBUF_NDEBUG_INLINE LTPC::Impl_::Impl_(
 inline void LTPC::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char*>(&_impl_) +
-               offsetof(Impl_, ltp_),
+               offsetof(Impl_, iep_),
            0,
            offsetof(Impl_, cp_) -
-               offsetof(Impl_, ltp_) +
+               offsetof(Impl_, iep_) +
                sizeof(Impl_::cp_));
 }
 LTPC::~LTPC() {
-  // @@protoc_insertion_point(destructor:upstox.LTPC)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   SharedDtor(*this);
 }
 inline void LTPC::SharedDtor(MessageLite& self) {
@@ -2913,6 +3550,7 @@ inline void LTPC::SharedDtor(MessageLite& self) {
   }
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
+  delete this_._impl_.iep_;
   this_._impl_.~Impl_();
 }
 
@@ -2943,14 +3581,18 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const LTPC::ParseTableT_
         LTPC::InternalGenerateParseTable_(LTPC_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void LTPC::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.LTPC)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    ABSL_DCHECK(_impl_.iep_ != nullptr);
+    _impl_.iep_->Clear();
+  }
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001eU)) {
     ::memset(&_impl_.ltp_, 0, static_cast<::size_t>(
         reinterpret_cast<char*>(&_impl_.cp_) -
         reinterpret_cast<char*>(&_impl_.ltp_)) + sizeof(_impl_.cp_));
@@ -2973,13 +3615,13 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.LTPC)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
   // double ltp = 1;
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_ltp()) != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteDoubleToArray(
@@ -2988,7 +3630,7 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
   }
 
   // int64 ltt = 2;
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_ltt() != 0) {
       target =
           ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<2>(
@@ -2997,7 +3639,7 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
   }
 
   // int64 ltq = 3;
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_ltq() != 0) {
       target =
           ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<3>(
@@ -3006,7 +3648,7 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
   }
 
   // double cp = 4;
-  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+  if (CheckHasBit(cached_has_bits, 0x00000010U)) {
     if (::absl::bit_cast<::uint64_t>(this_._internal_cp()) != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteDoubleToArray(
@@ -3014,12 +3656,19 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
     }
   }
 
+  // .google.protobuf.DoubleValue iep = 5;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        5, *this_._impl_.iep_, this_._impl_.iep_->GetCachedSize(), target,
+        stream);
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.LTPC)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   return target;
 }
 
@@ -3030,7 +3679,7 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
 ::size_t LTPC::ByteSizeLong() const {
   const LTPC& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.LTPC)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -3039,29 +3688,34 @@ PROTOBUF_NOINLINE void LTPC::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // double ltp = 1;
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
+    // .google.protobuf.DoubleValue iep = 5;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.iep_);
+    }
+    // double ltp = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_ltp()) != 0) {
         total_size += 9;
       }
     }
     // int64 ltt = 2;
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_ltt() != 0) {
         total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
             this_._internal_ltt());
       }
     }
     // int64 ltq = 3;
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_ltq() != 0) {
         total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
             this_._internal_ltq());
       }
     }
     // double cp = 4;
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_cp()) != 0) {
         total_size += 9;
       }
@@ -3078,29 +3732,38 @@ void LTPC::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.LTPC)
+  ::google::protobuf::Arena* arena = _this->GetArena();
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000001fU)) {
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      ABSL_DCHECK(from._impl_.iep_ != nullptr);
+      if (_this->_impl_.iep_ == nullptr) {
+        _this->_impl_.iep_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.iep_);
+      } else {
+        _this->_impl_.iep_->MergeFrom(*from._impl_.iep_);
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       if (::absl::bit_cast<::uint64_t>(from._internal_ltp()) != 0) {
         _this->_impl_.ltp_ = from._impl_.ltp_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (from._internal_ltt() != 0) {
         _this->_impl_.ltt_ = from._impl_.ltt_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (from._internal_ltq() != 0) {
         _this->_impl_.ltq_ = from._impl_.ltq_;
       }
     }
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000010U)) {
       if (::absl::bit_cast<::uint64_t>(from._internal_cp()) != 0) {
         _this->_impl_.cp_ = from._impl_.cp_;
       }
@@ -3112,7 +3775,7 @@ void LTPC::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void LTPC::CopyFrom(const LTPC& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.LTPC)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3126,9 +3789,9 @@ void LTPC::InternalSwap(LTPC* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(LTPC, _impl_.cp_)
       + sizeof(LTPC::_impl_.cp_)
-      - PROTOBUF_FIELD_OFFSET(LTPC, _impl_.ltp_)>(
-          reinterpret_cast<char*>(&_impl_.ltp_),
-          reinterpret_cast<char*>(&other->_impl_.ltp_));
+      - PROTOBUF_FIELD_OFFSET(LTPC, _impl_.iep_)>(
+          reinterpret_cast<char*>(&_impl_.iep_),
+          reinterpret_cast<char*>(&other->_impl_.iep_));
 }
 
 ::google::protobuf::Metadata LTPC::GetMetadata() const {
@@ -3143,18 +3806,18 @@ MarketLevel::MarketLevel(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.MarketLevel)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
 }
 PROTOBUF_NDEBUG_INLINE MarketLevel::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::MarketLevel& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         bidaskquote_ {
           visibility, ::_pbi::InternalMetadataOffset::Build<
-              ::upstox::MarketLevel,
-              PROTOBUF_FIELD_OFFSET(::upstox::MarketLevel, _impl_.bidaskquote_)>()
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel, _impl_.bidaskquote_)>()
           , from.bidaskquote_
         }
      {}
@@ -3174,15 +3837,15 @@ MarketLevel::MarketLevel(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
 
-  // @@protoc_insertion_point(copy_constructor:upstox.MarketLevel)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
 }
 PROTOBUF_NDEBUG_INLINE MarketLevel::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         bidaskquote_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketLevel,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketLevel, _impl_.bidaskquote_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketLevel, _impl_.bidaskquote_)>()
          }
      {}
 
@@ -3190,7 +3853,7 @@ inline void MarketLevel::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
 }
 MarketLevel::~MarketLevel() {
-  // @@protoc_insertion_point(destructor:upstox.MarketLevel)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   SharedDtor(*this);
 }
 inline void MarketLevel::SharedDtor(MessageLite& self) {
@@ -3230,7 +3893,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketLevel::ParseTableT_
         MarketLevel::InternalGenerateParseTable_(MarketLevel_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void MarketLevel::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.MarketLevel)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3258,12 +3921,12 @@ PROTOBUF_NOINLINE void MarketLevel::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.MarketLevel)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // repeated .upstox.Quote bidAskQuote = 1;
+  // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_bidaskquote_size());
@@ -3281,7 +3944,7 @@ PROTOBUF_NOINLINE void MarketLevel::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.MarketLevel)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   return target;
 }
 
@@ -3292,7 +3955,7 @@ PROTOBUF_NOINLINE void MarketLevel::Clear() {
 ::size_t MarketLevel::ByteSizeLong() const {
   const MarketLevel& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.MarketLevel)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -3301,7 +3964,7 @@ PROTOBUF_NOINLINE void MarketLevel::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
    {
-    // repeated .upstox.Quote bidAskQuote = 1;
+    // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote bidAskQuote = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_bidaskquote_size();
@@ -3322,7 +3985,7 @@ void MarketLevel::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.MarketLevel)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -3339,7 +4002,7 @@ void MarketLevel::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void MarketLevel::CopyFrom(const MarketLevel& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.MarketLevel)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3365,18 +4028,18 @@ MarketOHLC::MarketOHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.MarketOHLC)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
 }
 PROTOBUF_NDEBUG_INLINE MarketOHLC::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::MarketOHLC& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         ohlc_ {
           visibility, ::_pbi::InternalMetadataOffset::Build<
-              ::upstox::MarketOHLC,
-              PROTOBUF_FIELD_OFFSET(::upstox::MarketOHLC, _impl_.ohlc_)>()
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC, _impl_.ohlc_)>()
           , from.ohlc_
         }
      {}
@@ -3396,15 +4059,15 @@ MarketOHLC::MarketOHLC(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
 
-  // @@protoc_insertion_point(copy_constructor:upstox.MarketOHLC)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
 }
 PROTOBUF_NDEBUG_INLINE MarketOHLC::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         ohlc_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketOHLC,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketOHLC, _impl_.ohlc_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketOHLC, _impl_.ohlc_)>()
          }
      {}
 
@@ -3412,7 +4075,7 @@ inline void MarketOHLC::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
 }
 MarketOHLC::~MarketOHLC() {
-  // @@protoc_insertion_point(destructor:upstox.MarketOHLC)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   SharedDtor(*this);
 }
 inline void MarketOHLC::SharedDtor(MessageLite& self) {
@@ -3452,7 +4115,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketOHLC::ParseTableT_
         MarketOHLC::InternalGenerateParseTable_(MarketOHLC_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void MarketOHLC::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.MarketOHLC)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3480,12 +4143,12 @@ PROTOBUF_NOINLINE void MarketOHLC::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.MarketOHLC)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // repeated .upstox.OHLC ohlc = 1;
+  // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     for (unsigned i = 0, n = static_cast<unsigned>(
                              this_._internal_ohlc_size());
@@ -3503,7 +4166,7 @@ PROTOBUF_NOINLINE void MarketOHLC::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.MarketOHLC)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   return target;
 }
 
@@ -3514,7 +4177,7 @@ PROTOBUF_NOINLINE void MarketOHLC::Clear() {
 ::size_t MarketOHLC::ByteSizeLong() const {
   const MarketOHLC& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.MarketOHLC)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -3523,7 +4186,7 @@ PROTOBUF_NOINLINE void MarketOHLC::Clear() {
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
    {
-    // repeated .upstox.OHLC ohlc = 1;
+    // repeated .com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC ohlc = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1UL * this_._internal_ohlc_size();
@@ -3544,7 +4207,7 @@ void MarketOHLC::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.MarketOHLC)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -3561,7 +4224,7 @@ void MarketOHLC::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void MarketOHLC::CopyFrom(const MarketOHLC& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.MarketOHLC)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3587,7 +4250,7 @@ Quote::Quote(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.Quote)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
 }
 Quote::Quote(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Quote& from)
@@ -3615,7 +4278,7 @@ inline void Quote::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
                sizeof(Impl_::askp_));
 }
 Quote::~Quote() {
-  // @@protoc_insertion_point(destructor:upstox.Quote)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   SharedDtor(*this);
 }
 inline void Quote::SharedDtor(MessageLite& self) {
@@ -3655,7 +4318,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const Quote::ParseTableT_
         Quote::InternalGenerateParseTable_(Quote_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void Quote::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.Quote)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3685,7 +4348,7 @@ PROTOBUF_NOINLINE void Quote::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.Quote)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
@@ -3731,7 +4394,7 @@ PROTOBUF_NOINLINE void Quote::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.Quote)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   return target;
 }
 
@@ -3742,7 +4405,7 @@ PROTOBUF_NOINLINE void Quote::Clear() {
 ::size_t Quote::ByteSizeLong() const {
   const Quote& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.Quote)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -3790,7 +4453,7 @@ void Quote::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.Quote)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -3824,7 +4487,7 @@ void Quote::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void Quote::CopyFrom(const Quote& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.Quote)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Quote)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3855,7 +4518,7 @@ OptionGreeks::OptionGreeks(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.OptionGreeks)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
 }
 OptionGreeks::OptionGreeks(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const OptionGreeks& from)
@@ -3883,7 +4546,7 @@ inline void OptionGreeks::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
                sizeof(Impl_::rho_));
 }
 OptionGreeks::~OptionGreeks() {
-  // @@protoc_insertion_point(destructor:upstox.OptionGreeks)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   SharedDtor(*this);
 }
 inline void OptionGreeks::SharedDtor(MessageLite& self) {
@@ -3923,7 +4586,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const OptionGreeks::ParseTableT_
         OptionGreeks::InternalGenerateParseTable_(OptionGreeks_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void OptionGreeks::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.OptionGreeks)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -3953,7 +4616,7 @@ PROTOBUF_NOINLINE void OptionGreeks::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.OptionGreeks)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
@@ -4008,7 +4671,7 @@ PROTOBUF_NOINLINE void OptionGreeks::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.OptionGreeks)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   return target;
 }
 
@@ -4019,7 +4682,7 @@ PROTOBUF_NOINLINE void OptionGreeks::Clear() {
 ::size_t OptionGreeks::ByteSizeLong() const {
   const OptionGreeks& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.OptionGreeks)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -4071,7 +4734,7 @@ void OptionGreeks::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.OptionGreeks)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -4110,7 +4773,7 @@ void OptionGreeks::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void OptionGreeks::CopyFrom(const OptionGreeks& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.OptionGreeks)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -4141,12 +4804,12 @@ OHLC::OHLC(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.OHLC)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
 }
 PROTOBUF_NDEBUG_INLINE OHLC::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::OHLC& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::OHLC& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         interval_(arena, from.interval_) {}
@@ -4173,7 +4836,7 @@ OHLC::OHLC(
                offsetof(Impl_, open_) +
                sizeof(Impl_::ts_));
 
-  // @@protoc_insertion_point(copy_constructor:upstox.OHLC)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
 }
 PROTOBUF_NDEBUG_INLINE OHLC::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
@@ -4191,7 +4854,7 @@ inline void OHLC::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
                sizeof(Impl_::ts_));
 }
 OHLC::~OHLC() {
-  // @@protoc_insertion_point(destructor:upstox.OHLC)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   SharedDtor(*this);
 }
 inline void OHLC::SharedDtor(MessageLite& self) {
@@ -4232,7 +4895,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const OHLC::ParseTableT_
         OHLC::InternalGenerateParseTable_(OHLC_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void OHLC::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.OHLC)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -4265,7 +4928,7 @@ PROTOBUF_NOINLINE void OHLC::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.OHLC)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
@@ -4275,7 +4938,7 @@ PROTOBUF_NOINLINE void OHLC::Clear() {
     if (!this_._internal_interval().empty()) {
       const ::std::string& _s = this_._internal_interval();
       ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "upstox.OHLC.interval");
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC.interval");
       target = stream->WriteStringMaybeAliased(1, _s, target);
     }
   }
@@ -4339,7 +5002,7 @@ PROTOBUF_NOINLINE void OHLC::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.OHLC)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   return target;
 }
 
@@ -4350,7 +5013,7 @@ PROTOBUF_NOINLINE void OHLC::Clear() {
 ::size_t OHLC::ByteSizeLong() const {
   const OHLC& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.OHLC)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -4417,7 +5080,7 @@ void OHLC::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.OHLC)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -4470,7 +5133,7 @@ void OHLC::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void OHLC::CopyFrom(const OHLC& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.OHLC)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.OHLC)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -4504,12 +5167,12 @@ MarketFullFeed::MarketFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE aren
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
 }
 PROTOBUF_NDEBUG_INLINE MarketFullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::MarketFullFeed& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0} {}
 
@@ -4544,11 +5207,11 @@ MarketFullFeed::MarketFullFeed(
                offsetof(Impl_, atp_),
            reinterpret_cast<const char*>(&from._impl_) +
                offsetof(Impl_, atp_),
-           offsetof(Impl_, tsq_) -
+           offsetof(Impl_, caseligible_) -
                offsetof(Impl_, atp_) +
-               sizeof(Impl_::tsq_));
+               sizeof(Impl_::caseligible_));
 
-  // @@protoc_insertion_point(copy_constructor:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
 }
 PROTOBUF_NDEBUG_INLINE MarketFullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
@@ -4560,12 +5223,12 @@ inline void MarketFullFeed::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char*>(&_impl_) +
                offsetof(Impl_, ltpc_),
            0,
-           offsetof(Impl_, tsq_) -
+           offsetof(Impl_, caseligible_) -
                offsetof(Impl_, ltpc_) +
-               sizeof(Impl_::tsq_));
+               sizeof(Impl_::caseligible_));
 }
 MarketFullFeed::~MarketFullFeed() {
-  // @@protoc_insertion_point(destructor:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   SharedDtor(*this);
 }
 inline void MarketFullFeed::SharedDtor(MessageLite& self) {
@@ -4609,7 +5272,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketFullFeed::ParseTableT_
         MarketFullFeed::InternalGenerateParseTable_(MarketFullFeed_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.MarketFullFeed)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -4639,10 +5302,10 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
         reinterpret_cast<char*>(&_impl_.iv_) -
         reinterpret_cast<char*>(&_impl_.atp_)) + sizeof(_impl_.iv_));
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000ff00U)) {
     ::memset(&_impl_.tbq_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.tsq_) -
-        reinterpret_cast<char*>(&_impl_.tbq_)) + sizeof(_impl_.tsq_));
+        reinterpret_cast<char*>(&_impl_.caseligible_) -
+        reinterpret_cast<char*>(&_impl_.tbq_)) + sizeof(_impl_.caseligible_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -4662,33 +5325,33 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.ltpc_, this_._impl_.ltpc_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.MarketLevel marketLevel = 2;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.marketlevel_, this_._impl_.marketlevel_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.OptionGreeks optionGreeks = 3;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.optiongreeks_, this_._impl_.optiongreeks_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.MarketOHLC marketOHLC = 4;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.marketohlc_, this_._impl_.marketohlc_->GetCachedSize(), target,
@@ -4749,12 +5412,66 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
     }
   }
 
+  // double iep = 11;
+  if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_iep()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          11, this_._internal_iep(), target);
+    }
+  }
+
+  // double rp = 12;
+  if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+    if (::absl::bit_cast<::uint64_t>(this_._internal_rp()) != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteDoubleToArray(
+          12, this_._internal_rp(), target);
+    }
+  }
+
+  // int64 ieq = 13;
+  if (CheckHasBit(cached_has_bits, 0x00001000U)) {
+    if (this_._internal_ieq() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<13>(
+              stream, this_._internal_ieq(), target);
+    }
+  }
+
+  // int64 iiqTotal = 14;
+  if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+    if (this_._internal_iiqtotal() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<14>(
+              stream, this_._internal_iiqtotal(), target);
+    }
+  }
+
+  // int64 iiqM = 15;
+  if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+    if (this_._internal_iiqm() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<15>(
+              stream, this_._internal_iiqm(), target);
+    }
+  }
+
+  // bool casEligible = 16;
+  if (CheckHasBit(cached_has_bits, 0x00008000U)) {
+    if (this_._internal_caseligible() != 0) {
+      target = stream->EnsureSpace(target);
+      target = ::_pbi::WireFormatLite::WriteBoolToArray(
+          16, this_._internal_caseligible(), target);
+    }
+  }
+
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   return target;
 }
 
@@ -4765,7 +5482,7 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
 ::size_t MarketFullFeed::ByteSizeLong() const {
   const MarketFullFeed& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -4775,22 +5492,22 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x000000ffU)) {
-    // .upstox.LTPC ltpc = 1;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.ltpc_);
     }
-    // .upstox.MarketLevel marketLevel = 2;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketLevel marketLevel = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.marketlevel_);
     }
-    // .upstox.OptionGreeks optionGreeks = 3;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.optiongreeks_);
     }
-    // .upstox.MarketOHLC marketOHLC = 4;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 4;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.marketohlc_);
@@ -4821,7 +5538,7 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
       }
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000ff00U)) {
     // double tbq = 9;
     if (CheckHasBit(cached_has_bits, 0x00000100U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_tbq()) != 0) {
@@ -4832,6 +5549,45 @@ PROTOBUF_NOINLINE void MarketFullFeed::Clear() {
     if (CheckHasBit(cached_has_bits, 0x00000200U)) {
       if (::absl::bit_cast<::uint64_t>(this_._internal_tsq()) != 0) {
         total_size += 9;
+      }
+    }
+    // double iep = 11;
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_iep()) != 0) {
+        total_size += 9;
+      }
+    }
+    // double rp = 12;
+    if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+      if (::absl::bit_cast<::uint64_t>(this_._internal_rp()) != 0) {
+        total_size += 9;
+      }
+    }
+    // int64 ieq = 13;
+    if (CheckHasBit(cached_has_bits, 0x00001000U)) {
+      if (this_._internal_ieq() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+            this_._internal_ieq());
+      }
+    }
+    // int64 iiqTotal = 14;
+    if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+      if (this_._internal_iiqtotal() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+            this_._internal_iiqtotal());
+      }
+    }
+    // int64 iiqM = 15;
+    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+      if (this_._internal_iiqm() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+            this_._internal_iiqm());
+      }
+    }
+    // bool casEligible = 16;
+    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
+      if (this_._internal_caseligible() != 0) {
+        total_size += 3;
       }
     }
   }
@@ -4847,7 +5603,7 @@ void MarketFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -4907,7 +5663,7 @@ void MarketFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
       }
     }
   }
-  if (BatchCheckHasBit(cached_has_bits, 0x00000300U)) {
+  if (BatchCheckHasBit(cached_has_bits, 0x0000ff00U)) {
     if (CheckHasBit(cached_has_bits, 0x00000100U)) {
       if (::absl::bit_cast<::uint64_t>(from._internal_tbq()) != 0) {
         _this->_impl_.tbq_ = from._impl_.tbq_;
@@ -4918,6 +5674,36 @@ void MarketFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
         _this->_impl_.tsq_ = from._impl_.tsq_;
       }
     }
+    if (CheckHasBit(cached_has_bits, 0x00000400U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_iep()) != 0) {
+        _this->_impl_.iep_ = from._impl_.iep_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000800U)) {
+      if (::absl::bit_cast<::uint64_t>(from._internal_rp()) != 0) {
+        _this->_impl_.rp_ = from._impl_.rp_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00001000U)) {
+      if (from._internal_ieq() != 0) {
+        _this->_impl_.ieq_ = from._impl_.ieq_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00002000U)) {
+      if (from._internal_iiqtotal() != 0) {
+        _this->_impl_.iiqtotal_ = from._impl_.iiqtotal_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00004000U)) {
+      if (from._internal_iiqm() != 0) {
+        _this->_impl_.iiqm_ = from._impl_.iiqm_;
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00008000U)) {
+      if (from._internal_caseligible() != 0) {
+        _this->_impl_.caseligible_ = from._impl_.caseligible_;
+      }
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -4925,7 +5711,7 @@ void MarketFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void MarketFullFeed::CopyFrom(const MarketFullFeed& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.MarketFullFeed)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -4937,8 +5723,8 @@ void MarketFullFeed::InternalSwap(MarketFullFeed* PROTOBUF_RESTRICT PROTOBUF_NON
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.tsq_)
-      + sizeof(MarketFullFeed::_impl_.tsq_)
+      PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.caseligible_)
+      + sizeof(MarketFullFeed::_impl_.caseligible_)
       - PROTOBUF_FIELD_OFFSET(MarketFullFeed, _impl_.ltpc_)>(
           reinterpret_cast<char*>(&_impl_.ltpc_),
           reinterpret_cast<char*>(&other->_impl_.ltpc_));
@@ -4956,12 +5742,12 @@ IndexFullFeed::IndexFullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
 }
 PROTOBUF_NDEBUG_INLINE IndexFullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::IndexFullFeed& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0} {}
 
@@ -4987,7 +5773,7 @@ IndexFullFeed::IndexFullFeed(
                 ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.marketohlc_)
                 : nullptr;
 
-  // @@protoc_insertion_point(copy_constructor:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
 }
 PROTOBUF_NDEBUG_INLINE IndexFullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
@@ -5004,7 +5790,7 @@ inline void IndexFullFeed::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
                sizeof(Impl_::marketohlc_));
 }
 IndexFullFeed::~IndexFullFeed() {
-  // @@protoc_insertion_point(destructor:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   SharedDtor(*this);
 }
 inline void IndexFullFeed::SharedDtor(MessageLite& self) {
@@ -5046,7 +5832,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const IndexFullFeed::ParseTableT_
         IndexFullFeed::InternalGenerateParseTable_(IndexFullFeed_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void IndexFullFeed::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.IndexFullFeed)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -5081,19 +5867,19 @@ PROTOBUF_NOINLINE void IndexFullFeed::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.ltpc_, this_._impl_.ltpc_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.MarketOHLC marketOHLC = 2;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.marketohlc_, this_._impl_.marketohlc_->GetCachedSize(), target,
@@ -5105,7 +5891,7 @@ PROTOBUF_NOINLINE void IndexFullFeed::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   return target;
 }
 
@@ -5116,7 +5902,7 @@ PROTOBUF_NOINLINE void IndexFullFeed::Clear() {
 ::size_t IndexFullFeed::ByteSizeLong() const {
   const IndexFullFeed& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -5126,12 +5912,12 @@ PROTOBUF_NOINLINE void IndexFullFeed::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .upstox.LTPC ltpc = 1;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.ltpc_);
     }
-    // .upstox.MarketOHLC marketOHLC = 2;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketOHLC marketOHLC = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.marketohlc_);
@@ -5149,7 +5935,7 @@ void IndexFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -5179,7 +5965,7 @@ void IndexFullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void IndexFullFeed::CopyFrom(const IndexFullFeed& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.IndexFullFeed)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -5203,6 +5989,32 @@ void IndexFullFeed::InternalSwap(IndexFullFeed* PROTOBUF_RESTRICT PROTOBUF_NONNU
 }
 // ===================================================================
 
+void FullFeed::set_allocated_marketff(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketFullFeed* PROTOBUF_NULLABLE marketff) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_FullFeedUnion();
+  if (marketff) {
+    ::google::protobuf::Arena* submessage_arena = marketff->GetArena();
+    if (message_arena != submessage_arena) {
+      marketff = ::google::protobuf::internal::GetOwnedMessage(message_arena, marketff, submessage_arena);
+    }
+    set_has_marketff();
+    _impl_.FullFeedUnion_.marketff_ = marketff;
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.marketFF)
+}
+void FullFeed::set_allocated_indexff(::com::upstox::marketdatafeederv3udapi::rpc::proto::IndexFullFeed* PROTOBUF_NULLABLE indexff) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_FullFeedUnion();
+  if (indexff) {
+    ::google::protobuf::Arena* submessage_arena = indexff->GetArena();
+    if (message_arena != submessage_arena) {
+      indexff = ::google::protobuf::internal::GetOwnedMessage(message_arena, indexff, submessage_arena);
+    }
+    set_has_indexff();
+    _impl_.FullFeedUnion_.indexff_ = indexff;
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed.indexFF)
+}
 FullFeed::FullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, FullFeed_get_class_data()) {
@@ -5210,14 +6022,15 @@ FullFeed::FullFeed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.FullFeed)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
 }
 PROTOBUF_NDEBUG_INLINE FullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::FullFeed& from_msg)
-      : _has_bits_{from._has_bits_},
-        _cached_size_{0} {}
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed& from_msg)
+      : FullFeedUnion_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
 
 FullFeed::FullFeed(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -5233,32 +6046,31 @@ FullFeed::FullFeed(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.marketff_ = (CheckHasBit(cached_has_bits, 0x00000001U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.marketff_)
-                : nullptr;
-  _impl_.indexff_ = (CheckHasBit(cached_has_bits, 0x00000002U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.indexff_)
-                : nullptr;
+  switch (FullFeedUnion_case()) {
+    case FULLFEEDUNION_NOT_SET:
+      break;
+      case kMarketFF:
+        _impl_.FullFeedUnion_.marketff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FullFeedUnion_.marketff_);
+        break;
+      case kIndexFF:
+        _impl_.FullFeedUnion_.indexff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FullFeedUnion_.indexff_);
+        break;
+  }
 
-  // @@protoc_insertion_point(copy_constructor:upstox.FullFeed)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
 }
 PROTOBUF_NDEBUG_INLINE FullFeed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
-      : _cached_size_{0} {}
+      : FullFeedUnion_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 inline void FullFeed::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char*>(&_impl_) +
-               offsetof(Impl_, marketff_),
-           0,
-           offsetof(Impl_, indexff_) -
-               offsetof(Impl_, marketff_) +
-               sizeof(Impl_::indexff_));
 }
 FullFeed::~FullFeed() {
-  // @@protoc_insertion_point(destructor:upstox.FullFeed)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   SharedDtor(*this);
 }
 inline void FullFeed::SharedDtor(MessageLite& self) {
@@ -5268,10 +6080,39 @@ inline void FullFeed::SharedDtor(MessageLite& self) {
   }
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  delete this_._impl_.marketff_;
-  delete this_._impl_.indexff_;
+  if (this_.has_FullFeedUnion()) {
+    this_.clear_FullFeedUnion();
+  }
   this_._impl_.~Impl_();
 }
+
+void FullFeed::clear_FullFeedUnion() {
+// @@protoc_insertion_point(one_of_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (FullFeedUnion_case()) {
+    case kMarketFF: {
+      if (GetArena() == nullptr) {
+        delete _impl_.FullFeedUnion_.marketff_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FullFeedUnion_.marketff_);
+      }
+      break;
+    }
+    case kIndexFF: {
+      if (GetArena() == nullptr) {
+        delete _impl_.FullFeedUnion_.indexff_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FullFeedUnion_.indexff_);
+      }
+      break;
+    }
+    case FULLFEEDUNION_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = FULLFEEDUNION_NOT_SET;
+}
+
 
 #ifndef PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
@@ -5300,24 +6141,13 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const FullFeed::ParseTableT_
         FullFeed::InternalGenerateParseTable_(FullFeed_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void FullFeed::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.FullFeed)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      ABSL_DCHECK(_impl_.marketff_ != nullptr);
-      _impl_.marketff_->Clear();
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(_impl_.indexff_ != nullptr);
-      _impl_.indexff_->Clear();
-    }
-  }
-  _impl_._has_bits_.Clear();
+  clear_FullFeedUnion();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -5335,31 +6165,32 @@ PROTOBUF_NOINLINE void FullFeed::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.FullFeed)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.MarketFullFeed marketFF = 1;
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        1, *this_._impl_.marketff_, this_._impl_.marketff_->GetCachedSize(), target,
-        stream);
+  switch (this_.FullFeedUnion_case()) {
+    case kMarketFF: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.FullFeedUnion_.marketff_, this_._impl_.FullFeedUnion_.marketff_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kIndexFF: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          2, *this_._impl_.FullFeedUnion_.indexff_, this_._impl_.FullFeedUnion_.indexff_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
   }
-
-  // .upstox.IndexFullFeed indexFF = 2;
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        2, *this_._impl_.indexff_, this_._impl_.indexff_->GetCachedSize(), target,
-        stream);
-  }
-
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.FullFeed)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   return target;
 }
 
@@ -5370,25 +6201,28 @@ PROTOBUF_NOINLINE void FullFeed::Clear() {
 ::size_t FullFeed::ByteSizeLong() const {
   const FullFeed& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.FullFeed)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void)cached_has_bits;
 
-  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
-  cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    // .upstox.MarketFullFeed marketFF = 1;
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+  switch (this_.FullFeedUnion_case()) {
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketFullFeed marketFF = 1;
+    case kMarketFF: {
       total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.marketff_);
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.FullFeedUnion_.marketff_);
+      break;
     }
-    // .upstox.IndexFullFeed indexFF = 2;
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.IndexFullFeed indexFF = 2;
+    case kIndexFF: {
       total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.indexff_);
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.FullFeedUnion_.indexff_);
+      break;
+    }
+    case FULLFEEDUNION_NOT_SET: {
+      break;
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -5403,37 +6237,49 @@ void FullFeed::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.FullFeed)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      ABSL_DCHECK(from._impl_.marketff_ != nullptr);
-      if (_this->_impl_.marketff_ == nullptr) {
-        _this->_impl_.marketff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.marketff_);
-      } else {
-        _this->_impl_.marketff_->MergeFrom(*from._impl_.marketff_);
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_FullFeedUnion();
       }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
     }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(from._impl_.indexff_ != nullptr);
-      if (_this->_impl_.indexff_ == nullptr) {
-        _this->_impl_.indexff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.indexff_);
-      } else {
-        _this->_impl_.indexff_->MergeFrom(*from._impl_.indexff_);
+
+    switch (oneof_from_case) {
+      case kMarketFF: {
+        if (oneof_needs_init) {
+          _this->_impl_.FullFeedUnion_.marketff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FullFeedUnion_.marketff_);
+        } else {
+          _this->_impl_.FullFeedUnion_.marketff_->MergeFrom(*from._impl_.FullFeedUnion_.marketff_);
+        }
+        break;
       }
+      case kIndexFF: {
+        if (oneof_needs_init) {
+          _this->_impl_.FullFeedUnion_.indexff_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FullFeedUnion_.indexff_);
+        } else {
+          _this->_impl_.FullFeedUnion_.indexff_->MergeFrom(*from._impl_.FullFeedUnion_.indexff_);
+        }
+        break;
+      }
+      case FULLFEEDUNION_NOT_SET:
+        break;
     }
   }
-  _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
 }
 
 void FullFeed::CopyFrom(const FullFeed& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.FullFeed)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -5443,13 +6289,8 @@ void FullFeed::CopyFrom(const FullFeed& from) {
 void FullFeed::InternalSwap(FullFeed* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   using ::std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.indexff_)
-      + sizeof(FullFeed::_impl_.indexff_)
-      - PROTOBUF_FIELD_OFFSET(FullFeed, _impl_.marketff_)>(
-          reinterpret_cast<char*>(&_impl_.marketff_),
-          reinterpret_cast<char*>(&other->_impl_.marketff_));
+  swap(_impl_.FullFeedUnion_, other->_impl_.FullFeedUnion_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::google::protobuf::Metadata FullFeed::GetMetadata() const {
@@ -5464,12 +6305,12 @@ FirstLevelWithGreeks::FirstLevelWithGreeks(::google::protobuf::Arena* PROTOBUF_N
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
 }
 PROTOBUF_NDEBUG_INLINE FirstLevelWithGreeks::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::FirstLevelWithGreeks& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0} {}
 
@@ -5505,7 +6346,7 @@ FirstLevelWithGreeks::FirstLevelWithGreeks(
                offsetof(Impl_, vtt_) +
                sizeof(Impl_::iv_));
 
-  // @@protoc_insertion_point(copy_constructor:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
 }
 PROTOBUF_NDEBUG_INLINE FirstLevelWithGreeks::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
@@ -5522,7 +6363,7 @@ inline void FirstLevelWithGreeks::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE are
                sizeof(Impl_::iv_));
 }
 FirstLevelWithGreeks::~FirstLevelWithGreeks() {
-  // @@protoc_insertion_point(destructor:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   SharedDtor(*this);
 }
 inline void FirstLevelWithGreeks::SharedDtor(MessageLite& self) {
@@ -5565,7 +6406,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const FirstLevelWithGreeks::ParseTableT_
         FirstLevelWithGreeks::InternalGenerateParseTable_(FirstLevelWithGreeks_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void FirstLevelWithGreeks::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.FirstLevelWithGreeks)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -5609,26 +6450,26 @@ PROTOBUF_NOINLINE void FirstLevelWithGreeks::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         1, *this_._impl_.ltpc_, this_._impl_.ltpc_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.Quote firstDepth = 2;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
   if (CheckHasBit(cached_has_bits, 0x00000002U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         2, *this_._impl_.firstdepth_, this_._impl_.firstdepth_->GetCachedSize(), target,
         stream);
   }
 
-  // .upstox.OptionGreeks optionGreeks = 3;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         3, *this_._impl_.optiongreeks_, this_._impl_.optiongreeks_->GetCachedSize(), target,
@@ -5667,7 +6508,7 @@ PROTOBUF_NOINLINE void FirstLevelWithGreeks::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   return target;
 }
 
@@ -5678,7 +6519,7 @@ PROTOBUF_NOINLINE void FirstLevelWithGreeks::Clear() {
 ::size_t FirstLevelWithGreeks::ByteSizeLong() const {
   const FirstLevelWithGreeks& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -5688,17 +6529,17 @@ PROTOBUF_NOINLINE void FirstLevelWithGreeks::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000003fU)) {
-    // .upstox.LTPC ltpc = 1;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.ltpc_);
     }
-    // .upstox.Quote firstDepth = 2;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.Quote firstDepth = 2;
     if (CheckHasBit(cached_has_bits, 0x00000002U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.firstdepth_);
     }
-    // .upstox.OptionGreeks optionGreeks = 3;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.OptionGreeks optionGreeks = 3;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.optiongreeks_);
@@ -5735,7 +6576,7 @@ void FirstLevelWithGreeks::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -5788,7 +6629,7 @@ void FirstLevelWithGreeks::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void FirstLevelWithGreeks::CopyFrom(const FirstLevelWithGreeks& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.FirstLevelWithGreeks)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -5812,6 +6653,45 @@ void FirstLevelWithGreeks::InternalSwap(FirstLevelWithGreeks* PROTOBUF_RESTRICT 
 }
 // ===================================================================
 
+void Feed::set_allocated_ltpc(::com::upstox::marketdatafeederv3udapi::rpc::proto::LTPC* PROTOBUF_NULLABLE ltpc) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_FeedUnion();
+  if (ltpc) {
+    ::google::protobuf::Arena* submessage_arena = ltpc->GetArena();
+    if (message_arena != submessage_arena) {
+      ltpc = ::google::protobuf::internal::GetOwnedMessage(message_arena, ltpc, submessage_arena);
+    }
+    set_has_ltpc();
+    _impl_.FeedUnion_.ltpc_ = ltpc;
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.ltpc)
+}
+void Feed::set_allocated_fullfeed(::com::upstox::marketdatafeederv3udapi::rpc::proto::FullFeed* PROTOBUF_NULLABLE fullfeed) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_FeedUnion();
+  if (fullfeed) {
+    ::google::protobuf::Arena* submessage_arena = fullfeed->GetArena();
+    if (message_arena != submessage_arena) {
+      fullfeed = ::google::protobuf::internal::GetOwnedMessage(message_arena, fullfeed, submessage_arena);
+    }
+    set_has_fullfeed();
+    _impl_.FeedUnion_.fullfeed_ = fullfeed;
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.fullFeed)
+}
+void Feed::set_allocated_firstlevelwithgreeks(::com::upstox::marketdatafeederv3udapi::rpc::proto::FirstLevelWithGreeks* PROTOBUF_NULLABLE firstlevelwithgreeks) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_FeedUnion();
+  if (firstlevelwithgreeks) {
+    ::google::protobuf::Arena* submessage_arena = firstlevelwithgreeks->GetArena();
+    if (message_arena != submessage_arena) {
+      firstlevelwithgreeks = ::google::protobuf::internal::GetOwnedMessage(message_arena, firstlevelwithgreeks, submessage_arena);
+    }
+    set_has_firstlevelwithgreeks();
+    _impl_.FeedUnion_.firstlevelwithgreeks_ = firstlevelwithgreeks;
+  }
+  // @@protoc_insertion_point(field_set_allocated:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed.firstLevelWithGreeks)
+}
 Feed::Feed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, Feed_get_class_data()) {
@@ -5819,14 +6699,16 @@ Feed::Feed(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.Feed)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
 }
 PROTOBUF_NDEBUG_INLINE Feed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::Feed& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed& from_msg)
       : _has_bits_{from._has_bits_},
-        _cached_size_{0} {}
+        _cached_size_{0},
+        FeedUnion_{},
+        _oneof_case_{from._oneof_case_[0]} {}
 
 Feed::Feed(
     ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
@@ -5842,36 +6724,36 @@ Feed::Feed(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.ltpc_ = (CheckHasBit(cached_has_bits, 0x00000001U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.ltpc_)
-                : nullptr;
-  _impl_.fullfeed_ = (CheckHasBit(cached_has_bits, 0x00000002U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.fullfeed_)
-                : nullptr;
-  _impl_.firstlevelwithgreeks_ = (CheckHasBit(cached_has_bits, 0x00000004U))
-                ? ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.firstlevelwithgreeks_)
-                : nullptr;
   _impl_.requestmode_ = from._impl_.requestmode_;
+  switch (FeedUnion_case()) {
+    case FEEDUNION_NOT_SET:
+      break;
+      case kLtpc:
+        _impl_.FeedUnion_.ltpc_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.ltpc_);
+        break;
+      case kFullFeed:
+        _impl_.FeedUnion_.fullfeed_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.fullfeed_);
+        break;
+      case kFirstLevelWithGreeks:
+        _impl_.FeedUnion_.firstlevelwithgreeks_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.firstlevelwithgreeks_);
+        break;
+  }
 
-  // @@protoc_insertion_point(copy_constructor:upstox.Feed)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
 }
 PROTOBUF_NDEBUG_INLINE Feed::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
-      : _cached_size_{0} {}
+      : _cached_size_{0},
+        FeedUnion_{},
+        _oneof_case_{} {}
 
 inline void Feed::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char*>(&_impl_) +
-               offsetof(Impl_, ltpc_),
-           0,
-           offsetof(Impl_, requestmode_) -
-               offsetof(Impl_, ltpc_) +
-               sizeof(Impl_::requestmode_));
+  _impl_.requestmode_ = {};
 }
 Feed::~Feed() {
-  // @@protoc_insertion_point(destructor:upstox.Feed)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   SharedDtor(*this);
 }
 inline void Feed::SharedDtor(MessageLite& self) {
@@ -5881,11 +6763,47 @@ inline void Feed::SharedDtor(MessageLite& self) {
   }
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
-  delete this_._impl_.ltpc_;
-  delete this_._impl_.fullfeed_;
-  delete this_._impl_.firstlevelwithgreeks_;
+  if (this_.has_FeedUnion()) {
+    this_.clear_FeedUnion();
+  }
   this_._impl_.~Impl_();
 }
+
+void Feed::clear_FeedUnion() {
+// @@protoc_insertion_point(one_of_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (FeedUnion_case()) {
+    case kLtpc: {
+      if (GetArena() == nullptr) {
+        delete _impl_.FeedUnion_.ltpc_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.ltpc_);
+      }
+      break;
+    }
+    case kFullFeed: {
+      if (GetArena() == nullptr) {
+        delete _impl_.FeedUnion_.fullfeed_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.fullfeed_);
+      }
+      break;
+    }
+    case kFirstLevelWithGreeks: {
+      if (GetArena() == nullptr) {
+        delete _impl_.FeedUnion_.firstlevelwithgreeks_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.FeedUnion_.firstlevelwithgreeks_);
+      }
+      break;
+    }
+    case FEEDUNION_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = FEEDUNION_NOT_SET;
+}
+
 
 #ifndef PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
@@ -5914,28 +6832,14 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const Feed::ParseTableT_
         Feed::InternalGenerateParseTable_(Feed_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void Feed::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.Feed)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      ABSL_DCHECK(_impl_.ltpc_ != nullptr);
-      _impl_.ltpc_->Clear();
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(_impl_.fullfeed_ != nullptr);
-      _impl_.fullfeed_->Clear();
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
-      ABSL_DCHECK(_impl_.firstlevelwithgreeks_ != nullptr);
-      _impl_.firstlevelwithgreeks_->Clear();
-    }
-  }
   _impl_.requestmode_ = 0;
+  clear_FeedUnion();
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -5954,34 +6858,35 @@ PROTOBUF_NOINLINE void Feed::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.Feed)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
+  switch (this_.FeedUnion_case()) {
+    case kLtpc: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          1, *this_._impl_.FeedUnion_.ltpc_, this_._impl_.FeedUnion_.ltpc_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kFullFeed: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          2, *this_._impl_.FeedUnion_.fullfeed_, this_._impl_.FeedUnion_.fullfeed_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    case kFirstLevelWithGreeks: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          3, *this_._impl_.FeedUnion_.firstlevelwithgreeks_, this_._impl_.FeedUnion_.firstlevelwithgreeks_->GetCachedSize(), target,
+          stream);
+      break;
+    }
+    default:
+      break;
+  }
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.LTPC ltpc = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        1, *this_._impl_.ltpc_, this_._impl_.ltpc_->GetCachedSize(), target,
-        stream);
-  }
-
-  // .upstox.FullFeed fullFeed = 2;
-  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        2, *this_._impl_.fullfeed_, this_._impl_.fullfeed_->GetCachedSize(), target,
-        stream);
-  }
-
-  // .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
-  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
-    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-        3, *this_._impl_.firstlevelwithgreeks_, this_._impl_.firstlevelwithgreeks_->GetCachedSize(), target,
-        stream);
-  }
-
-  // .upstox.RequestMode requestMode = 4;
-  if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (this_._internal_requestmode() != 0) {
       target = stream->EnsureSpace(target);
       target = ::_pbi::WireFormatLite::WriteEnumToArray(
@@ -5994,7 +6899,7 @@ PROTOBUF_NOINLINE void Feed::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.Feed)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   return target;
 }
 
@@ -6005,37 +6910,44 @@ PROTOBUF_NOINLINE void Feed::Clear() {
 ::size_t Feed::ByteSizeLong() const {
   const Feed& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.Feed)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void)cached_has_bits;
 
-  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
-  cached_has_bits = this_._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // .upstox.LTPC ltpc = 1;
+   {
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.RequestMode requestMode = 4;
+    cached_has_bits = this_._impl_._has_bits_[0];
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.ltpc_);
-    }
-    // .upstox.FullFeed fullFeed = 2;
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.fullfeed_);
-    }
-    // .upstox.FirstLevelWithGreeks firstLevelWithGreeks = 3;
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
-      total_size += 1 +
-                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.firstlevelwithgreeks_);
-    }
-    // .upstox.RequestMode requestMode = 4;
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       if (this_._internal_requestmode() != 0) {
         total_size += 1 +
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_requestmode());
       }
+    }
+  }
+  switch (this_.FeedUnion_case()) {
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.LTPC ltpc = 1;
+    case kLtpc: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.FeedUnion_.ltpc_);
+      break;
+    }
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.FullFeed fullFeed = 2;
+    case kFullFeed: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.FeedUnion_.fullfeed_);
+      break;
+    }
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.FirstLevelWithGreeks firstLevelWithGreeks = 3;
+    case kFirstLevelWithGreeks: {
+      total_size += 1 +
+                    ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.FeedUnion_.firstlevelwithgreeks_);
+      break;
+    }
+    case FEEDUNION_NOT_SET: {
+      break;
     }
   }
   return this_.MaybeComputeUnknownFieldsSize(total_size,
@@ -6050,50 +6962,64 @@ void Feed::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.Feed)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-      ABSL_DCHECK(from._impl_.ltpc_ != nullptr);
-      if (_this->_impl_.ltpc_ == nullptr) {
-        _this->_impl_.ltpc_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.ltpc_);
-      } else {
-        _this->_impl_.ltpc_->MergeFrom(*from._impl_.ltpc_);
-      }
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
-      ABSL_DCHECK(from._impl_.fullfeed_ != nullptr);
-      if (_this->_impl_.fullfeed_ == nullptr) {
-        _this->_impl_.fullfeed_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.fullfeed_);
-      } else {
-        _this->_impl_.fullfeed_->MergeFrom(*from._impl_.fullfeed_);
-      }
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
-      ABSL_DCHECK(from._impl_.firstlevelwithgreeks_ != nullptr);
-      if (_this->_impl_.firstlevelwithgreeks_ == nullptr) {
-        _this->_impl_.firstlevelwithgreeks_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.firstlevelwithgreeks_);
-      } else {
-        _this->_impl_.firstlevelwithgreeks_->MergeFrom(*from._impl_.firstlevelwithgreeks_);
-      }
-    }
-    if (CheckHasBit(cached_has_bits, 0x00000008U)) {
-      if (from._internal_requestmode() != 0) {
-        _this->_impl_.requestmode_ = from._impl_.requestmode_;
-      }
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (from._internal_requestmode() != 0) {
+      _this->_impl_.requestmode_ = from._impl_.requestmode_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (const uint32_t oneof_from_case =
+          from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_FeedUnion();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kLtpc: {
+        if (oneof_needs_init) {
+          _this->_impl_.FeedUnion_.ltpc_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.ltpc_);
+        } else {
+          _this->_impl_.FeedUnion_.ltpc_->MergeFrom(*from._impl_.FeedUnion_.ltpc_);
+        }
+        break;
+      }
+      case kFullFeed: {
+        if (oneof_needs_init) {
+          _this->_impl_.FeedUnion_.fullfeed_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.fullfeed_);
+        } else {
+          _this->_impl_.FeedUnion_.fullfeed_->MergeFrom(*from._impl_.FeedUnion_.fullfeed_);
+        }
+        break;
+      }
+      case kFirstLevelWithGreeks: {
+        if (oneof_needs_init) {
+          _this->_impl_.FeedUnion_.firstlevelwithgreeks_ = ::google::protobuf::Message::CopyConstruct(arena, *from._impl_.FeedUnion_.firstlevelwithgreeks_);
+        } else {
+          _this->_impl_.FeedUnion_.firstlevelwithgreeks_->MergeFrom(*from._impl_.FeedUnion_.firstlevelwithgreeks_);
+        }
+        break;
+      }
+      case FEEDUNION_NOT_SET:
+        break;
+    }
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
 }
 
 void Feed::CopyFrom(const Feed& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.Feed)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.Feed)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6104,15 +7030,254 @@ void Feed::InternalSwap(Feed* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
   using ::std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Feed, _impl_.requestmode_)
-      + sizeof(Feed::_impl_.requestmode_)
-      - PROTOBUF_FIELD_OFFSET(Feed, _impl_.ltpc_)>(
-          reinterpret_cast<char*>(&_impl_.ltpc_),
-          reinterpret_cast<char*>(&other->_impl_.ltpc_));
+  swap(_impl_.requestmode_, other->_impl_.requestmode_);
+  swap(_impl_.FeedUnion_, other->_impl_.FeedUnion_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::google::protobuf::Metadata Feed::GetMetadata() const {
+  return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
+}
+// ===================================================================
+
+StatusInfo::StatusInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, StatusInfo_get_class_data()) {
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  SharedCtor(arena);
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+}
+PROTOBUF_NDEBUG_INLINE StatusInfo::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo& from_msg)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        status_(arena, from.status_) {}
+
+StatusInfo::StatusInfo(
+    ::google::protobuf::Arena* PROTOBUF_NULLABLE arena,
+    const StatusInfo& from)
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+    : ::google::protobuf::Message(arena, StatusInfo_get_class_data()) {
+
+#else   // PROTOBUF_CUSTOM_VTABLE
+    : ::google::protobuf::Message(arena) {
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  StatusInfo* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.updatedtime_ = from._impl_.updatedtime_;
+
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+}
+PROTOBUF_NDEBUG_INLINE StatusInfo::Impl_::Impl_(
+    [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
+    [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+      : _cached_size_{0},
+        status_(arena) {}
+
+inline void StatusInfo::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.updatedtime_ = {};
+}
+StatusInfo::~StatusInfo() {
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  SharedDtor(*this);
+}
+inline void StatusInfo::SharedDtor(MessageLite& self) {
+  StatusInfo& this_ = static_cast<StatusInfo&>(self);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
+  ABSL_DCHECK(this_.GetArena() == nullptr);
+  this_._impl_.status_.Destroy();
+  this_._impl_.~Impl_();
+}
+
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull StatusInfo_class_data_ =
+        StatusInfo::InternalGenerateClassData_(StatusInfo_globals_._default);
+
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+StatusInfo::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&StatusInfo_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(StatusInfo_class_data_.tc_table);
+  return StatusInfo_class_data_.base();
+}
+#else
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+StatusInfo::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&StatusInfo_globals_);
+  ::google::protobuf::internal::PrefetchToLocalCache(
+      ::google::protobuf::internal::MessageGlobalsBase::ToParseTableBase(&StatusInfo_globals_));
+  return StatusInfo_globals_.GetClassData();
+}
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const StatusInfo::ParseTableT_
+    StatusInfo::_table_ =
+        StatusInfo::InternalGenerateParseTable_(StatusInfo_class_data_.base());
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_NOINLINE void StatusInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _impl_._has_bits_[0];
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    _impl_.status_.ClearNonDefaultToEmpty();
+  }
+  _impl_.updatedtime_ = ::int64_t{0};
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::uint8_t* PROTOBUF_NONNULL StatusInfo::_InternalSerialize(
+    const ::google::protobuf::MessageLite& base, ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) {
+  const StatusInfo& this_ = static_cast<const StatusInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::uint8_t* PROTOBUF_NONNULL StatusInfo::_InternalSerialize(
+    ::uint8_t* PROTOBUF_NONNULL target,
+    ::google::protobuf::io::EpsCopyOutputStream* PROTOBUF_NONNULL stream) const {
+  const StatusInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    this_.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = this_._impl_._has_bits_[0];
+  // string status = 1;
+  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+    if (!this_._internal_status().empty()) {
+      const ::std::string& _s = this_._internal_status();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo.status");
+      target = stream->WriteStringMaybeAliased(1, _s, target);
+    }
+  }
+
+  // int64 updatedTime = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (this_._internal_updatedtime() != 0) {
+      target =
+          ::google::protobuf::internal::WireFormatLite::WriteInt64ToArrayWithField<2>(
+              stream, this_._internal_updatedtime(), target);
+    }
+  }
+
+  if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  return target;
+}
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+::size_t StatusInfo::ByteSizeLong(const MessageLite& base) {
+  const StatusInfo& this_ = static_cast<const StatusInfo&>(base);
+#else   // PROTOBUF_CUSTOM_VTABLE
+::size_t StatusInfo::ByteSizeLong() const {
+  const StatusInfo& this_ = *this;
+#endif  // PROTOBUF_CUSTOM_VTABLE
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  ::size_t total_size = 0;
+
+  ::uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void)cached_has_bits;
+
+  ::_pbi::Prefetch5LinesFrom7Lines(&this_);
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    // string status = 1;
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!this_._internal_status().empty()) {
+        total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                        this_._internal_status());
+      }
+    }
+    // int64 updatedTime = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (this_._internal_updatedtime() != 0) {
+        total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+            this_._internal_updatedtime());
+      }
+    }
+  }
+  return this_.MaybeComputeUnknownFieldsSize(total_size,
+                                             &this_._impl_._cached_size_);
+}
+
+void StatusInfo::MergeImpl(::google::protobuf::MessageLite& to_msg,
+                      const ::google::protobuf::MessageLite& from_msg) {
+   auto* const _this = static_cast<StatusInfo*>(&to_msg);
+  auto& from = static_cast<const StatusInfo&>(from_msg);
+  if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
+    from.CheckHasBitConsistency();
+  }
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
+
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000003U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      if (!from._internal_status().empty()) {
+        _this->_internal_set_status(from._internal_status());
+      } else {
+        if (_this->_impl_.status_.IsDefault()) {
+          _this->_internal_set_status("");
+        }
+      }
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      if (from._internal_updatedtime() != 0) {
+        _this->_impl_.updatedtime_ = from._impl_.updatedtime_;
+      }
+    }
+  }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+}
+
+void StatusInfo::CopyFrom(const StatusInfo& from) {
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+
+void StatusInfo::InternalSwap(StatusInfo* PROTOBUF_RESTRICT PROTOBUF_NONNULL other) {
+  using ::std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.status_, &other->_impl_.status_, arena);
+  swap(_impl_.updatedtime_, other->_impl_.updatedtime_);
+}
+
+::google::protobuf::Metadata StatusInfo::GetMetadata() const {
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // ===================================================================
@@ -6155,6 +7320,82 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketInfo_SegmentStatusEntry_DoNotUse::
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 // ===================================================================
 
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+MarketInfo_CasMarketStatusEntry_DoNotUse::MarketInfo_CasMarketStatusEntry_DoNotUse() : SuperType(MarketInfo_CasMarketStatusEntry_DoNotUse_get_class_data()) {}
+MarketInfo_CasMarketStatusEntry_DoNotUse::MarketInfo_CasMarketStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+    : SuperType(arena, MarketInfo_CasMarketStatusEntry_DoNotUse_get_class_data()) {}
+#else   // PROTOBUF_CUSTOM_VTABLE
+MarketInfo_CasMarketStatusEntry_DoNotUse::MarketInfo_CasMarketStatusEntry_DoNotUse() : SuperType() {}
+MarketInfo_CasMarketStatusEntry_DoNotUse::MarketInfo_CasMarketStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena) : SuperType(arena) {}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_ =
+        MarketInfo_CasMarketStatusEntry_DoNotUse::InternalGenerateClassData_(MarketInfo_CasMarketStatusEntry_DoNotUse_globals_._default);
+
+// including ~ all the vtables and everything they use become part
+// of the same ~ SCC.
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+MarketInfo_CasMarketStatusEntry_DoNotUse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_.tc_table);
+  return MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_.base();
+}
+#else
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+MarketInfo_CasMarketStatusEntry_DoNotUse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&MarketInfo_CasMarketStatusEntry_DoNotUse_globals_);
+  ::google::protobuf::internal::PrefetchToLocalCache(
+      ::google::protobuf::internal::MessageGlobalsBase::ToParseTableBase(&MarketInfo_CasMarketStatusEntry_DoNotUse_globals_));
+  return MarketInfo_CasMarketStatusEntry_DoNotUse_globals_.GetClassData();
+}
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketInfo_CasMarketStatusEntry_DoNotUse::ParseTableT_
+    MarketInfo_CasMarketStatusEntry_DoNotUse::_table_ =
+        MarketInfo_CasMarketStatusEntry_DoNotUse::InternalGenerateParseTable_(MarketInfo_CasMarketStatusEntry_DoNotUse_class_data_.base());
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+// ===================================================================
+
+#if defined(PROTOBUF_CUSTOM_VTABLE)
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MarketInfo_PreOpenSessionStatusEntry_DoNotUse() : SuperType(MarketInfo_PreOpenSessionStatusEntry_DoNotUse_get_class_data()) {}
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MarketInfo_PreOpenSessionStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
+    : SuperType(arena, MarketInfo_PreOpenSessionStatusEntry_DoNotUse_get_class_data()) {}
+#else   // PROTOBUF_CUSTOM_VTABLE
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MarketInfo_PreOpenSessionStatusEntry_DoNotUse() : SuperType() {}
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::MarketInfo_PreOpenSessionStatusEntry_DoNotUse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena) : SuperType(arena) {}
+#endif  // PROTOBUF_CUSTOM_VTABLE
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const
+    ::google::protobuf::internal::ClassDataFull MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_ =
+        MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalGenerateClassData_(MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_._default);
+
+// including ~ all the vtables and everything they use become part
+// of the same ~ SCC.
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_);
+  ::google::protobuf::internal::PrefetchToLocalCache(MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_.tc_table);
+  return MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_.base();
+}
+#else
+PROTOBUF_ATTRIBUTE_WEAK const ::google::protobuf::internal::ClassData* PROTOBUF_NONNULL
+MarketInfo_PreOpenSessionStatusEntry_DoNotUse::GetClassData() const {
+  ::google::protobuf::internal::PrefetchToLocalCache(&MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_);
+  ::google::protobuf::internal::PrefetchToLocalCache(
+      ::google::protobuf::internal::MessageGlobalsBase::ToParseTableBase(&MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_));
+  return MarketInfo_PreOpenSessionStatusEntry_DoNotUse_globals_.GetClassData();
+}
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+#ifndef PROTOBUF_MESSAGE_GLOBALS
+PROTOBUF_CONSTINIT
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketInfo_PreOpenSessionStatusEntry_DoNotUse::ParseTableT_
+    MarketInfo_PreOpenSessionStatusEntry_DoNotUse::_table_ =
+        MarketInfo_PreOpenSessionStatusEntry_DoNotUse::InternalGenerateParseTable_(MarketInfo_PreOpenSessionStatusEntry_DoNotUse_class_data_.base());
+#endif  // !PROTOBUF_MESSAGE_GLOBALS
+// ===================================================================
+
 MarketInfo::MarketInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, MarketInfo_get_class_data()) {
@@ -6162,19 +7403,33 @@ MarketInfo::MarketInfo(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.MarketInfo)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
 }
 PROTOBUF_NDEBUG_INLINE MarketInfo::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::MarketInfo& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         segmentstatus_ {
           visibility, ::_pbi::InternalMetadataOffset::Build<
-              ::upstox::MarketInfo,
-              PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo, _impl_.segmentstatus_)>()
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.segmentstatus_)>()
           , from.segmentstatus_
+        }
+        ,
+        casmarketstatus_ {
+          visibility, ::_pbi::InternalMetadataOffset::Build<
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.casmarketstatus_)>()
+          , from.casmarketstatus_
+        }
+        ,
+        preopensessionstatus_ {
+          visibility, ::_pbi::InternalMetadataOffset::Build<
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.preopensessionstatus_)>()
+          , from.preopensessionstatus_
         }
      {}
 
@@ -6193,15 +7448,25 @@ MarketInfo::MarketInfo(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
 
-  // @@protoc_insertion_point(copy_constructor:upstox.MarketInfo)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
 }
 PROTOBUF_NDEBUG_INLINE MarketInfo::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         segmentstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::MarketInfo,
-            PROTOBUF_FIELD_OFFSET(::upstox::MarketInfo, _impl_.segmentstatus_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.segmentstatus_)>()
+         }
+        ,
+        casmarketstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.casmarketstatus_)>()
+         }
+        ,
+        preopensessionstatus_ { visibility, ::_pbi::InternalMetadataOffset::Build<
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketInfo, _impl_.preopensessionstatus_)>()
          }
      {}
 
@@ -6209,7 +7474,7 @@ inline void MarketInfo::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
 }
 MarketInfo::~MarketInfo() {
-  // @@protoc_insertion_point(destructor:upstox.MarketInfo)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   SharedDtor(*this);
 }
 inline void MarketInfo::SharedDtor(MessageLite& self) {
@@ -6249,15 +7514,23 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const MarketInfo::ParseTableT_
         MarketInfo::InternalGenerateParseTable_(MarketInfo_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void MarketInfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.MarketInfo)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    _impl_.segmentstatus_.Clear();
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _impl_.segmentstatus_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _impl_.casmarketstatus_.Clear();
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _impl_.preopensessionstatus_.Clear();
+    }
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
@@ -6277,16 +7550,16 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.MarketInfo)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // map<string, .upstox.MarketStatus> segmentStatus = 1;
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus> segmentStatus = 1;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     if (!this_._internal_segmentstatus().empty()) {
-      using MapType = ::google::protobuf::Map<::std::string, ::upstox::MarketStatus>;
-      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::upstox::MarketStatus,
+      using MapType = ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus>;
+      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus,
                                      _pbi::WireFormatLite::TYPE_STRING,
                                      _pbi::WireFormatLite::TYPE_ENUM>;
       const auto& field = this_._internal_segmentstatus();
@@ -6297,7 +7570,7 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
               1, entry.first, entry.second, target, stream);
           ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
               entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "upstox.MarketInfo.segmentStatus");
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.segmentStatus");
         }
       } else {
         for (const auto& entry : field) {
@@ -6305,7 +7578,65 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
               1, entry.first, entry.second, target, stream);
           ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
               entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "upstox.MarketInfo.segmentStatus");
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.segmentStatus");
+        }
+      }
+    }
+  }
+
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> casMarketStatus = 2;
+  if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+    if (!this_._internal_casmarketstatus().empty()) {
+      using MapType = ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>;
+      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo,
+                                     _pbi::WireFormatLite::TYPE_STRING,
+                                     _pbi::WireFormatLite::TYPE_MESSAGE>;
+      const auto& field = this_._internal_casmarketstatus();
+
+      if (stream->IsSerializationDeterministic() && field.size() > 1) {
+        for (const auto& entry : ::google::protobuf::internal::MapSorterPtr<MapType>(field)) {
+          target = WireHelper::InternalSerialize(
+              2, entry.first, entry.second, target, stream);
+          ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+              entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.casMarketStatus");
+        }
+      } else {
+        for (const auto& entry : field) {
+          target = WireHelper::InternalSerialize(
+              2, entry.first, entry.second, target, stream);
+          ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+              entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.casMarketStatus");
+        }
+      }
+    }
+  }
+
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> preOpenSessionStatus = 3;
+  if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+    if (!this_._internal_preopensessionstatus().empty()) {
+      using MapType = ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo>;
+      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo,
+                                     _pbi::WireFormatLite::TYPE_STRING,
+                                     _pbi::WireFormatLite::TYPE_MESSAGE>;
+      const auto& field = this_._internal_preopensessionstatus();
+
+      if (stream->IsSerializationDeterministic() && field.size() > 1) {
+        for (const auto& entry : ::google::protobuf::internal::MapSorterPtr<MapType>(field)) {
+          target = WireHelper::InternalSerialize(
+              3, entry.first, entry.second, target, stream);
+          ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+              entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.preOpenSessionStatus");
+        }
+      } else {
+        for (const auto& entry : field) {
+          target = WireHelper::InternalSerialize(
+              3, entry.first, entry.second, target, stream);
+          ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+              entry.first.data(), static_cast<int>(entry.first.length()),
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo.preOpenSessionStatus");
         }
       }
     }
@@ -6316,7 +7647,7 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.MarketInfo)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   return target;
 }
 
@@ -6327,7 +7658,7 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
 ::size_t MarketInfo::ByteSizeLong() const {
   const MarketInfo& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.MarketInfo)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -6335,16 +7666,36 @@ PROTOBUF_NOINLINE void MarketInfo::Clear() {
   (void)cached_has_bits;
 
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
-   {
-    // map<string, .upstox.MarketStatus> segmentStatus = 1;
-    cached_has_bits = this_._impl_._has_bits_[0];
+  cached_has_bits = this_._impl_._has_bits_[0];
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketStatus> segmentStatus = 1;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size +=
           1 * ::google::protobuf::internal::FromIntSize(this_._internal_segmentstatus_size());
       for (const auto& entry : this_._internal_segmentstatus()) {
-        total_size += _pbi::MapEntryFuncs<::std::string, ::upstox::MarketStatus,
+        total_size += _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::MarketStatus,
                                        _pbi::WireFormatLite::TYPE_STRING,
                                        _pbi::WireFormatLite::TYPE_ENUM>::ByteSizeLong(entry.first, entry.second);
+      }
+    }
+    // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> casMarketStatus = 2;
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      total_size +=
+          1 * ::google::protobuf::internal::FromIntSize(this_._internal_casmarketstatus_size());
+      for (const auto& entry : this_._internal_casmarketstatus()) {
+        total_size += _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo,
+                                       _pbi::WireFormatLite::TYPE_STRING,
+                                       _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
+      }
+    }
+    // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.StatusInfo> preOpenSessionStatus = 3;
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      total_size +=
+          1 * ::google::protobuf::internal::FromIntSize(this_._internal_preopensessionstatus_size());
+      for (const auto& entry : this_._internal_preopensessionstatus()) {
+        total_size += _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::StatusInfo,
+                                       _pbi::WireFormatLite::TYPE_STRING,
+                                       _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
       }
     }
   }
@@ -6359,14 +7710,22 @@ void MarketInfo::MergeImpl(::google::protobuf::MessageLite& to_msg,
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     from.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.MarketInfo)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = from._impl_._has_bits_[0];
-  if (CheckHasBit(cached_has_bits, 0x00000001U)) {
-    _this->_impl_.segmentstatus_.MergeFrom(from._impl_.segmentstatus_);
+  if (BatchCheckHasBit(cached_has_bits, 0x00000007U)) {
+    if (CheckHasBit(cached_has_bits, 0x00000001U)) {
+      _this->_impl_.segmentstatus_.MergeFrom(from._impl_.segmentstatus_);
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000002U)) {
+      _this->_impl_.casmarketstatus_.MergeFrom(from._impl_.casmarketstatus_);
+    }
+    if (CheckHasBit(cached_has_bits, 0x00000004U)) {
+      _this->_impl_.preopensessionstatus_.MergeFrom(from._impl_.preopensessionstatus_);
+    }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
@@ -6374,7 +7733,7 @@ void MarketInfo::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void MarketInfo::CopyFrom(const MarketInfo& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.MarketInfo)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6386,6 +7745,8 @@ void MarketInfo::InternalSwap(MarketInfo* PROTOBUF_RESTRICT PROTOBUF_NONNULL oth
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.segmentstatus_.InternalSwap(&other->_impl_.segmentstatus_);
+  _impl_.casmarketstatus_.InternalSwap(&other->_impl_.casmarketstatus_);
+  _impl_.preopensessionstatus_.InternalSwap(&other->_impl_.preopensessionstatus_);
 }
 
 ::google::protobuf::Metadata MarketInfo::GetMetadata() const {
@@ -6438,18 +7799,18 @@ FeedResponse::FeedResponse(::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
     : ::google::protobuf::Message(arena) {
 #endif  // PROTOBUF_CUSTOM_VTABLE
   SharedCtor(arena);
-  // @@protoc_insertion_point(arena_constructor:upstox.FeedResponse)
+  // @@protoc_insertion_point(arena_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
 }
 PROTOBUF_NDEBUG_INLINE FeedResponse::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena, const Impl_& from,
-    [[maybe_unused]] const ::upstox::FeedResponse& from_msg)
+    [[maybe_unused]] const ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse& from_msg)
       : _has_bits_{from._has_bits_},
         _cached_size_{0},
         feeds_ {
           visibility, ::_pbi::InternalMetadataOffset::Build<
-              ::upstox::FeedResponse,
-              PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.feeds_)>()
+              ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse,
+              PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.feeds_)>()
           , from.feeds_
         }
      {}
@@ -6480,15 +7841,15 @@ FeedResponse::FeedResponse(
                offsetof(Impl_, currentts_) +
                sizeof(Impl_::type_));
 
-  // @@protoc_insertion_point(copy_constructor:upstox.FeedResponse)
+  // @@protoc_insertion_point(copy_constructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
 }
 PROTOBUF_NDEBUG_INLINE FeedResponse::Impl_::Impl_(
     [[maybe_unused]] ::google::protobuf::internal::InternalVisibility visibility,
     [[maybe_unused]] ::google::protobuf::Arena* PROTOBUF_NULLABLE arena)
       : _cached_size_{0},
         feeds_ { visibility, ::_pbi::InternalMetadataOffset::Build<
-            ::upstox::FeedResponse,
-            PROTOBUF_FIELD_OFFSET(::upstox::FeedResponse, _impl_.feeds_)>()
+            ::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse,
+            PROTOBUF_FIELD_OFFSET(::com::upstox::marketdatafeederv3udapi::rpc::proto::FeedResponse, _impl_.feeds_)>()
          }
      {}
 
@@ -6502,7 +7863,7 @@ inline void FeedResponse::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
                sizeof(Impl_::type_));
 }
 FeedResponse::~FeedResponse() {
-  // @@protoc_insertion_point(destructor:upstox.FeedResponse)
+  // @@protoc_insertion_point(destructor:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   SharedDtor(*this);
 }
 inline void FeedResponse::SharedDtor(MessageLite& self) {
@@ -6543,7 +7904,7 @@ PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 const FeedResponse::ParseTableT_
         FeedResponse::InternalGenerateParseTable_(FeedResponse_class_data_.base());
 #endif  // !PROTOBUF_MESSAGE_GLOBALS
 PROTOBUF_NOINLINE void FeedResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:upstox.FeedResponse)
+// @@protoc_insertion_point(message_clear_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   ::google::protobuf::internal::TSanWrite(&_impl_);
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -6580,12 +7941,12 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
   if constexpr (::_pbi::DebugHardenCheckHasBitConsistency()) {
     this_.CheckHasBitConsistency();
   }
-  // @@protoc_insertion_point(serialize_to_array_start:upstox.FeedResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // .upstox.Type type = 1;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
   if (CheckHasBit(cached_has_bits, 0x00000004U)) {
     if (this_._internal_type() != 0) {
       target = stream->EnsureSpace(target);
@@ -6594,11 +7955,11 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
     }
   }
 
-  // map<string, .upstox.Feed> feeds = 2;
+  // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed> feeds = 2;
   if (CheckHasBit(cached_has_bits, 0x00000008U)) {
     if (!this_._internal_feeds().empty()) {
-      using MapType = ::google::protobuf::Map<::std::string, ::upstox::Feed>;
-      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::upstox::Feed,
+      using MapType = ::google::protobuf::Map<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed>;
+      using WireHelper = _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed,
                                      _pbi::WireFormatLite::TYPE_STRING,
                                      _pbi::WireFormatLite::TYPE_MESSAGE>;
       const auto& field = this_._internal_feeds();
@@ -6609,7 +7970,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
               2, entry.first, entry.second, target, stream);
           ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
               entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "upstox.FeedResponse.feeds");
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.feeds");
         }
       } else {
         for (const auto& entry : field) {
@@ -6617,7 +7978,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
               2, entry.first, entry.second, target, stream);
           ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
               entry.first.data(), static_cast<int>(entry.first.length()),
- ::google::protobuf::internal::WireFormatLite::SERIALIZE, "upstox.FeedResponse.feeds");
+ ::google::protobuf::internal::WireFormatLite::SERIALIZE, "com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse.feeds");
         }
       }
     }
@@ -6632,7 +7993,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
     }
   }
 
-  // .upstox.MarketInfo marketInfo = 4;
+  // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
   if (CheckHasBit(cached_has_bits, 0x00000001U)) {
     target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
         4, *this_._impl_.marketinfo_, this_._impl_.marketinfo_->GetCachedSize(), target,
@@ -6644,7 +8005,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
             this_._internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:upstox.FeedResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   return target;
 }
 
@@ -6655,7 +8016,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
 ::size_t FeedResponse::ByteSizeLong() const {
   const FeedResponse& this_ = *this;
 #endif  // PROTOBUF_CUSTOM_VTABLE
-  // @@protoc_insertion_point(message_byte_size_start:upstox.FeedResponse)
+  // @@protoc_insertion_point(message_byte_size_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   ::size_t total_size = 0;
 
   ::uint32_t cached_has_bits = 0;
@@ -6665,7 +8026,7 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
   ::_pbi::Prefetch5LinesFrom7Lines(&this_);
   cached_has_bits = this_._impl_._has_bits_[0];
   if (BatchCheckHasBit(cached_has_bits, 0x0000000fU)) {
-    // .upstox.MarketInfo marketInfo = 4;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.MarketInfo marketInfo = 4;
     if (CheckHasBit(cached_has_bits, 0x00000001U)) {
       total_size += 1 +
                     ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.marketinfo_);
@@ -6677,19 +8038,19 @@ PROTOBUF_NOINLINE void FeedResponse::Clear() {
             this_._internal_currentts());
       }
     }
-    // .upstox.Type type = 1;
+    // .com.upstox.marketdatafeederv3udapi.rpc.proto.Type type = 1;
     if (CheckHasBit(cached_has_bits, 0x00000004U)) {
       if (this_._internal_type() != 0) {
         total_size += 1 +
                       ::_pbi::WireFormatLite::EnumSize(this_._internal_type());
       }
     }
-    // map<string, .upstox.Feed> feeds = 2;
+    // map<string, .com.upstox.marketdatafeederv3udapi.rpc.proto.Feed> feeds = 2;
     if (CheckHasBit(cached_has_bits, 0x00000008U)) {
       total_size +=
           1 * ::google::protobuf::internal::FromIntSize(this_._internal_feeds_size());
       for (const auto& entry : this_._internal_feeds()) {
-        total_size += _pbi::MapEntryFuncs<::std::string, ::upstox::Feed,
+        total_size += _pbi::MapEntryFuncs<::std::string, ::com::upstox::marketdatafeederv3udapi::rpc::proto::Feed,
                                        _pbi::WireFormatLite::TYPE_STRING,
                                        _pbi::WireFormatLite::TYPE_MESSAGE>::ByteSizeLong(entry.first, entry.second);
       }
@@ -6707,7 +8068,7 @@ void FeedResponse::MergeImpl(::google::protobuf::MessageLite& to_msg,
     from.CheckHasBitConsistency();
   }
   ::google::protobuf::Arena* arena = _this->GetArena();
-  // @@protoc_insertion_point(class_specific_merge_from_start:upstox.FeedResponse)
+  // @@protoc_insertion_point(class_specific_merge_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
@@ -6742,7 +8103,7 @@ void FeedResponse::MergeImpl(::google::protobuf::MessageLite& to_msg,
 }
 
 void FeedResponse::CopyFrom(const FeedResponse& from) {
-  // @@protoc_insertion_point(class_specific_copy_from_start:upstox.FeedResponse)
+  // @@protoc_insertion_point(class_specific_copy_from_start:com.upstox.marketdatafeederv3udapi.rpc.proto.FeedResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -6766,7 +8127,11 @@ void FeedResponse::InternalSwap(FeedResponse* PROTOBUF_RESTRICT PROTOBUF_NONNULL
   return ::google::protobuf::Message::GetMetadataImpl(GetClassData()->full());
 }
 // @@protoc_insertion_point(namespace_scope)
+}  // namespace proto
+}  // namespace rpc
+}  // namespace marketdatafeederv3udapi
 }  // namespace upstox
+}  // namespace com
 namespace google {
 namespace protobuf {
 }  // namespace protobuf

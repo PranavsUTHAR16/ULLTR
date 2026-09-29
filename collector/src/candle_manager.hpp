@@ -6,6 +6,7 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
+#include <functional>
 #include <hiredis/hiredis.h>
 
 struct Candle {
@@ -49,7 +50,17 @@ public:
     // Reload token upon dynamic authentication refresh
     void reload_token();
 
+    // Bar Close Notification Callback
+    using BarCloseCallback = std::function<void(const std::string& symbol, const std::string& tf, const Candle& closed_candle)>;
+    void set_bar_close_callback(BarCloseCallback cb) { m_bar_close_callback = cb; }
+    void add_instrument(const std::string& sym) {
+        if (std::find(m_instruments.begin(), m_instruments.end(), sym) == m_instruments.end()) {
+            m_instruments.push_back(sym);
+        }
+    }
+
 private:
+    BarCloseCallback m_bar_close_callback;
     // Dynamic HTTPS client using Boost.Beast (used only for startup catch-up)
     std::string https_get(const std::string& target);
 

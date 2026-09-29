@@ -9,16 +9,42 @@ import upstox_client
 from upstox_client.rest import ApiException
 
 def is_market_open_today():
-    """Queries Upstox API to verify if the NSE exchange is open today, with a weekend fallback."""
+    """
+    Comprehensive Market Status & Holiday Verifier using Upstox API.
+    Handles:
+    1. Weekends (Saturday / Sunday) -> Market CLOSED.
+    2. Official Trading Holidays (via get_holidays()) -> Market CLOSED.
+    3. Live Exchange Status (via get_market_status('NSE')) ->
+       - NORMAL_OPEN, PRE_OPEN_*, CAS_* -> Market ACTIVE.
+       - HOLIDAY, CLOSED -> Market CLOSED.
+       - NORMAL_CLOSE, CLOSING_END, CLOSING_START:
+         If current time is past 15:30 IST, market is CLOSED for the day.
+    """
+    now = datetime.now()
+    today_date = now.date()
+    current_time_str = now.strftime("%H:%M")
+
+    # 1. Immediate Weekend Check (Saturday=5, Sunday=6)
+    if now.weekday() in [5, 6]:
+        print("🔴 Weekend check: Today is a weekend (Saturday/Sunday). Market is CLOSED.")
+        return False
+
+    # 2. Check if current time is past market hours (after 15:30 IST)
+    if current_time_str >= "15:30":
+        print(f"🔴 Off-market hours: Current time is {current_time_str} IST (past 15:30). Market is CLOSED.")
+        return False
+
     token_path = '/Users/prana/Desktop/open_source/web/login/access_token.json'
-    
-    # Force daily refresh: run auth.py if token file doesn't exist or is not from today
+    if not os.path.exists(token_path) and os.path.exists('/Users/prana/Desktop/open_source/web/access_token.json'):
+        token_path = '/Users/prana/Desktop/open_source/web/access_token.json'
+
+    # Check token age / existence
     run_needed = False
     if not os.path.exists(token_path):
         run_needed = True
     else:
         mtime_date = datetime.fromtimestamp(os.path.getmtime(token_path)).date()
-        if mtime_date < datetime.now().date():
+        if mtime_date < today_date:
             run_needed = True
             
     if run_needed:
@@ -35,7 +61,10 @@ def is_market_open_today():
 
     try:
         if not os.path.exists(token_path):
-            raise FileNotFoundError(f"Access token file not found at {token_path}")
+            if os.path.exists('/Users/prana/Desktop/open_source/web/access_token.json'):
+                token_path = '/Users/prana/Desktop/open_source/web/access_token.json'
+            else:
+                raise FileNotFoundError(f"Access token file not found at {token_path}")
             
         with open(token_path) as f:
             token = json.load(f)['access_token']
@@ -43,27 +72,40 @@ def is_market_open_today():
         configuration = upstox_client.Configuration()
         configuration.access_token = token
         api_instance = upstox_client.MarketHolidaysAndTimingsApi(upstox_client.ApiClient(configuration))
+
+        # 3. Check Upstox Official Holiday Calendar
+        try:
+            holidays_resp = api_instance.get_holidays()
+            if holidays_resp and hasattr(holidays_resp, 'data') and holidays_resp.data:
+                for h in holidays_resp.data:
+                    d = getattr(h, '_date', None) or getattr(h, 'date', None)
+                    if hasattr(d, 'date'):
+                        d = d.date()
+                    elif isinstance(d, str):
+                        d = datetime.strptime(d[:10], '%Y-%m-%d').date()
+                    if d == today_date:
+                        h_type = getattr(h, 'holiday_type', 'TRADING_HOLIDAY')
+                        closed_ex = getattr(h, 'closed_exchanges', []) or []
+                        if h_type == 'TRADING_HOLIDAY' and (not closed_ex or any(ex in closed_ex for ex in ['NSE', 'NFO', 'BSE', 'BFO'])):
+                            h_desc = getattr(h, 'description', 'Official Exchange Holiday')
+                            print(f"🔴 Upstox Holiday Detected: Today ({today_date}) is {h_desc}. Market is CLOSED.")
+                            return False
+        except Exception as he:
+            print(f"⚠️ Warning querying Upstox holiday calendar: {he}")
+
+        # 4. Check Upstox Live Market Status for NSE
         try:
             api_response = api_instance.get_market_status('NSE')
         except ApiException as ae:
             if ae.status == 401:
-                print("⚠️ Expiry Manager API Unauthorized (401). Deleting stale token and triggering automated token refresh...")
-                if os.path.exists(token_path):
-                    try:
-                        os.remove(token_path)
-                    except Exception as ex:
-                        print(f"⚠️ Failed to remove stale token file: {ex}")
-                
-                # Run auth.py
+                print("⚠️ Expiry Manager API Unauthorized (401). Refreshing token...")
                 auth_script = "/Users/prana/Desktop/open_source/web/login/auth.py"
-                run_auth = subprocess.run(
+                subprocess.run(
                     [sys.executable, auth_script],
                     capture_output=True,
                     text=True,
                     cwd=os.path.dirname(auth_script)
                 )
-                
-                # Reload token
                 with open(token_path) as f:
                     token = json.load(f)['access_token']
                 configuration.access_token = token
@@ -76,18 +118,36 @@ def is_market_open_today():
         status = getattr(status_data, 'status', 'CLOSED').upper() if status_data else 'CLOSED'
         print(f"🔍 Upstox Market Status for NSE today: {status}")
         
-        # If the status is CLOSED, the market is definitely closed today
-        if status == 'CLOSED':
+        # Definitive Closed Statuses
+        if status in ['HOLIDAY', 'CLOSED']:
+            print(f"🔴 Market status is {status}. Market is CLOSED.")
             return False
-        return True
+
+        if status in ['NORMAL_CLOSE', 'CLOSING_END', 'CLOSING_START']:
+            if current_time_str >= "15:30":
+                print(f"🔴 Market has concluded for the day (Status: {status} at {current_time_str} IST). Market is CLOSED.")
+                return False
+
+        # Active trading statuses
+        active_statuses = [
+            'NORMAL_OPEN', 'PRE_OPEN_START', 'PRE_OPEN_END', 'PRE_OPEN_M_END',
+            'CAS_LM_START', 'CAS_M_STOP', 'CAS_STOP', 'CTS_CLOSE'
+        ]
+        if status in active_statuses:
+            print(f"🟢 Market is actively open (Status: {status}).")
+            return True
+
+        if "08:30" <= current_time_str <= "15:30":
+            print(f"🟡 Market status is {status} during trading hours (08:30-15:30). Assuming OPEN.")
+            return True
+
+        return False
     except Exception as e:
-        print(f"⚠️ Failed to get live market status from Upstox API ({e}). Using weekend fallback.")
-        # Fallback: check if weekend (Saturday=5, Sunday=6)
-        day = datetime.now().weekday()
-        if day in [5, 6]:
-            print("🔴 Weekend fallback triggered: Today is a weekend. Market is CLOSED.")
+        print(f"⚠️ Failed to get live market status from Upstox API ({e}). Using time/weekday fallback.")
+        if now.weekday() in [5, 6] or current_time_str >= "15:30":
+            print(f"🔴 Fallback: Weekend or after 15:30 IST ({current_time_str}). Market is CLOSED.")
             return False
-        print("🟢 Weekend fallback triggered: Today is a weekday. Assuming market is OPEN.")
+        print(f"🟢 Fallback: Weekday during trading hours ({current_time_str}). Assuming market is OPEN.")
         return True
 
 def clear_premarket_logs():
@@ -112,24 +172,31 @@ def restart_collector(clear_logs: bool = False):
     if clear_logs:
         clear_premarket_logs()
         
-    # Kill existing collector and reconciler binaries
-    subprocess.run(["pkill", "-f", "./collector"], capture_output=True)
-    subprocess.run(["pkill", "-f", "reconciler.py"], capture_output=True)
-    
-    build_dir = "/Users/prana/Desktop/open_source/web/collector/build"
-    log_file = "/Users/prana/Desktop/open_source/web/collector_bg.log"
-    
-    print(f"🔄 Launching C++ Collector in the background (logs: {log_file})...")
-    with open(log_file, "a") as log:
-        # Spawn C++ collector as a detached background process group
-        subprocess.Popen(
-            ["./collector", "../config.json"],
-            cwd=build_dir,
-            stdout=log,
-            stderr=log,
-            preexec_fn=os.setpgrp # Detach process group so it runs independently of daemon
-        )
+    # Check if systemd manages ulltr-collector
+    res = subprocess.run(["systemctl", "is-active", "ulltr-collector.service"], capture_output=True, text=True)
+    if res.returncode == 0:
+        print("🔄 Restarting ulltr-collector.service via systemctl...")
+        subprocess.run(["sudo", "systemctl", "restart", "ulltr-collector.service"], capture_output=True)
+    else:
+        # Kill existing collector binaries cleanly
+        subprocess.run(["pkill", "-9", "-f", "collector/build/collector"], capture_output=True)
+        subprocess.run(["pkill", "-9", "-f", "./collector"], capture_output=True)
+        time.sleep(0.5)
         
+        build_dir = "/Users/prana/Desktop/open_source/web/collector/build"
+        log_file = "/Users/prana/Desktop/open_source/web/collector_bg.log"
+        
+        print(f"🔄 Launching C++ Collector in the background (logs: {log_file})...")
+        with open(log_file, "a") as log:
+            subprocess.Popen(
+                ["./collector", "../config.json"],
+                cwd=build_dir,
+                stdout=log,
+                stderr=log,
+                preexec_fn=os.setpgrp
+            )
+        
+    subprocess.run(["pkill", "-f", "reconciler.py"], capture_output=True)
     print("🔄 Launching Standalone Reconciler in the background...")
     reco_log_file = "/Users/prana/Desktop/open_source/web/reconciler_stdout.log"
     with open(reco_log_file, "a") as log:

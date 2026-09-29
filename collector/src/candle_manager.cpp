@@ -533,10 +533,16 @@ void CandleManager::process_tick_candle(
         
         if (!has_active || symbol_candles[tf].timestamp < ts_candle) {
             // A candle interval has officially closed!
-            if (has_active && tf == "1m") {
-                // Publish closed 1m candle to Redis Pub/Sub channel
-                redisReply* r_pub = (redisReply*)redisCommand(sync_redis, "PUBLISH md:reco:trigger %s:%lld", symbol.c_str(), symbol_candles[tf].timestamp);
-                if (r_pub) freeReplyObject(r_pub);
+            if (has_active) {
+                Candle closed_c = symbol_candles[tf];
+                if (tf == "1m") {
+                    // Publish closed 1m candle to Redis Pub/Sub channel
+                    redisReply* r_pub = (redisReply*)redisCommand(sync_redis, "PUBLISH md:reco:trigger %s:%lld", symbol.c_str(), closed_c.timestamp);
+                    if (r_pub) freeReplyObject(r_pub);
+                }
+                if (m_bar_close_callback) {
+                    m_bar_close_callback(symbol, tf, closed_c);
+                }
             }
             
             Candle c;

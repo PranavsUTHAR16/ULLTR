@@ -1,34 +1,15 @@
 syntax = "proto3";
 
-package upstox;
+package com.upstox.marketdatafeederv3udapi.rpc.proto;
 
-enum Type {
-  initial_feed = 0;
-  live_feed = 1;
-  market_info = 2;
-}
-
-enum RequestMode {
-  ltpc = 0;
-  full_d5 = 1;
-  option_greeks = 2;
-  full_d30 = 3;
-}
-
-enum MarketStatus {
-  PRE_OPEN_START = 0;
-  PRE_OPEN_END = 1;
-  NORMAL_OPEN = 2;
-  NORMAL_CLOSE = 3;
-  CLOSING_START = 4;
-  CLOSING_END = 5;
-}
+import "google/protobuf/wrappers.proto";
 
 message LTPC {
   double ltp = 1;
   int64 ltt = 2;
   int64 ltq = 3;
   double cp = 4;
+  google.protobuf.DoubleValue iep = 5;
 }
 
 message MarketLevel {
@@ -64,6 +45,12 @@ message OHLC {
   int64 ts = 7;
 }
 
+enum Type {
+  initial_feed = 0;
+  live_feed = 1;
+  market_info = 2;
+}
+
 message MarketFullFeed {
   LTPC ltpc = 1;
   MarketLevel marketLevel = 2;
@@ -75,6 +62,12 @@ message MarketFullFeed {
   double iv = 8;
   double tbq = 9;
   double tsq = 10;
+  double iep = 11;
+  double rp = 12;
+  int64 ieq = 13;
+  int64 iiqTotal = 14;
+  int64 iiqM = 15;
+  bool casEligible = 16;
 }
 
 message IndexFullFeed {
@@ -83,8 +76,10 @@ message IndexFullFeed {
 }
 
 message FullFeed {
-  MarketFullFeed marketFF = 1;
-  IndexFullFeed indexFF = 2;
+  oneof FullFeedUnion {
+    MarketFullFeed marketFF = 1;
+    IndexFullFeed indexFF = 2;
+  }
 }
 
 message FirstLevelWithGreeks {
@@ -97,14 +92,39 @@ message FirstLevelWithGreeks {
 }
 
 message Feed {
-  LTPC ltpc = 1;
-  FullFeed fullFeed = 2;
-  FirstLevelWithGreeks firstLevelWithGreeks = 3;
+  oneof FeedUnion {
+    LTPC ltpc = 1;
+    FullFeed fullFeed = 2;
+    FirstLevelWithGreeks firstLevelWithGreeks = 3;
+  }
   RequestMode requestMode = 4;
+}
+
+enum RequestMode {
+  ltpc = 0;
+  full_d5 = 1;
+  option_greeks = 2;
+  full_d30 = 3;
+}
+
+enum MarketStatus {
+  PRE_OPEN_START = 0;
+  PRE_OPEN_END = 1;
+  NORMAL_OPEN = 2;
+  NORMAL_CLOSE = 3;
+  CLOSING_START = 4;
+  CLOSING_END = 5;
+}
+
+message StatusInfo {
+  string status = 1;
+  int64 updatedTime = 2;
 }
 
 message MarketInfo {
   map<string, MarketStatus> segmentStatus = 1;
+  map<string, StatusInfo> casMarketStatus = 2;
+  map<string, StatusInfo> preOpenSessionStatus = 3;
 }
 
 message FeedResponse {
@@ -113,3 +133,4 @@ message FeedResponse {
   int64 currentTs = 3;
   MarketInfo marketInfo = 4;
 }
+

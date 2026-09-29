@@ -38,7 +38,7 @@ logger = logging.getLogger("StockDepthCollector")
 IST = timezone(timedelta(hours=5, minutes=30))
 
 # ClickHouse Cloud Credentials
-CH_HOST = "libz0hxoze.ap-south-1.aws.clickhouse.cloud"
+CH_HOST = "ra5fptcofl.ap-south-1.aws.clickhouse.cloud"
 CH_USER = "default"
 CH_PASS = "BhhYrZvtF3lA~"
 CH_PORT = 8443
@@ -216,9 +216,11 @@ class StockDepthCollector:
                     logger.info(f"🚀 [{segment_name}] Subscribed to {len(instruments)} stocks in 'full_d30' (30-level depth) mode!")
 
                     msg_count = 0
+                    last_msg_time = time.time()
                     while self.running:
                         try:
-                            msg = await asyncio.wait_for(ws.recv(), timeout=2.0)
+                            msg = await asyncio.wait_for(ws.recv(), timeout=1.0)
+                            last_msg_time = time.time()
                             if isinstance(msg, bytes):
                                 feed_resp = pb.FeedResponse()
                                 feed_resp.ParseFromString(msg)
@@ -244,6 +246,13 @@ class StockDepthCollector:
                                     asks_p = []
                                     asks_q = []
 
+                                    iep = 0.0
+                                    rp = 0.0
+                                    ieq = 0
+                                    iiq_total = 0
+                                    iiq_market = 0
+                                    cas_eligible = False
+
                                     if feed.HasField("fullFeed") and feed.fullFeed.HasField("marketFF"):
                                         mff = feed.fullFeed.marketFF
                                         ltp = float(mff.ltpc.ltp)
@@ -251,6 +260,21 @@ class StockDepthCollector:
                                         vol = int(mff.vtt)
                                         tbq = int(mff.tbq)
                                         tsq = int(mff.tsq)
+
+                                        # Native CAS fields (September 4, 2026 Upstox update)
+                                        if mff.iep > 0.0:
+                                            iep = float(mff.iep)
+                                        elif mff.ltpc.HasField("iep"):
+                                            iep = float(mff.ltpc.iep.value)
+                                        if mff.rp > 0.0:
+                                            rp = float(mff.rp)
+                                        if mff.ieq > 0:
+                                            ieq = int(mff.ieq)
+                                        if mff.iiqTotal != 0:
+                                            iiq_total = int(mff.iiqTotal)
+                                        if mff.iiqM != 0:
+                                            iiq_market = int(mff.iiqM)
+                                        cas_eligible = bool(mff.casEligible)
 
                                         # Extract all depth levels (up to 30 levels)
                                         if mff.HasField("marketLevel"):
@@ -267,6 +291,8 @@ class StockDepthCollector:
                                         ltp = float(flg.ltpc.ltp)
                                         cp = float(flg.ltpc.cp)
                                         vol = int(flg.vtt)
+                                        if flg.ltpc.HasField("iep"):
+                                            iep = float(flg.ltpc.iep.value)
                                         if flg.HasField("firstDepth"):
                                             if flg.firstDepth.bidQ > 0:
                                                 bids_p.append(float(flg.firstDepth.bidP))
@@ -278,6 +304,25 @@ class StockDepthCollector:
                                     elif feed.HasField("ltpc"):
                                         ltp = float(feed.ltpc.ltp)
                                         cp = float(feed.ltpc.cp)
+                                        if feed.ltpc.HasField("iep"):
+                                            iep = float(feed.ltpc.iep.value)
+
+                                    # Fast-path cache to Redis for real-time CAS consumers
+                                    if self.redis_client and iep > 0.0:
+                                        try:
+                                            self.redis_client.hset(f"cas:live:{underlying}", mapping={
+                                                "symbol": sym_key,
+                                                "underlying": underlying,
+                                                "iep": str(iep),
+                                                "rp": str(rp),
+                                                "ieq": str(ieq),
+                                                "iiq_total": str(iiq_total),
+                                                "iiq_market": str(iiq_market),
+                                                "cas_eligible": "1" if cas_eligible else "0",
+                                                "ts_recv": str(int(time.time() * 1000))
+                                            })
+                                        except Exception:
+                                            pass
 
                                     bid1 = bids_p[0] if bids_p else 0.0
                                     bid_qty1 = bids_q[0] if bids_q else 0
@@ -305,6 +350,10 @@ class StockDepthCollector:
                                                 pipe.hset(f"depth:quote:{r[1]}", mapping={
                                                     "ltp": r[4], "cp": r[5], "vol": r[6], "tbq": r[7], "tsq": r[8],
                                                     "bid1": r[9], "bid_qty1": r[10], "ask1": r[11], "ask_qty1": r[12],
+                                                    "bp": ",".join(map(str, r[13])) if r[13] else "",
+                                                    "bq": ",".join(map(str, r[14])) if r[14] else "",
+                                                    "ap": ",".join(map(str, r[15])) if r[15] else "",
+                                                    "aq": ",".join(map(str, r[16])) if r[16] else "",
                                                     "mbq": r[17], "msq": r[18], "ts": now_ts
                                                 })
                                             pipe.execute()
@@ -317,11 +366,18 @@ class StockDepthCollector:
                                             self.flush_buffer()
 
                         except asyncio.TimeoutError:
+                            now_ist = datetime.now(IST)
+                            is_market_hours = (now_ist.weekday() < 5) and (
+                                ("09:15" <= now_ist.strftime("%H:%M") <= "15:30")
+                            )
+                            if is_market_hours and (time.time() - last_msg_time >= 3.0):
+                                logger.warning(f"🚨 [{segment_name}] Feed silence >= 3.0s detected during market hours! Reconnecting immediately...")
+                                break
                             continue
 
             except Exception as e:
-                logger.error(f"⚠️ [{segment_name}] WebSocket error: {e}. Reconnecting in 3s...")
-                await asyncio.sleep(3)
+                logger.error(f"⚠️ [{segment_name}] WebSocket error: {e}. Reconnecting immediately...")
+                await asyncio.sleep(0.5)
 
     async def flush_loop(self):
         while self.running:
