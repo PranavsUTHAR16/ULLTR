@@ -510,6 +510,24 @@ def run_model07_live(
     trade_logger = Model07TradeLogger(base_dir=os.path.dirname(os.path.abspath(__file__)))
 
     today_str = datetime.date.today().strftime("%Y-%m-%d")
+    now_curr = datetime.datetime.now()
+
+    # Guard: if started after market close (15:30), sleep until next morning 09:15 AM
+    if now_curr.strftime("%H:%M") >= "15:30":
+        days_ahead = 1
+        if now_curr.weekday() == 4:  # Friday -> Monday
+            days_ahead = 3
+        elif now_curr.weekday() == 5:  # Saturday -> Monday
+            days_ahead = 2
+        target_start = datetime.datetime.combine(
+            now_curr.date() + datetime.timedelta(days=days_ahead),
+            datetime.time(9, 15, 0)
+        )
+        sleep_sec = max(60.0, (target_start - now_curr).total_seconds())
+        logger.info("Current time %s is after market close. Sleeping %d sec until %s...", now_curr.strftime("%H:%M"), sleep_sec, target_start)
+        time.sleep(sleep_sec)
+        # Update today_str after waking up
+        today_str = datetime.date.today().strftime("%Y-%m-%d")
 
     # Front Expiry resolution
     front_exp = r.get("exp:NIFTY:front") or today_str
@@ -522,6 +540,7 @@ def run_model07_live(
         friction_pt=friction
     )
     strategy.init_trading_day(trade_date=today_str, expiry_date=front_exp)
+
 
     # Morning Alert
     morning_msg = (
@@ -666,7 +685,23 @@ def run_model07_live(
                 summary = strategy.get_daily_summary()
                 trade_logger.save_session_trades(today_str, summary["tranches"], summary)
                 print_model07_terminal_scorecard(summary)
+
+                # Sleep overnight until next morning 09:15 AM to prevent systemd tight-loop restarts
+                now_curr = datetime.datetime.now()
+                days_ahead = 1
+                if now_curr.weekday() == 4:  # Friday -> Monday
+                    days_ahead = 3
+                elif now_curr.weekday() == 5:  # Saturday -> Monday
+                    days_ahead = 2
+                target_start = datetime.datetime.combine(
+                    now_curr.date() + datetime.timedelta(days=days_ahead),
+                    datetime.time(9, 15, 0)
+                )
+                sleep_sec = max(60.0, (target_start - now_curr).total_seconds())
+                logger.info("Trading session complete. Sleeping %d sec until %s...", sleep_sec, target_start)
+                time.sleep(sleep_sec)
                 break
+
 
             time.sleep(1.0)
         except KeyboardInterrupt:
