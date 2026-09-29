@@ -48,6 +48,7 @@ class Model0216(BaseTradingModel):
         self.last_exit_bar: str = ""
         self.lots_nifty: int = 10   # 10 Lots = 650 Qty
         self.lots_sensex: int = 20  # 20 Lots = 200 Qty (10/lot)
+        self.oi_open: Dict[str, float] = {}
 
     def _connect_clickhouse(self):
         """Initializes ClickHouse client connection."""
@@ -76,6 +77,7 @@ class Model0216(BaseTradingModel):
         self.current_date = trade_date
         self.active_positions.clear()
         self.closed_positions.clear()
+        self.oi_open.clear()
         self.last_evaluated_bar = ""
         self.last_exit_bar = ""
 
@@ -180,12 +182,12 @@ class Model0216(BaseTradingModel):
         return df_5m
 
     def get_dynamic_atm3_pcr(self, underlying: str, expiry: str, spot_px: float) -> Tuple[float, float, float]:
-        """Calculates real-time ATM ±3 Strike PCR ratio and PE/CE Open Interest from Redis."""
+        """Calculates real-time ATM ±3 Strike PCR ratio using Change in OI (Delta OI) from Redis."""
         step = 100.0 if underlying == "SENSEX" else 50.0
         atm_strike = round(spot_px / step) * step
         target_strikes = [atm_strike + (i * step) for i in range(-3, 4)]
-        total_pe_oi = 0.0
-        total_ce_oi = 0.0
+        net_delta_pe = 0.0
+        net_delta_ce = 0.0
 
         try:
             chain = self.data_client.get_option_chain(underlying, expiry)
@@ -197,16 +199,44 @@ class Model0216(BaseTradingModel):
                     if pe_sym:
                         pe_oi_val = self.data_client.client.r.hget(f"md:quote:{pe_sym}", "oi")
                         if pe_oi_val:
-                            total_pe_oi += float(pe_oi_val)
+                            cur_pe = float(pe_oi_val)
+                            if pe_sym not in self.oi_open:
+                                saved = self.data_client.client.r.get(f"md:oi_open:{pe_sym}")
+                                if saved:
+                                    self.oi_open[pe_sym] = float(saved)
+                                else:
+                                    self.oi_open[pe_sym] = cur_pe
+                                    self.data_client.client.r.set(f"md:oi_open:{pe_sym}", str(cur_pe))
+                            delta_pe = cur_pe - self.oi_open.get(pe_sym, cur_pe)
+                            net_delta_pe += delta_pe
+
                     if ce_sym:
                         ce_oi_val = self.data_client.client.r.hget(f"md:quote:{ce_sym}", "oi")
                         if ce_oi_val:
-                            total_ce_oi += float(ce_oi_val)
-        except Exception:
-            pass
+                            cur_ce = float(ce_oi_val)
+                            if ce_sym not in self.oi_open:
+                                saved = self.data_client.client.r.get(f"md:oi_open:{ce_sym}")
+                                if saved:
+                                    self.oi_open[ce_sym] = float(saved)
+                                else:
+                                    self.oi_open[ce_sym] = cur_ce
+                                    self.data_client.client.r.set(f"md:oi_open:{ce_sym}", str(cur_ce))
+                            delta_ce = cur_ce - self.oi_open.get(ce_sym, cur_ce)
+                            net_delta_ce += delta_ce
+        except Exception as e:
+            logger.debug(f"Error calculating Delta OI PCR: {e}")
 
-        pcr_ratio = total_pe_oi / max(total_ce_oi, 1.0) if total_ce_oi > 0 else (2.0 if total_pe_oi > 0 else 1.0)
-        return pcr_ratio, total_pe_oi, total_ce_oi
+        # Compute Delta OI PCR ratio
+        if net_delta_pe > 0 and net_delta_ce > 0:
+            pcr_ratio = net_delta_pe / max(net_delta_ce, 1.0)
+        elif net_delta_pe > 0 and net_delta_ce <= 0:
+            pcr_ratio = 2.50  # Heavy Put writing + Call unwinding = Strongly Bullish
+        elif net_delta_pe <= 0 and net_delta_ce > 0:
+            pcr_ratio = 0.40  # Put unwinding + Heavy Call writing = Strongly Bearish
+        else:
+            pcr_ratio = 1.00
+
+        return round(float(pcr_ratio), 2), net_delta_pe, net_delta_ce
 
     def on_5m_candle_close(self, current_time_str: str) -> Optional[Dict[str, Any]]:
         """

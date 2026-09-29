@@ -7,6 +7,7 @@ from .strategy_6 import Strategy6Model
 from .model_0216 import Model0216
 from .dynamic_dte import DynamicDTEModel
 from .ultra_tsmom import UltraTSMOMModel
+from .model_07 import Model07Strategy, Model07Tranche
 
 __all__ = [
     "BaseTradingModel",
@@ -14,4 +15,7 @@ __all__ = [
     "Model0216",
     "DynamicDTEModel",
     "UltraTSMOMModel",
+    "Model07Strategy",
+    "Model07Tranche",
 ]
+

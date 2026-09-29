@@ -58,25 +58,31 @@ class MultiModelEngine:
 
     @property
     def active_positions(self) -> List[ForwardTestPosition]:
-        """Aggregates active positions from all modular sub-models."""
-        return (
-            self.strategy6.active_positions +
-            self.model_0216.active_positions +
-            self.dynamic_dte.active_positions +
-            self.ultra_tsmom.active_positions +
-            self.cas_model.active_positions
-        )
+        """Aggregates active positions from enabled models."""
+        pos = list(self.strategy6.active_positions)
+        if getattr(self.config.model_0216, "enabled", False):
+            pos.extend(self.model_0216.active_positions)
+        if getattr(self.config.dynamic_dte, "enabled", False):
+            pos.extend(self.dynamic_dte.active_positions)
+        if getattr(getattr(self.config, "ultra_tsmom", None), "enabled", False):
+            pos.extend(self.ultra_tsmom.active_positions)
+        if getattr(getattr(self.config, "cas", None), "enabled", False):
+            pos.extend(self.cas_model.active_positions)
+        return pos
 
     @property
     def closed_positions(self) -> List[ForwardTestPosition]:
-        """Aggregates closed positions from all modular sub-models."""
-        return (
-            self.strategy6.closed_positions +
-            self.model_0216.closed_positions +
-            self.dynamic_dte.closed_positions +
-            self.ultra_tsmom.closed_positions +
-            self.cas_model.closed_positions
-        )
+        """Aggregates closed positions from enabled models."""
+        pos = list(self.strategy6.closed_positions)
+        if getattr(self.config.model_0216, "enabled", False):
+            pos.extend(self.model_0216.closed_positions)
+        if getattr(self.config.dynamic_dte, "enabled", False):
+            pos.extend(self.dynamic_dte.closed_positions)
+        if getattr(getattr(self.config, "ultra_tsmom", None), "enabled", False):
+            pos.extend(self.ultra_tsmom.closed_positions)
+        if getattr(getattr(self.config, "cas", None), "enabled", False):
+            pos.extend(self.cas_model.closed_positions)
+        return pos
 
     def load_saved_positions(self):
         """Loads today's saved trades from CSV to survive daemon restarts."""
@@ -91,6 +97,17 @@ class MultiModelEngine:
 
             for _, row in df_today.iterrows():
                 model_id = str(row["model_id"])
+
+                # Skip disabled models from being loaded into memory
+                if model_id == "0216_MODEL" and not getattr(self.config.model_0216, "enabled", False):
+                    continue
+                if model_id == "DYNAMIC_DTE" and not getattr(self.config.dynamic_dte, "enabled", False):
+                    continue
+                if model_id == "CAS_ARB" and not getattr(getattr(self.config, "cas", None), "enabled", False):
+                    continue
+                if model_id == "ULTRA_TSMOM" and not getattr(getattr(self.config, "ultra_tsmom", None), "enabled", False):
+                    continue
+
                 und = str(row["underlying"])
                 exp = str(row["expiry"])
                 stk = float(row["strike"])
@@ -132,8 +149,12 @@ class MultiModelEngine:
                     target_model = self.dynamic_dte
                 elif model_id == "CAS_ARB":
                     target_model = self.cas_model
-                else:
+                elif model_id in ["ULTRA_TSMOM", "TSMOM"]:
                     target_model = self.ultra_tsmom
+                else:
+                    print(f"⚠️ [engine] Skipping unknown model_id '{model_id}' in saved positions")
+                    continue
+
 
                 if pos.status == "OPEN":
                     target_model.active_positions.append(pos)
@@ -169,6 +190,12 @@ class MultiModelEngine:
 
     def evaluate_5m_boundary(self):
         """Evaluates 5-minute candle boundary execution for Model 0216 and Model 3 (Dynamic DTE)."""
+        # Model 0216 and Dynamic DTE are discontinued
+        m0216_enabled = getattr(self.config.model_0216, "enabled", False)
+        dyn_dte_enabled = getattr(self.config.dynamic_dte, "enabled", False)
+        if not m0216_enabled and not dyn_dte_enabled:
+            return
+
         now_dt = datetime.now()
         is_5m_boundary = (now_dt.minute % 5 == 0) and (now_dt.second <= 15)
         if not is_5m_boundary:
@@ -179,17 +206,19 @@ class MultiModelEngine:
             return
         self.last_5m_checked = time_str
 
-        # Evaluate 0216 Model
-        res_0216 = self.model_0216.on_5m_candle_close(time_str)
-        if res_0216 and res_0216.get("action") == "ENTRY":
-            self.log_trade_execution()
-            self.send_telegram_0216_entry(res_0216)
+        # Evaluate 0216 Model if enabled
+        if m0216_enabled:
+            res_0216 = self.model_0216.on_5m_candle_close(time_str)
+            if res_0216 and res_0216.get("action") == "ENTRY":
+                self.log_trade_execution()
+                self.send_telegram_0216_entry(res_0216)
 
-        # Evaluate Dynamic DTE Model
-        res_dd = self.dynamic_dte.on_5m_candle_close(time_str)
-        if res_dd and res_dd.get("action") == "ENTRY":
-            self.log_trade_execution()
-            self.send_telegram_dynamic_dte_entry(res_dd["position"])
+        # Evaluate Dynamic DTE Model if enabled
+        if dyn_dte_enabled:
+            res_dd = self.dynamic_dte.on_5m_candle_close(time_str)
+            if res_dd and res_dd.get("action") == "ENTRY":
+                self.log_trade_execution()
+                self.send_telegram_dynamic_dte_entry(res_dd["position"])
 
     def update_and_monitor(self):
         """Performs live price updates, trailing stop evaluations, and 5m candle evaluations."""
@@ -201,36 +230,58 @@ class MultiModelEngine:
             self.log_trade_execution()
             self.send_telegram_sl_broadcast(s6_closed)
 
-        # 2. Evaluate 5-Minute Candle Boundary (0216 Model & Dynamic DTE)
-        self.evaluate_5m_boundary()
+        # 2. Evaluate 5-Minute Candle Boundary (if sub-models enabled)
+        if getattr(self.config.model_0216, "enabled", False) or getattr(self.config.dynamic_dte, "enabled", False):
+            self.evaluate_5m_boundary()
 
-        # 3. Update Model 0216 Active Positions
-        m2_closed = self.model_0216.update_and_monitor(now_time_str)
-        if m2_closed:
-            self.log_trade_execution()
-            self.send_telegram_sl_broadcast(m2_closed)
+        # 3. Update Model 0216 Active Positions (if open and enabled)
+        if getattr(self.config.model_0216, "enabled", False) and self.model_0216.active_positions:
+            m2_closed = self.model_0216.update_and_monitor(now_time_str)
+            if m2_closed:
+                self.log_trade_execution()
+                self.send_telegram_sl_broadcast(m2_closed)
 
-        # 4. Update Dynamic DTE Active Positions
-        dd_closed = self.dynamic_dte.update_and_monitor(now_time_str)
-        if dd_closed:
-            self.log_trade_execution()
-            self.send_telegram_sl_broadcast(dd_closed)
+        # 4. Update Dynamic DTE Active Positions (if open and enabled)
+        if getattr(self.config.dynamic_dte, "enabled", False) and self.dynamic_dte.active_positions:
+            dd_closed = self.dynamic_dte.update_and_monitor(now_time_str)
+            if dd_closed:
+                self.log_trade_execution()
+                self.send_telegram_sl_broadcast(dd_closed)
 
-        # 5. Update Ultra-TSMOM Active Positions
-        ut_closed = self.ultra_tsmom.update_and_monitor(now_time_str)
-        if ut_closed:
-            self.log_trade_execution()
-            self.send_telegram_sl_broadcast(ut_closed)
+        # 5. Update Ultra-TSMOM Active Positions (if open and enabled)
+        if getattr(getattr(self.config, "ultra_tsmom", None), "enabled", False) and self.ultra_tsmom.active_positions:
+            ut_closed = self.ultra_tsmom.update_and_monitor(now_time_str)
+            if ut_closed:
+                self.log_trade_execution()
+                self.send_telegram_sl_broadcast(ut_closed)
+
+        # 6. Update CAS Model Active Positions (if open and enabled)
+        if getattr(getattr(self.config, "cas", None), "enabled", False) and self.cas_model.active_positions:
+            cas_closed = self.cas_model.update_and_monitor(now_time_str)
+            if cas_closed:
+                self.log_trade_execution()
+                self.send_telegram_sl_broadcast(cas_closed)
 
     def execute_eod_squareoff(self):
-        """Executes hard 15:00 EOD square-off across all models."""
+        """Executes hard 15:00 EOD square-off across morning models."""
         now_time_str = datetime.now().strftime("%H:%M")
         self.strategy6.execute_eod_squareoff(now_time_str)
-        self.model_0216.execute_eod_squareoff(now_time_str)
-        self.dynamic_dte.execute_eod_squareoff(now_time_str)
-        self.ultra_tsmom.execute_eod_squareoff(now_time_str)
+        if getattr(self.config.model_0216, "enabled", False):
+            self.model_0216.execute_eod_squareoff(now_time_str)
+        if getattr(self.config.dynamic_dte, "enabled", False):
+            self.dynamic_dte.execute_eod_squareoff(now_time_str)
+        if getattr(getattr(self.config, "ultra_tsmom", None), "enabled", False):
+            self.ultra_tsmom.execute_eod_squareoff(now_time_str)
         self.log_trade_execution()
         self.send_telegram_eod_broadcast()
+
+    def execute_cas_squareoff(self):
+        """Executes 15:30:00 CAS cash settlement."""
+        now_time_str = datetime.now().strftime("%H:%M")
+        cas_closed = self.cas_model.execute_eod_squareoff(now_time_str)
+        if cas_closed:
+            self.log_trade_execution()
+            self.send_telegram_eod_broadcast()
 
     def calculate_model_pnl(self, model_id: str) -> Tuple[float, float, float]:
         """Calculates (realized_pnl, unrealized_pnl, total_pnl) for a specific model."""
@@ -250,20 +301,14 @@ class MultiModelEngine:
         """Renders rich real-time terminal telemetry status dashboard across all active models."""
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
-        m2_real, m2_unreal, m2_tot = self.calculate_model_pnl("0216_MODEL")
-        dd_real, dd_unreal, dd_tot = self.calculate_model_pnl("DYNAMIC_DTE")
-        cas_real, cas_unreal, cas_tot = self.calculate_model_pnl("CAS_ARB")
-        comb_tot = s6_tot + m2_tot + dd_tot + cas_tot
+        s6_lots = self.config.strategy6.total_lots
 
         print(f"\n🚀 MULTI-MODEL LIVE FORWARD TESTER | {now_str}")
         print("=" * 85)
-        print(f"Strategy 6: {self.strategy6.underlying} ({self.strategy6.regime[0]}-{self.strategy6.regime[1]}) | 0216 Asset: {self.model_0216.target_asset} | CAS Arb: {'ARMED' if self.cas_model.is_armed else 'WAITING'}")
+        print(f"Strategy 6: {self.strategy6.underlying} ({self.strategy6.regime[0]}-{self.strategy6.regime[1]}) | DTE: {self.strategy6.dte}")
         print("-" * 85)
-        print(f"📊 MODEL 1 [STRATEGY_6] (10 Lots) : ₹{s6_tot:+,.2f} (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})")
-        print(f"📊 MODEL 2 [0216_MODEL] (10 Lots) : ₹{m2_tot:+,.2f} (Realized: ₹{m2_real:+,.2f} | Unrealized: ₹{m2_unreal:+,.2f})")
-        print(f"📊 MODEL 3 [DYNAMIC_DTE]          : ₹{dd_tot:+,.2f} (Realized: ₹{dd_real:+,.2f} | Unrealized: ₹{dd_unreal:+,.2f})")
-        print(f"📊 MODEL 5 [CAS_ARB] (Real Orders): ₹{cas_tot:+,.2f} (Realized: ₹{cas_real:+,.2f} | Unrealized: ₹{cas_unreal:+,.2f})")
-        print(f"💰 COMBINED TOTAL PORTFOLIO PnL   : ₹{comb_tot:+,.2f} (Max Cap: 20 Lots / ₹50L Capital)")
+        print(f"📊 MODEL 1 [STRATEGY_6] ({s6_lots} Lots) : ₹{s6_tot:+,.2f} (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})")
+        print(f"💰 COMBINED TOTAL PORTFOLIO PnL   : ₹{s6_tot:+,.2f} (Max Cap: {s6_lots} Lots / ₹50L Capital)")
         print("-" * 85)
         print("ACTIVE POSITIONS:")
         if not self.active_positions:
@@ -297,13 +342,14 @@ class MultiModelEngine:
         exp = self.strategy6.expiry or "PENDING"
         dte = self.strategy6.dte
         regime = f"{self.strategy6.regime[0]}-{self.strategy6.regime[1]}"
+        s6_lots = self.config.strategy6.total_lots
         msg = (
             f"🟢 <b>ULLTR LIVE FORWARD TESTER ACTIVE (Market Open 09:15 IST)</b>\n"
             f"📅 Date: <b>{self.current_date}</b>\n"
             f"🎯 Strategy 6 Focus: <b>{und}</b> (Expiry: <b>{exp}</b> | DTE: <b>{dte}</b>)\n"
             f"📊 Micro-Regime: <b>{regime}</b> | Jump Active: <b>{self.strategy6.morning_active}</b>\n"
             f"⏳ Scheduled: Strategy 6 sharp entry at <b>09:18:01 IST</b>\n"
-            f"🛡️ Portfolio Cap: <b>20 Lots / ₹50L Capital</b>"
+            f"🛡️ Portfolio Cap: <b>{s6_lots} Lots / ₹50L Capital</b>"
         )
         self._send_telegram(msg)
 
@@ -314,14 +360,15 @@ class MultiModelEngine:
             f"💓 <b>ULLTR FORWARD TESTER HEARTBEAT | {now_str} IST</b>\n"
             f"• Status: <b>Engine Healthy & Actively Polling (5ms loop)</b>\n"
             f"• Active Positions: <b>{len(self.active_positions)}</b> | Closed: <b>{len(self.closed_positions)}</b>\n"
-            f"• Model 0216 & Dynamic DTE: <b>Actively monitoring 5m candle closes</b>"
+            f"• Strategy 6: <b>Active & Monitoring SL / EOD Squareoff</b>"
         )
         self._send_telegram(msg)
 
     def send_telegram_entry_broadcast(self):
         """Sends Telegram notification on Strategy 6 entry."""
+        s6_lots = self.config.strategy6.total_lots
         lines = [
-            "⚡ <b>MODEL 1 [STRATEGY 6] 09:18 AM LIVE ENTRY EXECUTED (10 Lots)</b>",
+            f"⚡ <b>MODEL 1 [STRATEGY 6] 09:18 AM LIVE ENTRY EXECUTED ({s6_lots} Lots)</b>",
             f"• Underlying: <b>{self.strategy6.underlying}</b> | Expiry: <b>{self.strategy6.expiry}</b>",
             f"• Micro-Regime: <b>{self.strategy6.regime[0]}-{self.strategy6.regime[1]}</b>",
             "\n<b>Active Positions:</b>"
@@ -403,17 +450,12 @@ class MultiModelEngine:
             return
         
         s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
-        m2_real, m2_unreal, m2_tot = self.calculate_model_pnl("0216_MODEL")
-        dd_real, dd_unreal, dd_tot = self.calculate_model_pnl("DYNAMIC_DTE")
-        comb_tot = s6_tot + m2_tot + dd_tot
-
+        s6_lots = self.config.strategy6.total_lots
         now_str = datetime.now().strftime("%H:%M:%S")
         lines = [
             f"📡 <b>LIVE TELEMETRY UPDATE | {now_str}</b>",
-            f"• Model 1 [Strategy 6] (10L): <b>₹{s6_tot:+,.2f}</b> (Unrealized: ₹{s6_unreal:+,.2f})",
-            f"• Model 2 [0216 Model] (10L): <b>₹{m2_tot:+,.2f}</b> (Unrealized: ₹{m2_unreal:+,.2f})",
-            f"• Model 3 [Dynamic DTE]: <b>₹{dd_tot:+,.2f}</b> (Unrealized: ₹{dd_unreal:+,.2f})",
-            f"💰 <b>Combined Portfolio PnL: ₹{comb_tot:+,.2f}</b>",
+            f"• Model 1 [Strategy 6] ({s6_lots}L): <b>₹{s6_tot:+,.2f}</b> (Unrealized: ₹{s6_unreal:+,.2f})",
+            f"💰 <b>Combined Portfolio PnL: ₹{s6_tot:+,.2f}</b>",
             "\n<b>Active Open Legs:</b>"
         ]
         for p in self.active_positions:
@@ -422,22 +464,18 @@ class MultiModelEngine:
         self._send_telegram("\n".join(lines))
 
     def send_telegram_eod_broadcast(self):
-        """Sends Telegram daily summary at 15:00 market close."""
+        """Sends Telegram daily summary at market close."""
         s6_real, _, _ = self.calculate_model_pnl("STRATEGY_6")
-        m2_real, _, _ = self.calculate_model_pnl("0216_MODEL")
-        dd_real, _, _ = self.calculate_model_pnl("DYNAMIC_DTE")
-        comb = s6_real + m2_real + dd_real
+        s6_lots = self.config.strategy6.total_lots
         msg = (
             f"🏁 <b>EOD MARKET SQUARE-OFF COMPLETED</b>\n"
-            f"• Model 1 [Strategy 6] (10 Lots): <b>₹{s6_real:+,.2f}</b>\n"
-            f"• Model 2 [0216 Model] (10 Lots): <b>₹{m2_real:+,.2f}</b>\n"
-            f"• Model 3 [Dynamic DTE]: <b>₹{dd_real:+,.2f}</b>\n"
-            f"• <b>Total Realized Portfolio PnL: ₹{comb:+,.2f}</b>"
+            f"• Model 1 [Strategy 6] ({s6_lots} Lots): <b>₹{s6_real:+,.2f}</b>\n"
+            f"• <b>Total Realized Portfolio PnL: ₹{s6_real:+,.2f}</b>"
         )
         self._send_telegram(msg)
 
     def log_trade_execution(self):
-        """Saves current trade records to CSV."""
+        """Saves current trade records to CSV without overwriting past history."""
         try:
             records = []
             for p in self.active_positions + self.closed_positions:
@@ -466,7 +504,70 @@ class MultiModelEngine:
                     "spot_sl_price": p.spot_sl_price,
                     "spot_tp_price": p.spot_tp_price
                 })
-            df = pd.DataFrame(records)
-            df.to_csv(self.log_file, index=False)
+            df_today = pd.DataFrame(records)
+
+            # 1. Update cumulative master log (preserving prior historical days)
+            if os.path.exists(self.log_file):
+                try:
+                    df_existing = pd.read_csv(self.log_file)
+                    df_history = df_existing[df_existing["date"] != self.current_date]
+                    df_combined = pd.concat([df_history, df_today], ignore_index=True)
+                except Exception:
+                    df_combined = df_today
+            else:
+                df_combined = df_today
+
+            df_combined.to_csv(self.log_file, index=False)
+
+            # 2. Date-specific immutable daily archive
+            daily_dir = os.path.join(os.path.dirname(self.log_file), "daily_logs")
+            os.makedirs(daily_dir, exist_ok=True)
+            daily_path = os.path.join(daily_dir, f"trades_{self.current_date}.csv")
+            df_today.to_csv(daily_path, index=False)
+
+            # 3. Maintain daily summary ledger for direct backtest comparison
+            self.log_daily_summary()
+
         except Exception as e:
             print(f"⚠️ Error logging trades: {e}")
+
+    def log_daily_summary(self):
+        """Maintains a permanent daily summary ledger for backtest comparison."""
+        try:
+            summary_file = os.path.join(os.path.dirname(self.log_file), "daily_summary.csv")
+            s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
+            s6_lots = self.config.strategy6.total_lots
+
+            wins = sum(1 for p in self.strategy6.closed_positions if p.pnl > 0)
+            losses = sum(1 for p in self.strategy6.closed_positions if p.pnl < 0)
+
+            today_row = {
+                "date": self.current_date,
+                "model_id": "STRATEGY_6",
+                "underlying": self.strategy6.underlying,
+                "expiry": self.strategy6.expiry,
+                "dte": self.strategy6.dte,
+                "regime": f"{self.strategy6.regime[0]}-{self.strategy6.regime[1]}",
+                "lots": s6_lots,
+                "trades_count": len(self.strategy6.active_positions) + len(self.strategy6.closed_positions),
+                "wins": wins,
+                "losses": losses,
+                "realized_pnl": s6_real,
+                "unrealized_pnl": s6_unreal,
+                "total_pnl": s6_tot
+            }
+            df_row = pd.DataFrame([today_row])
+
+            if os.path.exists(summary_file):
+                try:
+                    df_prev = pd.read_csv(summary_file)
+                    df_hist = df_prev[df_prev["date"] != self.current_date]
+                    df_out = pd.concat([df_hist, df_row], ignore_index=True)
+                except Exception:
+                    df_out = df_row
+            else:
+                df_out = df_row
+
+            df_out.to_csv(summary_file, index=False)
+        except Exception as e:
+            print(f"⚠️ Error logging daily summary: {e}")

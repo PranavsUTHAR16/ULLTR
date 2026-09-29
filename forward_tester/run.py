@@ -12,7 +12,7 @@ from expiry_manager import is_market_open_today
 
 def run_live(engine: MultiModelEngine):
     """Runs the live Multi-Model execution loop during market hours."""
-    print("Starting MULTI-MODEL Forward Tester (Model 1: Strategy 6 [10 Lots] | Model 2: 0216 Model [10 Lots]) in LIVE mode...")
+    print("Starting Forward Tester (Model 1: Strategy 6 [20 Lots]) in LIVE mode...")
     
     if not is_market_open_today():
         print("🔴 NSE Exchange is CLOSED today. Forward Tester will not trade. Exiting.")
@@ -21,12 +21,14 @@ def run_live(engine: MultiModelEngine):
     print("🟢 NSE Exchange is OPEN today. Initiating execution loop...")
     
     entry_h, entry_m, entry_s = engine.config.strategy6.entry_time  # 09:18:01
-    exit_h, exit_m, exit_s = 15, 25, 0                               # Extended to 15:25:00 for CAS execution
+    exit_h, exit_m, exit_s = 15, 0, 5                                # Runs through 15:00:05 for Strategy 6 squareoff
     
-    entry_triggered = len(engine.strategy6.active_positions) > 0 or len(engine.strategy6.closed_positions) > 0
-    morning_exit_triggered = False
-    cas_armed = False
-    cas_triggered = False
+    # BUG-25 FIX: Only block re-entry if there are currently ACTIVE positions.
+    # Closed positions from a prior session or earlier that day must not prevent
+    # new entries (false positive from position recovery on restart).
+    entry_triggered = len(engine.strategy6.active_positions) > 0
+
+    eod_squareoff_done = False
     last_render_time = 0.0
     last_telegram_time = time.time()
     last_heartbeat_hour = -1
@@ -41,6 +43,7 @@ def run_live(engine: MultiModelEngine):
             if not market_open_refreshed and now >= dtime(9, 15, 0) and now < dtime(exit_h, exit_m, exit_s):
                 print("🔔 Market Open detected (09:15 IST). Refreshing option chains and day state from Redis...")
                 engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
+                engine.load_saved_positions()
                 engine.send_telegram_morning_heartbeat()
                 market_open_refreshed = True
 
@@ -52,7 +55,7 @@ def run_live(engine: MultiModelEngine):
                 if len(engine.strategy6.active_positions) > 0:
                     entry_triggered = True
                 
-            # 3. Monitor active positions & evaluate 5-minute candle signals
+            # 3. Monitor active positions & trailing stops
             engine.update_and_monitor()
                 
             # 4. Render terminal status dashboard once per second
@@ -70,27 +73,15 @@ def run_live(engine: MultiModelEngine):
                 engine.send_telegram_periodic_heartbeat()
                 last_heartbeat_hour = now_dt.hour
 
-            # 7. Check 15:00 PM Squareoff for Morning Models (Strategy 6 & 0216)
-            if not morning_exit_triggered and now >= dtime(15, 0, 0):
-                engine.strategy6.execute_eod_squareoff("15:00")
-                engine.model_0216.execute_eod_squareoff("15:00")
-                morning_exit_triggered = True
-                print("\n🏁 15:00:00 Morning models squared off. Entering CAS Monitoring Phase...")
-
-            # 8. Check 15:15 PM CAS Arming
-            if not cas_armed and now >= dtime(15, 15, 0):
-                engine.arm_cas_session()
-                cas_armed = True
-
-            # 9. Check 15:20:05 PM CAS Entry Execution (Sub-1ms Real Order Placement)
-            if not cas_triggered and now >= dtime(15, 20, 5):
-                engine.execute_cas_entry()
-                cas_triggered = True
-
-            # 10. Check 15:25 PM Final EOD Exit
-            if now >= dtime(exit_h, exit_m, exit_s):
+            # 7. Check 15:00:00 Squareoff for Strategy 6 & EOD Broadcast
+            if not eod_squareoff_done and now >= dtime(15, 0, 0):
                 engine.execute_eod_squareoff()
-                print("\n🏁 15:25:00 Full session completed. Exiting forward test loop.")
+                eod_squareoff_done = True
+                print("\n🏁 15:00:00 Strategy 6 squared off and EOD broadcast sent.")
+
+            # 8. Check 15:00:05 Session Exit
+            if now >= dtime(exit_h, exit_m, exit_s):
+                print("\n🏁 15:00:05 Trading session completed. Exiting forward test loop.")
                 break
                 
             time.sleep(0.005)
@@ -105,28 +96,21 @@ def run_live(engine: MultiModelEngine):
             time.sleep(5.0)
 
 def run_dry_run(engine: MultiModelEngine):
-    """Simulates Dual-Model strike selection, allocation, and stop-loss monitoring."""
+    """Simulates Strategy 6 strike selection, allocation, and stop-loss monitoring."""
+    s6_lots = engine.config.strategy6.total_lots
     print("=" * 85)
-    print("🏃 RUNNING MULTI-MODEL FORWARD TESTER DRY-RUN SIMULATION (20 LOTS PORTFOLIO CAP)")
-    print("  • Model 1: STRATEGY_6 (Vol-Adaptive Regime Engine @ 10 Lots)")
-    print("  • Model 2: 0216_MODEL (Master Derivatives Engine @ 10 Lots / 5m Candle Boundary)")
+    print(f"🏃 RUNNING FORWARD TESTER DRY-RUN SIMULATION (STRATEGY 6 @ {s6_lots} LOTS)")
+    print(f"  • Model 1: STRATEGY_6 (Vol-Adaptive Regime Engine @ {s6_lots} Lots / ₹50L Cap)")
     print("=" * 85)
     
-    print("\nStep 1: Simulating Strategy 6 09:18 AM Entry (10 Lots)...")
+    print(f"\nStep 1: Simulating Strategy 6 09:18 AM Entry ({s6_lots} Lots)...")
     engine.execute_0918_dual_model_entry()
-    
-    print("\nStep 2: Simulating 0216 Model 5-Minute Candle Signal Evaluation...")
-    engine.evaluate_5m_boundary()
-    
-    print("\nStep 3: Simulating CAS Sub-1ms Equilibrium & Real Order Placement...")
-    engine.arm_cas_session()
-    engine.execute_cas_entry()
     
     time.sleep(1.0)
     engine.render_dashboard()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Multi-Model Forward Tester (Strategy 6 + 0216 Model)")
+    parser = argparse.ArgumentParser(description="Forward Tester (Model 1: Strategy 6 [20 Lots])")
     parser.add_argument("--dry-run", action="store_true", help="Run in dry-run simulation mode")
     parser.add_argument("--live", action="store_true", help="Run in live continuous polling mode")
     args = parser.parse_args()

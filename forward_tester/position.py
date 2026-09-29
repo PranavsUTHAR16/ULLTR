@@ -34,6 +34,20 @@ class ForwardTestPosition:
     def total_qty(self) -> int:
         return self.lots * self.lot_size
 
+    @property
+    def is_buy(self) -> bool:
+        if "BUY" in self.leg_type:
+            return True
+        if "SELL" in self.leg_type:
+            return False
+        return getattr(self, "direction", "") == "BUY"
+
+    def _calc_pnl(self, exit_price: float) -> float:
+        if self.is_buy:
+            return (exit_price - self.entry_price) * self.total_qty
+        else:
+            return (self.entry_price - exit_price) * self.total_qty
+
     def update_price(self, new_price: float) -> Tuple[bool, str]:
         """
         Updates current price, recalculates PnL, and checks for option SL breach or 80% Take-Profit decay.
@@ -43,24 +57,26 @@ class ForwardTestPosition:
             return False, ""
             
         self.current_price = new_price
-        is_buy = "BUY" in self.leg_type or getattr(self, "action", "") == "BUY"
-        if is_buy:
-            self.pnl = (self.current_price - self.entry_price) * self.total_qty
-        else:
-            self.pnl = (self.entry_price - self.current_price) * self.total_qty
+        self.pnl = self._calc_pnl(self.current_price)
         
-        # 1. Check Stop Loss breach (price >= entry_price * sl_mult)
-        if self.sl_mult > 0 and self.current_price >= self.sl_price:
-            self.status = "SL_HIT"
-            self.exit_price = self.sl_price
-            self.pnl = (self.entry_price - self.exit_price) * self.total_qty
-            return True, "SL_HIT"
+        # 1. Check Stop Loss breach only if sl_mult > 0 and sl_price > 0
+        if self.sl_mult > 0 and self.sl_price > 0:
+            if self.is_buy and self.current_price <= self.sl_price:
+                self.status = "SL_HIT"
+                self.exit_price = self.sl_price
+                self.pnl = self._calc_pnl(self.exit_price)
+                return True, "SL_HIT"
+            elif not self.is_buy and self.current_price >= self.sl_price:
+                self.status = "SL_HIT"
+                self.exit_price = self.sl_price
+                self.pnl = self._calc_pnl(self.exit_price)
+                return True, "SL_HIT"
 
-        # 2. Check 80% Premium Decay Take-Profit breach (price <= 20% of entry_price)
-        if self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
+        # 2. Check 80% Premium Decay Take-Profit breach (only for SELL/SHORT positions)
+        if not self.is_buy and self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
             self.status = "TP_HIT"
             self.exit_price = self.current_price
-            self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+            self.pnl = self._calc_pnl(self.exit_price)
             return True, "TP_HIT"
             
         return False, ""
@@ -80,7 +96,7 @@ class ForwardTestPosition:
             return False, ""
 
         self.current_price = opt_price if opt_price > 0 else self.current_price
-        self.pnl = (self.entry_price - self.current_price) * self.total_qty
+        self.pnl = self._calc_pnl(self.current_price)
 
         # Evaluate Spot-Based Fractal Stop Loss & HAR-RV Take Profit
         if self.model_id in ["DYNAMIC_DTE", "0216_MODEL"]:
@@ -88,30 +104,37 @@ class ForwardTestPosition:
                 if self.spot_sl_price > 0 and spot_low <= self.spot_sl_price:
                     self.status = "SL_HIT"
                     self.exit_price = self.current_price
-                    self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+                    self.pnl = self._calc_pnl(self.exit_price)
                     return True, "SL_HIT"
                 elif self.spot_tp_price > 0 and spot_high >= self.spot_tp_price:
                     self.status = "TP_HIT"
                     self.exit_price = self.current_price
-                    self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+                    self.pnl = self._calc_pnl(self.exit_price)
                     return True, "TP_HIT"
             elif self.direction == "SELL":  # Short CE (Bearish)
                 if self.spot_sl_price > 0 and spot_high >= self.spot_sl_price:
                     self.status = "SL_HIT"
                     self.exit_price = self.current_price
-                    self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+                    self.pnl = self._calc_pnl(self.exit_price)
                     return True, "SL_HIT"
                 elif self.spot_tp_price > 0 and spot_low <= self.spot_tp_price:
                     self.status = "TP_HIT"
                     self.exit_price = self.current_price
-                    self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+                    self.pnl = self._calc_pnl(self.exit_price)
                     return True, "TP_HIT"
 
+        # Check Option Premium Hard Stop Loss (e.g. 1.5x entry price)
+        if self.sl_mult > 0 and self.current_price >= (self.entry_price * self.sl_mult):
+            self.status = "SL_HIT"
+            self.exit_price = self.current_price
+            self.pnl = self._calc_pnl(self.exit_price)
+            return True, "OPTION_PREMIUM_SL_HIT"
+
         # Check 80% Premium Decay
-        if self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
+        if not self.is_buy and self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
             self.status = "TP_HIT"
             self.exit_price = self.current_price
-            self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+            self.pnl = self._calc_pnl(self.exit_price)
             return True, "TP_HIT"
 
         return False, ""
@@ -122,19 +145,20 @@ class ForwardTestPosition:
             self.status = "TSMOM_EXIT"
             self.exit_price = exit_price
             self.current_price = exit_price
-            self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+            self.pnl = self._calc_pnl(exit_price)
 
     def close_eod(self, exit_price: float):
         """Closes position at EOD market exit price."""
+        self.close_position(exit_price, reason="EOD_EXIT")
+
+    def close_position(self, exit_price: float, reason: str = "EOD_EXIT"):
+        """Closes position with specified exit price and reason."""
         if self.status == "OPEN":
-            self.status = "EOD_EXIT"
+            self.status = reason
             self.exit_price = exit_price
             self.current_price = exit_price
-            is_buy = "BUY" in self.leg_type or getattr(self, "action", "") == "BUY"
-            if is_buy:
-                self.pnl = (self.exit_price - self.entry_price) * self.total_qty
-            else:
-                self.pnl = (self.entry_price - self.exit_price) * self.total_qty
+            self.pnl = self._calc_pnl(exit_price)
+
 
 # Backward compatibility aliases
 Strategy6Position = ForwardTestPosition

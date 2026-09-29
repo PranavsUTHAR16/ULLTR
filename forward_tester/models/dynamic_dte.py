@@ -218,9 +218,9 @@ class DynamicDTEModel(BaseTradingModel):
                     current_price=opt_p,
                     lots=cfg_dd.total_lots,
                     lot_size=lot_size,
-                    sl_mult=0.0,
+                    sl_mult=getattr(cfg_dd, "opt_sl_mult", 1.50),
                     sl_price=spot_sl,
-                    delta=0.50 if cand_type == "CE" else -0.50,
+                    delta=-0.50 if cand_type == "CE" else 0.50,
                     direction=direction,
                     spot_entry_price=spot_p,
                     spot_sl_price=spot_sl,
@@ -228,7 +228,7 @@ class DynamicDTEModel(BaseTradingModel):
                 )
                 self.active_positions.append(pos)
                 return {
-                    "action": "ENTRY",
+                    "action": f"SELL {cand_type}",
                     "position": pos,
                     "direction": direction,
                     "strike": cand_stk,

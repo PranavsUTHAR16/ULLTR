@@ -34,6 +34,68 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
 
 
+def match_4tier_stock(bids_p: List[float], bids_q: List[int], asks_p: List[float], asks_q: List[int], mbq: float, msq: float, ref_price: float) -> float:
+    """
+    Applies the official 4-Tier NSE Equilibrium Auction Matching algorithm:
+    1. Maximum Executable Volume
+    2. Minimum Order Imbalance
+    3. Imbalance Direction (higher price for buy surplus, lower for sell surplus)
+    4. Proximity to Reference Price (15:15 LTP)
+    """
+    if ref_price <= 0:
+        return ref_price
+
+    limit_bids = [(p, q) for p, q in zip(bids_p, bids_q) if p > 0]
+    limit_asks = [(p, q) for p, q in zip(asks_p, asks_q) if p > 0]
+
+    mkt_buy_q = int(mbq) if mbq > 0 else sum(q for p, q in zip(bids_p, bids_q) if p == 0.0)
+    mkt_sell_q = int(msq) if msq > 0 else sum(q for p, q in zip(asks_p, asks_q) if p == 0.0)
+
+    candidate_prices = sorted(list(set([p for p, _ in limit_bids] + [p for p, _ in limit_asks] + [ref_price])))
+    if not candidate_prices:
+        return ref_price
+
+    best_candidates = []
+    for p in candidate_prices:
+        cum_buy = mkt_buy_q + sum(q for bp_i, q in limit_bids if bp_i >= p)
+        cum_sell = mkt_sell_q + sum(q for ap_i, q in limit_asks if ap_i <= p)
+        match_v = min(cum_buy, cum_sell)
+        imb = abs(cum_buy - cum_sell)
+        best_candidates.append({
+            'price': p,
+            'match_v': match_v,
+            'imb': imb,
+            'cum_buy': cum_buy,
+            'cum_sell': cum_sell
+        })
+
+    # Tier 1: Maximum Executable Volume
+    max_v = max(c['match_v'] for c in best_candidates)
+    if max_v == 0:
+        return round(float(ref_price), 2)
+
+    c1 = [c for c in best_candidates if c['match_v'] == max_v]
+    if len(c1) == 1:
+        return c1[0]['price']
+
+    # Tier 2: Minimum Order Imbalance
+    min_i = min(c['imb'] for c in c1)
+    c2 = [c for c in c1 if c['imb'] == min_i]
+    if len(c2) == 1:
+        return c2[0]['price']
+
+    # Tier 3: Imbalance Direction
+    first = c2[0]
+    if first['cum_buy'] > first['cum_sell']:
+        return max(c['price'] for c in c2)
+    elif first['cum_buy'] < first['cum_sell']:
+        return min(c['price'] for c in c2)
+
+    # Tier 4: Proximity to Reference Price
+    c2.sort(key=lambda c: (abs(c['price'] - ref_price), -c['price']))
+    return c2[0]['price']
+
+
 class CASModel(BaseTradingModel):
     """
     Sub-1ms Vectorized CAS Orderbook Arbitrage Model.
@@ -43,6 +105,8 @@ class CASModel(BaseTradingModel):
         self.trade_date = ""
         self.gateway = UpstoxBrokerGateway()
         self.redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+        
+        self.enabled = getattr(getattr(config, "cas", None), "enabled", False)
         
         if not self.data_client:
             try:
@@ -62,7 +126,80 @@ class CASModel(BaseTradingModel):
         self.is_armed = False
         self.entry_executed = False
         self.spot_ref: Dict[str, float] = {"NIFTY": 0.0, "SENSEX": 0.0}
+        self.stock_ref: Dict[str, float] = {}
         self.cas_telemetry: List[Dict[str, Any]] = []
+
+        # Pre-cache symbol keys and Redis depth keys for sub-millisecond access
+        self.nifty_symbols = list(self.nifty_weights.keys())
+        self.nifty_weights_list = [float(self.nifty_weights[s]) for s in self.nifty_symbols]
+        self.nifty_keys = [
+            f"depth:quote:{self.symbol_to_key.get(f'NSE_EQ:{s}', f'NSE_EQ|{s}')}"
+            for s in self.nifty_symbols
+        ]
+
+        self.sensex_symbols = list(self.sensex_weights.keys())
+        self.sensex_weights_list = [float(self.sensex_weights[s]) for s in self.sensex_symbols]
+        self.sensex_keys = [
+            f"depth:quote:{self.symbol_to_key.get(f'BSE_EQ:{s}', f'BSE_EQ|{s}')}"
+            for s in self.sensex_symbols
+        ]
+
+        # In-Engine Redis Lua script for ultra-low latency (< 500 µs) zero-payload calculation
+        self.lua_cas_script = None
+        self._init_lua_engine()
+
+    def _init_lua_engine(self):
+        """Compiles and registers Lua CAS equilibrium script inside Redis memory."""
+        lua_code = """
+        local spot = tonumber(ARGV[1])
+        local weighted_sum_pct = 0.0
+        local tot_buy = 0.0
+        local tot_sell = 0.0
+
+        for i, k in ipairs(KEYS) do
+            local w = tonumber(ARGV[i + 1])
+            local vals = redis.call('HMGET', k, 'ltp', 'tbq', 'tsq', 'mbq', 'msq')
+            local ltp = tonumber(vals[1]) or 0.0
+            local tbq = tonumber(vals[2]) or 0.0
+            local tsq = tonumber(vals[3]) or 0.0
+            local mbq = tonumber(vals[4]) or 0.0
+            local msq = tonumber(vals[5]) or 0.0
+            
+            tot_buy = tot_buy + tbq
+            tot_sell = tot_sell + tsq
+            
+            local tot_q = tbq + tsq
+            local imb = 0.0
+            if tot_q > 0 then
+                imb = (tbq - tsq) / tot_q
+            end
+            
+            local mkt_tot = mbq + msq
+            local mkt_imb = 0.0
+            if mkt_tot > 0 then
+                mkt_imb = (mbq - msq) / mkt_tot
+            end
+            
+            local comb_imb = 0.7 * imb + 0.3 * mkt_imb
+            local pct_move = comb_imb * 0.0018
+            weighted_sum_pct = weighted_sum_pct + (pct_move * w)
+        end
+
+        local cas_price = spot * (1.0 + weighted_sum_pct)
+        local expected_move = cas_price - spot
+        local pool = tot_buy + tot_sell
+        local buyer_dom = 50.0
+        if pool > 0 then
+            buyer_dom = (tot_buy / pool) * 100.0
+        end
+
+        return {tostring(cas_price), tostring(expected_move), tostring(buyer_dom), tostring(tot_buy), tostring(tot_sell)}
+        """
+        try:
+            self.lua_cas_script = self.redis_client.register_script(lua_code)
+        except Exception as e:
+            logger.warning(f"Failed to register Redis Lua CAS script: {e}")
+            self.lua_cas_script = None
 
     def _load_weights_and_mappings(self):
         """Loads static index constituent weights and Upstox instrument key mappings."""
@@ -94,11 +231,14 @@ class CASModel(BaseTradingModel):
         self.is_armed = False
         self.entry_executed = False
         self.spot_ref = {"NIFTY": 0.0, "SENSEX": 0.0}
+        self.stock_ref: Dict[str, float] = {}
         self.cas_telemetry.clear()
         logger.info(f"✅ CASModel initialized for trading day {trade_date}")
 
     def arm_cas_session(self):
-        """Pre-CAS arming around 15:15–15:20 IST. Records frozen spot references."""
+        """Pre-CAS arming around 15:15–15:20 IST. Records official 15:00-15:15 reference prices."""
+        if not self.enabled:
+            return
         for und in ["NIFTY", "SENSEX"]:
             p = 0.0
             if self.data_client:
@@ -109,82 +249,139 @@ class CASModel(BaseTradingModel):
             if p <= 0:
                 p = 24000.0 if und == "NIFTY" else 76500.0
             self.spot_ref[und] = p
+
+        # Load official August 2026 15:00-15:15 Reference Baselines from Redis if available
+        try:
+            nifty_ref = self.redis_client.get("cas:ref:NIFTY_50")
+            if nifty_ref:
+                self.spot_ref["NIFTY"] = float(nifty_ref)
+            sensex_ref = self.redis_client.get("cas:ref:SENSEX_30")
+            if sensex_ref:
+                self.spot_ref["SENSEX"] = float(sensex_ref)
+        except Exception as e:
+            logger.debug(f"Redis CAS ref read note: {e}")
+
+        # Cache frozen reference prices for all constituents at arming
+        all_keys = self.nifty_keys + self.sensex_keys
+        try:
+            pipe = self.redis_client.pipeline(transaction=False)
+            for k in all_keys:
+                pipe.hget(k, "ltp")
+            res = pipe.execute()
+            for k, val in zip(all_keys, res):
+                if val is not None:
+                    try:
+                        self.stock_ref[k] = float(val)
+                    except (ValueError, TypeError):
+                        pass
+        except Exception as e:
+            logger.warning(f"Note on CAS stock ref caching: {e}")
             
         self.is_armed = True
-        logger.info(f"🔒 CAS Model ARMED | Spot Ref: NIFTY={self.spot_ref['NIFTY']:,.2f} | SENSEX={self.spot_ref['SENSEX']:,.2f}")
+        logger.info(
+            f"🔒 CAS Model ARMED | Reference Baseline: NIFTY={self.spot_ref['NIFTY']:,.2f} | "
+            f"SENSEX={self.spot_ref['SENSEX']:,.2f} | Constituents Cached: {len(self.stock_ref)}"
+        )
 
     def calculate_equilibrium(self, underlying: str) -> Dict[str, Any]:
         """
-        Calculates CAS Orderbook Equilibrium Price in < 1 millisecond using NumPy vectorization.
+        Calculates CAS Orderbook Equilibrium Price in < 1 millisecond using exact
+        4-Tier NSE Matching Uncrossing across the full 30-level depth and market order queues.
         """
         t0_ns = time.perf_counter_ns()
         
         is_nifty = (underlying.upper() == "NIFTY")
-        weights_dict = self.nifty_weights if is_nifty else self.sensex_weights
-        exchange = "NSE_EQ" if is_nifty else "BSE_EQ"
         spot = self.spot_ref.get(underlying, 0.0)
         if spot <= 0:
             spot = 24000.0 if is_nifty else 76500.0
 
-        symbols = list(weights_dict.keys())
-        weights = np.array([weights_dict[s] for s in symbols], dtype=np.float64)
-        
-        # Pipelined Redis Hash fetch (< 150 µs)
+        # Fast path: check if cas_tracker has emitted live August 2026 CAS equilibrium
+        try:
+            idx_name = "NIFTY_50" if is_nifty else "SENSEX_30"
+            live_cas = self.redis_client.hgetall(f"cas:live:{idx_name}")
+            if live_cas and "cas_price" in live_cas:
+                cas_price = float(live_cas["cas_price"])
+                expected_move = float(live_cas.get("expected_move", cas_price - spot))
+                buyer_dom = float(live_cas.get("buyer_dom_pct", 50.0))
+                t1_ns = time.perf_counter_ns()
+                calc_time_us = round((t1_ns - t0_ns) / 1000.0, 2)
+                calc_time_ms = round((t1_ns - t0_ns) / 1_000_000.0, 4)
+                return {
+                    "underlying": underlying,
+                    "spot_ref": spot,
+                    "cas_price": cas_price,
+                    "expected_move": expected_move,
+                    "buyer_dominance_pct": buyer_dom,
+                    "total_buy_vol": 0.0,
+                    "total_sell_vol": 0.0,
+                    "calc_time_us": calc_time_us,
+                    "calc_time_ms": calc_time_ms
+                }
+        except Exception:
+            pass
+
+        keys = self.nifty_keys if is_nifty else self.sensex_keys
+        weights = self.nifty_weights_list if is_nifty else self.sensex_weights_list
+
         pipe = self.redis_client.pipeline(transaction=False)
-        for sym in symbols:
-            key_alias = f"{exchange}:{sym}"
-            inst_key = self.symbol_to_key.get(key_alias, f"{exchange}|{sym}")
-            pipe.hmget(f"depth:quote:{inst_key}", ["ltp", "tbq", "tsq", "mbq", "msq"])
+        for k in keys:
+            pipe.hmget(k, ["ltp", "bp", "bq", "ap", "aq", "mbq", "msq", "tbq", "tsq"])
         raw_depths = pipe.execute()
-        
-        # Assemble arrays
-        N = len(symbols)
-        ltp_arr = np.zeros(N, dtype=np.float64)
-        tbq_arr = np.zeros(N, dtype=np.float64)
-        tsq_arr = np.zeros(N, dtype=np.float64)
-        mbq_arr = np.zeros(N, dtype=np.float64)
-        msq_arr = np.zeros(N, dtype=np.float64)
-        
+
+        weighted_index_pct = 0.0
+        tot_buy_vol = 0.0
+        tot_sell_vol = 0.0
+
         for i, d in enumerate(raw_depths):
-            # d is [ltp, tbq, tsq, mbq, msq]
-            if d and d[0] is not None:
-                ltp_arr[i] = float(d[0] or 0.0)
-                tbq_arr[i] = float(d[1] or 0.0)
-                tsq_arr[i] = float(d[2] or 0.0)
-                mbq_arr[i] = float(d[3] or 0.0)
-                msq_arr[i] = float(d[4] or 0.0)
+            # d is [ltp, bp, bq, ap, aq, mbq, msq, tbq, tsq]
+            ltp = float(d[0]) if d and d[0] is not None else 1000.0
+            bp_str = d[1] if d and len(d) > 1 and d[1] is not None else ""
+            bq_str = d[2] if d and len(d) > 2 and d[2] is not None else ""
+            ap_str = d[3] if d and len(d) > 3 and d[3] is not None else ""
+            aq_str = d[4] if d and len(d) > 4 and d[4] is not None else ""
+            mbq = float(d[5]) if d and len(d) > 5 and d[5] is not None else 0.0
+            msq = float(d[6]) if d and len(d) > 6 and d[6] is not None else 0.0
+            tbq = float(d[7]) if d and len(d) > 7 and d[7] is not None else 0.0
+            tsq = float(d[8]) if d and len(d) > 8 and d[8] is not None else 0.0
+
+            tot_buy_vol += (tbq if tbq > 0 else mbq)
+            tot_sell_vol += (tsq if tsq > 0 else msq)
+
+            w = weights[i]
+            ref_p = self.stock_ref.get(keys[i], ltp)
+            if ref_p <= 0:
+                ref_p = ltp
+
+            if bp_str and ap_str:
+                try:
+                    bp = [float(x) for x in bp_str.split(",") if x]
+                    bq = [int(float(x)) for x in bq_str.split(",") if x]
+                    ap = [float(x) for x in ap_str.split(",") if x]
+                    aq = [int(float(x)) for x in aq_str.split(",") if x]
+                    p_eq = match_4tier_stock(bp, bq, ap, aq, mbq, msq, ref_p)
+                except Exception:
+                    p_eq = ref_p
             else:
-                # If unseeded, default to spot proportion
-                ltp_arr[i] = 1000.0
-                
-        # Vectorized CAS elasticity formula (~10 µs)
-        tot_q = tbq_arr + tsq_arr
-        # Safe divide for queue imbalance
-        imb = np.where(tot_q > 0, (tbq_arr - tsq_arr) / np.maximum(tot_q, 1.0), 0.0)
-        
-        mkt_tot = mbq_arr + msq_arr
-        mkt_imb = np.where(mkt_tot > 0, (mbq_arr - msq_arr) / np.maximum(mkt_tot, 1.0), 0.0)
-        
-        comb_imb = 0.7 * imb + 0.3 * mkt_imb
-        # Standard large-cap CAS elasticity multiplier
-        p_eq = ltp_arr * (1.0 + comb_imb * 0.0018)
-        
-        # Percentage move of each stock
-        pct_moves = np.where(ltp_arr > 0, (p_eq - ltp_arr) / ltp_arr, 0.0)
-        weighted_index_pct = np.dot(pct_moves, weights)
-        
+                # Fallback if depth arrays unseeded in Redis
+                tot_q = tbq + tsq
+                imb = (tbq - tsq) / max(tot_q, 1.0) if tot_q > 0 else 0.0
+                mkt_tot = mbq + msq
+                mkt_imb = (mbq - msq) / max(mkt_tot, 1.0) if mkt_tot > 0 else 0.0
+                comb_imb = 0.7 * imb + 0.3 * mkt_imb
+                p_eq = ref_p * (1.0 + comb_imb * 0.0018)
+
+            pct_move = (p_eq - ref_p) / ref_p if ref_p > 0 else 0.0
+            weighted_index_pct += (pct_move * w)
+
         cas_price = round(float(spot * (1.0 + weighted_index_pct)), 2)
         expected_move = round(float(cas_price - spot), 2)
-        
-        tot_buy_vol = float(np.sum(tbq_arr))
-        tot_sell_vol = float(np.sum(tsq_arr))
         tot_pool = tot_buy_vol + tot_sell_vol
         buyer_dom = round(float(tot_buy_vol / tot_pool * 100.0), 1) if tot_pool > 0 else 50.0
-        
+
         t1_ns = time.perf_counter_ns()
         calc_time_us = round((t1_ns - t0_ns) / 1000.0, 2)
         calc_time_ms = round((t1_ns - t0_ns) / 1_000_000.0, 4)
-        
+
         return {
             "underlying": underlying,
             "spot_ref": spot,
@@ -253,7 +450,10 @@ class CASModel(BaseTradingModel):
         Fires real orders for both NIFTY and SENSEX ATM contracts at 15:20:05 IST.
         Measures microsecond latency turnaround.
         """
-        if self.entry_executed:
+        if not self.enabled:
+            return []
+
+        if self.entry_executed or len(self.active_positions) > 0 or len(self.closed_positions) > 0:
             return self.cas_telemetry
 
         logger.info("🚨 15:20:05 CAS WINDOW TRIGGERED! Executing Sub-1ms Orderbook Arbitrage...")
@@ -327,7 +527,7 @@ class CASModel(BaseTradingModel):
                 current_price=ltp,
                 lots=1,
                 lot_size=qty,
-                sl_mult=1.0,
+                sl_mult=0.0,
                 sl_price=0.0,
                 delta=0.50,
                 direction=otype,
@@ -349,12 +549,17 @@ class CASModel(BaseTradingModel):
 
     def update_and_monitor(self, current_time_str: str) -> List[ForwardTestPosition]:
         """Monitors active CAS positions until 15:30:00 settlement."""
-        if not self.active_positions:
+        if not self.enabled or not self.active_positions:
             return []
             
         for pos in self.active_positions:
             if pos.status == "OPEN" and self.data_client:
-                cur_ltp = self.data_client.get_option_ltp(pos.symbol)
+                sym = pos.symbol
+                cur_ltp = self.data_client.get_option_ltp(sym)
+                if cur_ltp <= 0:
+                    prefix = "NSE_FO|" if pos.underlying == "NIFTY" else "BSE_FO|"
+                    if not sym.startswith(prefix):
+                        cur_ltp = self.data_client.get_option_ltp(f"{prefix}{sym}")
                 if cur_ltp > 0:
                     pos.update_price(cur_ltp)
         return []
@@ -370,7 +575,7 @@ class CASModel(BaseTradingModel):
                     settle_p = max(0.0, spot - pos.strike)
                 else:
                     settle_p = max(0.0, pos.strike - spot)
-                pos.close_position(settle_p)
+                pos.close_position(settle_p, reason="CAS_SETTLEMENT")
                 self.closed_positions.append(pos)
                 newly_closed.append(pos)
         self.active_positions.clear()

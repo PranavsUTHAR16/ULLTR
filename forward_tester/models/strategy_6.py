@@ -36,6 +36,10 @@ class Strategy6Model(BaseTradingModel):
         self.active_positions.clear()
         self.closed_positions.clear()
         self.entry_executed = False
+        try:
+            self.current_date = datetime.strptime(trade_date, "%Y-%m-%d").date()
+        except Exception:
+            self.current_date = date.today()
         
         # 1. Select closer expiry instrument (Sensex vs Nifty)
         self.underlying, self.expiry, self.dte = self._select_closer_expiry()
@@ -48,7 +52,7 @@ class Strategy6Model(BaseTradingModel):
 
     def _select_closer_expiry(self) -> Tuple[str, str, int]:
         """Compares SENSEX vs NIFTY front expiries and selects instrument with lower DTE <= 5 days."""
-        today = date.today()
+        today = getattr(self, "current_date", None) or date.today()
         info = {}
         for und in ["SENSEX", "NIFTY"]:
             exp_str = self.data_client.get_front_expiry(und)
@@ -102,7 +106,7 @@ class Strategy6Model(BaseTradingModel):
     def _detect_morning_jump(self, underlying: str) -> Tuple[bool, float]:
         """Queries 09:15-09:17 1-min candles for Strategy 6 morning jump signal."""
         spot_sym = "BSE_INDEX|SENSEX" if underlying == "SENSEX" else "NSE_INDEX|Nifty 50"
-        today = date.today()
+        today = getattr(self, "current_date", None) or date.today()
         closes = []
         try:
             c_keys = self.data_client.client.r.keys(f"md:candle:{spot_sym}:1m:*")
@@ -138,19 +142,24 @@ class Strategy6Model(BaseTradingModel):
             self.regime = self._compute_micro_regime(self.underlying)
             self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
 
-        lot_alloc = self.config.alloc_lr.get(self.regime, (7, 3, 1.75))
-        # Scale to 10 lots (half of 20-lot default: primary lots + secondary lots = 10)
-        p_lots = max(1, round(lot_alloc[0] / 2.0))
-        s_lots = max(1, 10 - p_lots)
-        sl_mult = lot_alloc[2]
+        lot_alloc = self.config.alloc_lr.get(self.regime, (15, 5, 2.00))
+        # Full 20 Lots Allocation (Primary lots + Secondary lots = 20)
+        p_lots = int(lot_alloc[0])
+        s_lots = int(lot_alloc[1])
+        sl_mult = float(lot_alloc[2])
 
         if self.morning_active:
             if self.regime in self.config.morning_amplify_keys:
-                p_lots = min(10, p_lots + 2)
-                s_lots = max(0, 10 - p_lots)
+                if self.regime == ('High', 'Rising'):
+                    p_lots, s_lots, sl_mult = 13, 7, 2.00
+                elif self.regime == ('Low', 'Falling'):
+                    p_lots, s_lots, sl_mult = 14, 6, 1.75
+                elif self.regime == ('Medium', 'Falling'):
+                    p_lots, s_lots, sl_mult = 15, 5, 2.00
+                else:
+                    p_lots, s_lots, sl_mult = 15, 5, 2.00
             elif self.regime in self.config.morning_defend_keys:
-                s_lots = min(10, s_lots + 2)
-                p_lots = max(0, 10 - s_lots)
+                p_lots, s_lots, sl_mult = 5, 15, 1.75
 
         spot_px = self.data_client.get_spot_price(self.underlying)
         if spot_px <= 0:
@@ -193,7 +202,17 @@ class Strategy6Model(BaseTradingModel):
         return self.active_positions
 
     def _create_position(self, opt_info: dict, opt_type: str, leg_type: str, delta: float, lots: int, lot_size: int, sl_mult: float) -> ForwardTestPosition:
-        entry_px = float(opt_info.get("entry_price") or opt_info.get("ltp") or opt_info.get("close") or 0.0)
+        """Create a position from a live option quote. Raises ValueError if entry price is stale/zero."""
+        entry_px = float(opt_info.get("entry_price") or opt_info.get("ltp") or opt_info.get("last_price") or 0.0)
+
+        # BUG-21 FIX: Zero entry price silently disables SL forever (sl_price = 0*mult = 0).
+        # Refuse to create the position — DATA_STALE should block entries, not create uncapped risk.
+        if entry_px <= 0.0:
+            raise ValueError(
+                f"DATA_STALE: {opt_type} {opt_info.get('symbol','?')} entry_px=0 — "
+                "refusing to create position with disabled SL"
+            )
+
         return ForwardTestPosition(
             model_id="STRATEGY_6",
             underlying=self.underlying,
@@ -213,6 +232,7 @@ class Strategy6Model(BaseTradingModel):
             status="OPEN"
         )
 
+
     def _build_options_dataframe(self, underlying: str, expiry: str) -> pd.DataFrame:
         """Constructs unified options dataframe with real-time Greeks."""
         chain = self.data_client.get_option_chain_quotes(underlying, expiry, count=25)
@@ -224,7 +244,14 @@ class Strategy6Model(BaseTradingModel):
             for opt_type, leg in leg_pair.items():
                 if not leg or "error" in leg or not isinstance(leg, dict):
                     continue
-                ltp = leg.get("ltp") or leg.get("close") or leg.get("last_price")
+                ltp = leg.get("ltp") or leg.get("last_price")
+                if (not ltp or float(ltp) <= 0) and leg.get("bid") and leg.get("ask"):
+                    try:
+                        b_val, a_val = float(leg.get("bid")), float(leg.get("ask"))
+                        if b_val > 0 and a_val > 0:
+                            ltp = (b_val + a_val) / 2.0
+                    except Exception:
+                        pass
                 if ltp and float(ltp) > 0:
                     px_val = float(ltp)
                     rows.append({
@@ -261,14 +288,17 @@ class Strategy6Model(BaseTradingModel):
         return closed_this_tick
 
     def execute_eod_squareoff(self, exit_time_str: str = "15:00") -> List[ForwardTestPosition]:
-        """EOD market squareoff for all open legs."""
+        """EOD market squareoff for all open legs. Uses _calc_pnl() for direction-aware PnL."""
         eod_closed = []
         for pos in list(self.active_positions):
             pos.status = "EOD_EXIT"
             pos.exit_price = pos.current_price
             pos.exit_time = exit_time_str
-            pos.pnl = (pos.entry_price - pos.exit_price) * pos.total_qty
+            # BUG-24 FIX: was `(entry - exit) * qty` which is correct only for SHORT positions.
+            # _calc_pnl() correctly handles both BUY (exit-entry) and SHORT (entry-exit) legs.
+            pos.pnl = pos._calc_pnl(pos.exit_price)
             self.active_positions.remove(pos)
             self.closed_positions.append(pos)
             eod_closed.append(pos)
         return eod_closed
+

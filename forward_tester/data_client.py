@@ -37,16 +37,26 @@ class ForwardTestDataClient:
             if time.time() < expire_time:
                 return exp
 
-        # Fetch keys from Redis
+        # Fetch keys from Redis, ignoring :meta keys
         keys = self.client.r.keys(f"chain:{underlying.upper()}:*")
         if not keys:
-            return None
-        
-        # Sort and find the earliest expiry >= today
-        expiries = sorted([k.split(":")[-1] for k in keys])
+            return ""
+
+        # Filter out meta keys and sort only valid YYYY-MM-DD expiry dates
+        expiries = []
+        for k in keys:
+            if ":meta" in k:
+                continue
+            suffix = k.split(":")[-1]
+            if len(suffix) == 10 and suffix.count("-") == 2:
+                expiries.append(suffix)
+        expiries.sort()
+
+        if not expiries:
+            return ""
+
         today_str = date.today().strftime("%Y-%m-%d")
-        
-        best_exp = None
+        best_exp = ""
         for exp in expiries:
             if exp >= today_str:
                 best_exp = exp
@@ -54,10 +64,10 @@ class ForwardTestDataClient:
         if not best_exp and expiries:
             best_exp = expiries[0]
 
-        if not hasattr(self, "_cached_expiries"):
-            self._cached_expiries = {}
-        self._cached_expiries[underlying] = (best_exp, time.time() + 60.0)
+        if best_exp:
+            self._cached_expiries[underlying] = (best_exp, time.time() + 60.0)
         return best_exp
+
 
     def get_option_chain_quotes(self, underlying: str, expiry: str, count: int = 15) -> dict:
         """Get quotes around ATM strike for the given expiry."""
@@ -82,7 +92,18 @@ class ForwardTestDataClient:
                 
             ltp = leg.get("ltp")
             if ltp is None or ltp == 0:
-                ltp = leg.get("close")
+                ltp = leg.get("last_price")
+            if (ltp is None or ltp == 0) and leg.get("bid") and leg.get("ask"):
+                try:
+                    b_val, a_val = float(leg.get("bid")), float(leg.get("ask"))
+                    if b_val > 0 and a_val > 0:
+                        ltp = (b_val + a_val) / 2.0
+                    elif b_val > 0:
+                        ltp = b_val
+                    elif a_val > 0:
+                        ltp = a_val
+                except Exception:
+                    pass
                 
             if ltp is not None and ltp > 0:
                 diff = abs(ltp - target_premium)
@@ -118,12 +139,29 @@ class ForwardTestDataClient:
     def get_option_ltp(self, symbol: str) -> float:
         """Fetch live LTP for an option symbol directly from Redis md:quote in <0.08ms."""
         try:
-            vals = self.client.r.hmget(f"md:quote:{symbol}", ["ltp", "close", "last_price"])
-            for v in vals:
-                if v is not None:
-                    flt_v = float(v)
-                    if flt_v > 0:
-                        return flt_v
+            keys_to_try = [symbol]
+            if not symbol.startswith("NSE_FO|") and not symbol.startswith("BSE_FO|"):
+                keys_to_try.extend([f"NSE_FO|{symbol}", f"BSE_FO|{symbol}"])
+            for k in keys_to_try:
+                vals = self.client.r.hmget(f"md:quote:{k}", ["ltp", "last_price", "bid", "ask"])
+                # 1. Real live traded price
+                for v in vals[:2]:
+                    if v is not None:
+                        flt_v = float(v)
+                        if flt_v > 0:
+                            return flt_v
+                # 2. Midpoint fallback if ltp is momentarily missing/zero (NEVER yesterday's close)
+                try:
+                    bid_v = float(vals[2]) if vals[2] is not None else 0.0
+                    ask_v = float(vals[3]) if vals[3] is not None else 0.0
+                    if bid_v > 0 and ask_v > 0:
+                        return (bid_v + ask_v) / 2.0
+                    elif bid_v > 0:
+                        return bid_v
+                    elif ask_v > 0:
+                        return ask_v
+                except Exception:
+                    pass
         except Exception:
             pass
         return 0.0
@@ -133,7 +171,16 @@ class ForwardTestDataClient:
         try:
             raw = self.client.r.hgetall(f"md:quote:{symbol}")
             if raw:
-                ltp = float(raw.get("ltp") or raw.get("close") or raw.get("last_price") or 0.0)
+                ltp = float(raw.get("ltp") or raw.get("last_price") or 0.0)
+                if ltp <= 0.0:
+                    bid = float(raw.get("bid", 0.0))
+                    ask = float(raw.get("ask", 0.0))
+                    if bid > 0 and ask > 0:
+                        ltp = (bid + ask) / 2.0
+                    elif bid > 0:
+                        ltp = bid
+                    elif ask > 0:
+                        ltp = ask
                 return {
                     "symbol": symbol,
                     "ltp": ltp,
@@ -163,7 +210,16 @@ class ForwardTestDataClient:
             batch = {}
             for s, raw in zip(symbols, results):
                 if raw:
-                    ltp = float(raw.get("ltp") or raw.get("close") or raw.get("last_price") or 0.0)
+                    ltp = float(raw.get("ltp") or raw.get("last_price") or 0.0)
+                    if ltp <= 0.0:
+                        bid = float(raw.get("bid", 0.0))
+                        ask = float(raw.get("ask", 0.0))
+                        if bid > 0 and ask > 0:
+                            ltp = (bid + ask) / 2.0
+                        elif bid > 0:
+                            ltp = bid
+                        elif ask > 0:
+                            ltp = ask
                     batch[s] = {
                         "symbol": s,
                         "ltp": ltp,
