@@ -1,0 +1,287 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "Nifty Spot Index Info",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${datasource}"
+          },
+          "query": "HGET \"md:quote:NSE_INDEX|Nifty 50\" ltp",
+          "refId": "A",
+          "type": "cli"
+        }
+      ],
+      "title": "Nifty Spot LTP",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Price (INR)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 16,
+        "x": 8,
+        "y": 5
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${datasource}"
+          },
+          "query": "EVAL \"local key = \\\"md:candles:NSE_INDEX|Nifty 50:15m\\\"\\nlocal ts_list = redis.call(\\\"ZRANGE\\\", key, -60, -1)\\nlocal res = {}\\nfor i, ts in ipairs(ts_list) do\\n    local close = redis.call(\\\"HGET\\\", \\\"md:candle:NSE_INDEX|Nifty 50:15m:\\\" .. ts, \\\"close\\\")\\n    if close then\\n        table.insert(res, {tonumber(ts) * 1000, tonumber(close)})\\n    end\\nend\\nreturn res\" 0",
+          "refId": "A",
+          "type": "cli"
+        }
+      ],
+      "title": "Nifty Spot 15m Close Price (Last 60 bars)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 4,
+      "title": "Nifty Options Chain Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "redis-datasource",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 5,
+      "options": {
+        "footer": {
+          "fields": [],
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Strike",
+            "desc": false
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "redis-datasource",
+            "uid": "${datasource}"
+          },
+          "query": "EVAL \"local chain_keys = redis.call(\\\"KEYS\\\", \\\"chain:NIFTY:*\\\")\\nif #chain_keys == 0 then return {} end\\ntable.sort(chain_keys)\\nlocal chain_key = chain_keys[1]\\nlocal fields = redis.call(\\\"HKEYS\\\", chain_key)\\nlocal res = {}\\nfor _, f in ipairs(fields) do\\n    local strike, otype = f:match(\\\"^(%d+):(%a+)$\\\"\\n    if strike and otype then\\n        local symbol = redis.call(\\\"HGET\\\", chain_key, f)\\n        if symbol then\\n            local ltp = redis.call(\\\"HGET\\\", \\\"md:quote:\\\" .. symbol, \\\"ltp\\\")\\n            local iv = redis.call(\\\"HGET\\\", \\\"md:quote:\\\" .. symbol, \\\"iv\\\")\\n            local delta = redis.call(\\\"HGET\\\", \\\"md:quote:\\\" .. symbol, \\\"delta\\\")\\n            table.insert(res, {tonumber(strike), otype, symbol, tonumber(ltp) or 0, tonumber(iv) or 0, tonumber(delta) or 0})\\n        end\\n    end\\nend\\ntable.sort(res, function(a, b)\\n    if a[1] == b[1] then\\n        return a[2] < b[2]\\n    else\\n        return a[1] < b[1]\\n    end\\nend)\\nreturn res\" 0",
+          "refId": "A",
+          "type": "cli"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Field 1": "Strike",
+              "Field 2": "Type",
+              "Field 3": "Symbol",
+              "Field 4": "LTP",
+              "Field 5": "IV",
+              "Field 6": "Delta"
+            }
+          }
+        }
+      ],
+      "title": "Live Option Chain (Front Expiry)",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "value": "Redis-VM"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "redis-datasource",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Nifty Live Trading Dashboard",
+  "version": 1,
+  "weekStart": ""
+}

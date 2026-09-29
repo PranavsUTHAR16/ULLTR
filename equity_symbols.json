@@ -1,0 +1,642 @@
+{
+  "NSE_EQ|INE040A01034": {
+    "instrument_key": "NSE_EQ|INE040A01034",
+    "symbol": "HDFCBANK",
+    "tradingsymbol": "HDFCBANK",
+    "company_name": "HDFC BANK LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE090A01021": {
+    "instrument_key": "NSE_EQ|INE090A01021",
+    "symbol": "ICICIBANK",
+    "tradingsymbol": "ICICIBANK",
+    "company_name": "ICICI BANK LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE397D01024": {
+    "instrument_key": "NSE_EQ|INE397D01024",
+    "symbol": "BHARTIARTL",
+    "tradingsymbol": "BHARTIARTL",
+    "company_name": "BHARTI AIRTEL LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE002A01018": {
+    "instrument_key": "NSE_EQ|INE002A01018",
+    "symbol": "RELIANCE",
+    "tradingsymbol": "RELIANCE",
+    "company_name": "RELIANCE INDUSTRIES LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE237A01036": {
+    "instrument_key": "NSE_EQ|INE237A01036",
+    "symbol": "KOTAKBANK",
+    "tradingsymbol": "KOTAKBANK",
+    "company_name": "KOTAK MAHINDRA BANK LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE758T01015": {
+    "instrument_key": "NSE_EQ|INE758T01015",
+    "symbol": "ETERNAL",
+    "tradingsymbol": "ETERNAL",
+    "company_name": "ETERNAL LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE238A01034": {
+    "instrument_key": "NSE_EQ|INE238A01034",
+    "symbol": "AXISBANK",
+    "tradingsymbol": "AXISBANK",
+    "company_name": "AXIS BANK LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE009A01021": {
+    "instrument_key": "NSE_EQ|INE009A01021",
+    "symbol": "INFY",
+    "tradingsymbol": "INFY",
+    "company_name": "INFOSYS LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE081A01020": {
+    "instrument_key": "NSE_EQ|INE081A01020",
+    "symbol": "TATASTEEL",
+    "tradingsymbol": "TATASTEEL",
+    "company_name": "TATA STEEL LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE101A01026": {
+    "instrument_key": "NSE_EQ|INE101A01026",
+    "symbol": "M&M",
+    "tradingsymbol": "M&M",
+    "company_name": "MAHINDRA & MAHINDRA LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE296A01032": {
+    "instrument_key": "NSE_EQ|INE296A01032",
+    "symbol": "BAJFINANCE",
+    "tradingsymbol": "BAJFINANCE",
+    "company_name": "BAJAJ FINANCE LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE423A01024": {
+    "instrument_key": "NSE_EQ|INE423A01024",
+    "symbol": "ADANIENT",
+    "tradingsymbol": "ADANIENT",
+    "company_name": "ADANI ENTERPRISES LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE280A01028": {
+    "instrument_key": "NSE_EQ|INE280A01028",
+    "symbol": "TITAN",
+    "tradingsymbol": "TITAN",
+    "company_name": "TITAN COMPANY LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE062A01020": {
+    "instrument_key": "NSE_EQ|INE062A01020",
+    "symbol": "SBIN",
+    "tradingsymbol": "SBIN",
+    "company_name": "STATE BANK OF INDIA",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE721A01047": {
+    "instrument_key": "NSE_EQ|INE721A01047",
+    "symbol": "SHRIRAMFIN",
+    "tradingsymbol": "SHRIRAMFIN",
+    "company_name": "SHRIRAM FINANCE LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE018A01030": {
+    "instrument_key": "NSE_EQ|INE018A01030",
+    "symbol": "LT",
+    "tradingsymbol": "LT",
+    "company_name": "LARSEN & TOUBRO LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE733E01010": {
+    "instrument_key": "NSE_EQ|INE733E01010",
+    "symbol": "NTPC",
+    "tradingsymbol": "NTPC",
+    "company_name": "NTPC LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE585B01010": {
+    "instrument_key": "NSE_EQ|INE585B01010",
+    "symbol": "MARUTI",
+    "tradingsymbol": "MARUTI",
+    "company_name": "MARUTI SUZUKI INDIA LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE467B01029": {
+    "instrument_key": "NSE_EQ|INE467B01029",
+    "symbol": "TCS",
+    "tradingsymbol": "TCS",
+    "company_name": "TATA CONSULTANCY SERV LT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE263A01024": {
+    "instrument_key": "NSE_EQ|INE263A01024",
+    "symbol": "BEL",
+    "tradingsymbol": "BEL",
+    "company_name": "BHARAT ELECTRONICS LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE481G01011": {
+    "instrument_key": "NSE_EQ|INE481G01011",
+    "symbol": "ULTRACEMCO",
+    "tradingsymbol": "ULTRACEMCO",
+    "company_name": "ULTRATECH CEMENT LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE038A01020": {
+    "instrument_key": "NSE_EQ|INE038A01020",
+    "symbol": "HINDALCO",
+    "tradingsymbol": "HINDALCO",
+    "company_name": "HINDALCO  INDUSTRIES  LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE019A01038": {
+    "instrument_key": "NSE_EQ|INE019A01038",
+    "symbol": "JSWSTEEL",
+    "tradingsymbol": "JSWSTEEL",
+    "company_name": "JSW STEEL LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE742F01042": {
+    "instrument_key": "NSE_EQ|INE742F01042",
+    "symbol": "ADANIPORTS",
+    "tradingsymbol": "ADANIPORTS",
+    "company_name": "ADANI PORT & SEZ LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE669C01036": {
+    "instrument_key": "NSE_EQ|INE669C01036",
+    "symbol": "TECHM",
+    "tradingsymbol": "TECHM",
+    "company_name": "TECH MAHINDRA LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE066A01021": {
+    "instrument_key": "NSE_EQ|INE066A01021",
+    "symbol": "EICHERMOT",
+    "tradingsymbol": "EICHERMOT",
+    "company_name": "EICHER MOTORS LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE213A01029": {
+    "instrument_key": "NSE_EQ|INE213A01029",
+    "symbol": "ONGC",
+    "tradingsymbol": "ONGC",
+    "company_name": "OIL AND NATURAL GAS CORP.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE917I01010": {
+    "instrument_key": "NSE_EQ|INE917I01010",
+    "symbol": "BAJAJ-AUTO",
+    "tradingsymbol": "BAJAJ-AUTO",
+    "company_name": "BAJAJ AUTO LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE155A01022": {
+    "instrument_key": "NSE_EQ|INE155A01022",
+    "symbol": "TMPV",
+    "tradingsymbol": "TMPV",
+    "company_name": "TATA MOTORS PASS VEH LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE860A01027": {
+    "instrument_key": "NSE_EQ|INE860A01027",
+    "symbol": "HCLTECH",
+    "tradingsymbol": "HCLTECH",
+    "company_name": "HCL TECHNOLOGIES LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE047A01021": {
+    "instrument_key": "NSE_EQ|INE047A01021",
+    "symbol": "GRASIM",
+    "tradingsymbol": "GRASIM",
+    "company_name": "GRASIM INDUSTRIES LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE154A01025": {
+    "instrument_key": "NSE_EQ|INE154A01025",
+    "symbol": "ITC",
+    "tradingsymbol": "ITC",
+    "company_name": "ITC LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE437A01024": {
+    "instrument_key": "NSE_EQ|INE437A01024",
+    "symbol": "APOLLOHOSP",
+    "tradingsymbol": "APOLLOHOSP",
+    "company_name": "APOLLO HOSPITALS ENTER. L",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE044A01036": {
+    "instrument_key": "NSE_EQ|INE044A01036",
+    "symbol": "SUNPHARMA",
+    "tradingsymbol": "SUNPHARMA",
+    "company_name": "SUN PHARMACEUTICAL IND L",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE030A01027": {
+    "instrument_key": "NSE_EQ|INE030A01027",
+    "symbol": "HINDUNILVR",
+    "tradingsymbol": "HINDUNILVR",
+    "company_name": "HINDUSTAN UNILEVER LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE752E01010": {
+    "instrument_key": "NSE_EQ|INE752E01010",
+    "symbol": "POWERGRID",
+    "tradingsymbol": "POWERGRID",
+    "company_name": "POWER GRID CORP. LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE646L01027": {
+    "instrument_key": "NSE_EQ|INE646L01027",
+    "symbol": "INDIGO",
+    "tradingsymbol": "INDIGO",
+    "company_name": "INTERGLOBE AVIATION LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE758E01017": {
+    "instrument_key": "NSE_EQ|INE758E01017",
+    "symbol": "JIOFIN",
+    "tradingsymbol": "JIOFIN",
+    "company_name": "JIO FIN SERVICES LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE522F01014": {
+    "instrument_key": "NSE_EQ|INE522F01014",
+    "symbol": "COALINDIA",
+    "tradingsymbol": "COALINDIA",
+    "company_name": "COAL INDIA LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE849A01020": {
+    "instrument_key": "NSE_EQ|INE849A01020",
+    "symbol": "TRENT",
+    "tradingsymbol": "TRENT",
+    "company_name": "TRENT LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE123W01016": {
+    "instrument_key": "NSE_EQ|INE123W01016",
+    "symbol": "SBILIFE",
+    "tradingsymbol": "SBILIFE",
+    "company_name": "SBI LIFE INSURANCE CO LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE027H01010": {
+    "instrument_key": "NSE_EQ|INE027H01010",
+    "symbol": "MAXHEALTH",
+    "tradingsymbol": "MAXHEALTH",
+    "company_name": "MAX HEALTHCARE INS LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE021A01026": {
+    "instrument_key": "NSE_EQ|INE021A01026",
+    "symbol": "ASIANPAINT",
+    "tradingsymbol": "ASIANPAINT",
+    "company_name": "ASIAN PAINTS LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE795G01014": {
+    "instrument_key": "NSE_EQ|INE795G01014",
+    "symbol": "HDFCLIFE",
+    "tradingsymbol": "HDFCLIFE",
+    "company_name": "HDFC LIFE INS CO LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE089A01031": {
+    "instrument_key": "NSE_EQ|INE089A01031",
+    "symbol": "DRREDDY",
+    "tradingsymbol": "DRREDDY",
+    "company_name": "DR. REDDY S LABORATORIES",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE918I01026": {
+    "instrument_key": "NSE_EQ|INE918I01026",
+    "symbol": "BAJAJFINSV",
+    "tradingsymbol": "BAJAJFINSV",
+    "company_name": "BAJAJ FINSERV LTD.",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE192A01025": {
+    "instrument_key": "NSE_EQ|INE192A01025",
+    "symbol": "TATACONSUM",
+    "tradingsymbol": "TATACONSUM",
+    "company_name": "TATA CONSUMER PRODUCT LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE239A01024": {
+    "instrument_key": "NSE_EQ|INE239A01024",
+    "symbol": "NESTLEIND",
+    "tradingsymbol": "NESTLEIND",
+    "company_name": "NESTLE INDIA LIMITED",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE075A01022": {
+    "instrument_key": "NSE_EQ|INE075A01022",
+    "symbol": "WIPRO",
+    "tradingsymbol": "WIPRO",
+    "company_name": "WIPRO LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "NSE_EQ|INE059A01026": {
+    "instrument_key": "NSE_EQ|INE059A01026",
+    "symbol": "CIPLA",
+    "tradingsymbol": "CIPLA",
+    "company_name": "CIPLA LTD",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50"
+  },
+  "BSE_EQ|INE002A01018": {
+    "instrument_key": "BSE_EQ|INE002A01018",
+    "symbol": "RELIANCE",
+    "tradingsymbol": "RELIANCE",
+    "company_name": "RELIANCE INDUSTRIES LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE397D01024": {
+    "instrument_key": "BSE_EQ|INE397D01024",
+    "symbol": "BHARTIARTL",
+    "tradingsymbol": "BHARTIARTL",
+    "company_name": "BHARTI AIRTEL LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE040A01034": {
+    "instrument_key": "BSE_EQ|INE040A01034",
+    "symbol": "HDFCBANK",
+    "tradingsymbol": "HDFCBANK",
+    "company_name": "HDFC BANK LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE090A01021": {
+    "instrument_key": "BSE_EQ|INE090A01021",
+    "symbol": "ICICIBANK",
+    "tradingsymbol": "ICICIBANK",
+    "company_name": "ICICI BANK LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE062A01020": {
+    "instrument_key": "BSE_EQ|INE062A01020",
+    "symbol": "SBIN",
+    "tradingsymbol": "SBIN",
+    "company_name": "STATE BANK OF INDIA",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE467B01029": {
+    "instrument_key": "BSE_EQ|INE467B01029",
+    "symbol": "TCS",
+    "tradingsymbol": "TCS",
+    "company_name": "TATA CONSULTANCY SERVICES LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE296A01032": {
+    "instrument_key": "BSE_EQ|INE296A01032",
+    "symbol": "BAJFINANCE",
+    "tradingsymbol": "BAJFINANCE",
+    "company_name": "BAJAJ FINANCE LIMITED",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE018A01030": {
+    "instrument_key": "BSE_EQ|INE018A01030",
+    "symbol": "LT",
+    "tradingsymbol": "LT",
+    "company_name": "LARSEN & TOUBRO LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE030A01027": {
+    "instrument_key": "BSE_EQ|INE030A01027",
+    "symbol": "HINDUNILVR",
+    "tradingsymbol": "HINDUNILVR",
+    "company_name": "HINDUSTAN UNILEVER LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE044A01036": {
+    "instrument_key": "BSE_EQ|INE044A01036",
+    "symbol": "SUNPHARMA",
+    "tradingsymbol": "SUNPHARMA",
+    "company_name": "SUN PHARMACEUTICAL INDUSTRIES",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE280A01028": {
+    "instrument_key": "BSE_EQ|INE280A01028",
+    "symbol": "TITAN",
+    "tradingsymbol": "TITAN",
+    "company_name": "TITAN COMPANY LIMITED",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE009A01021": {
+    "instrument_key": "BSE_EQ|INE009A01021",
+    "symbol": "INFY",
+    "tradingsymbol": "INFY",
+    "company_name": "INFOSYS LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE585B01010": {
+    "instrument_key": "BSE_EQ|INE585B01010",
+    "symbol": "MARUTI",
+    "tradingsymbol": "MARUTI",
+    "company_name": "MARUTI SUZUKI INDIA LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE237A01036": {
+    "instrument_key": "BSE_EQ|INE237A01036",
+    "symbol": "KOTAKBANK",
+    "tradingsymbol": "KOTAKBANK",
+    "company_name": "KOTAK MAHINDRA BANK LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE101A01026": {
+    "instrument_key": "BSE_EQ|INE101A01026",
+    "symbol": "M&M",
+    "tradingsymbol": "M&M",
+    "company_name": "MAHINDRA & MAHINDRA LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE742F01042": {
+    "instrument_key": "BSE_EQ|INE742F01042",
+    "symbol": "ADANIPORTS",
+    "tradingsymbol": "ADANIPORTS",
+    "company_name": "ADANI PORTS AND SPECIAL ECONOM",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE238A01034": {
+    "instrument_key": "BSE_EQ|INE238A01034",
+    "symbol": "AXISBANK",
+    "tradingsymbol": "AXISBANK",
+    "company_name": "AXIS BANK LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE860A01027": {
+    "instrument_key": "BSE_EQ|INE860A01027",
+    "symbol": "HCLTECH",
+    "tradingsymbol": "HCLTECH",
+    "company_name": "HCL TECHNOLOGIES LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE481G01011": {
+    "instrument_key": "BSE_EQ|INE481G01011",
+    "symbol": "ULTRACEMCO",
+    "tradingsymbol": "ULTRACEMCO",
+    "company_name": "ULTRATECH CEMENT LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE154A01025": {
+    "instrument_key": "BSE_EQ|INE154A01025",
+    "symbol": "ITC",
+    "tradingsymbol": "ITC",
+    "company_name": "ITC LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE918I01026": {
+    "instrument_key": "BSE_EQ|INE918I01026",
+    "symbol": "BAJAJFINSV",
+    "tradingsymbol": "BAJAJFINSV",
+    "company_name": "BAJAJ FINSERV LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE733E01010": {
+    "instrument_key": "BSE_EQ|INE733E01010",
+    "symbol": "NTPC",
+    "tradingsymbol": "NTPC",
+    "company_name": "NTPC LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE758T01015": {
+    "instrument_key": "BSE_EQ|INE758T01015",
+    "symbol": "ETERNAL",
+    "tradingsymbol": "ETERNAL",
+    "company_name": "Eternal Limited",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE263A01024": {
+    "instrument_key": "BSE_EQ|INE263A01024",
+    "symbol": "BEL",
+    "tradingsymbol": "BEL",
+    "company_name": "BHARAT ELECTRONICS LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE021A01026": {
+    "instrument_key": "BSE_EQ|INE021A01026",
+    "symbol": "ASIANPAINT",
+    "tradingsymbol": "ASIANPAINT",
+    "company_name": "ASIAN PAINTS LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE752E01010": {
+    "instrument_key": "BSE_EQ|INE752E01010",
+    "symbol": "POWERGRID",
+    "tradingsymbol": "POWERGRID",
+    "company_name": "POWER GRID CORPORATION OF INDI",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE081A01020": {
+    "instrument_key": "BSE_EQ|INE081A01020",
+    "symbol": "TATASTEEL",
+    "tradingsymbol": "TATASTEEL",
+    "company_name": "TATA STEEL LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE646L01027": {
+    "instrument_key": "BSE_EQ|INE646L01027",
+    "symbol": "INDIGO",
+    "tradingsymbol": "INDIGO",
+    "company_name": "InterGlobe Aviation Limited",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE669C01036": {
+    "instrument_key": "BSE_EQ|INE669C01036",
+    "symbol": "TECHM",
+    "tradingsymbol": "TECHM",
+    "company_name": "TECH MAHINDRA LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  },
+  "BSE_EQ|INE849A01020": {
+    "instrument_key": "BSE_EQ|INE849A01020",
+    "symbol": "TRENT",
+    "tradingsymbol": "TRENT",
+    "company_name": "TRENT LTD.",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30"
+  }
+}

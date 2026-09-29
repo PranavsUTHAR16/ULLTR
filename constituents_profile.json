@@ -1,0 +1,722 @@
+{
+  "NSE_EQ|INE040A01034": {
+    "symbol": "HDFCBANK",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "HDFC BANK LTD",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 1097271.81,
+    "company_profile": "HDFC Bank Limited (the Bank) is a private bank. The Bank, together with its subsidiaries, is engaged in providing a range of banking and financial ser..."
+  },
+  "NSE_EQ|INE090A01021": {
+    "symbol": "ICICIBANK",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ICICI BANK LTD.",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 1036297.7,
+    "company_profile": "ICICI Bank Limited is a diversified financial services company offering a range of banking and financial services to corporate and retail customers th..."
+  },
+  "NSE_EQ|INE397D01024": {
+    "symbol": "BHARTIARTL",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "BHARTI AIRTEL LIMITED",
+    "sector": "Telecommunication",
+    "sector_market_cap_inr_cr": 1171966.1,
+    "company_profile": "Bharti Airtel Limited is a telecommunication company. It operates through two business divisions: India & South Asia and Africa. Its B2C Services cons..."
+  },
+  "NSE_EQ|INE002A01018": {
+    "symbol": "RELIANCE",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "RELIANCE INDUSTRIES LTD",
+    "sector": "Refineries",
+    "sector_market_cap_inr_cr": 1740284.0,
+    "company_profile": "Reliance Industries Limited is engaged in the activities of hydrocarbon exploration and production, petroleum refining and marketing, petrochemicals, ..."
+  },
+  "NSE_EQ|INE237A01036": {
+    "symbol": "KOTAKBANK",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "KOTAK MAHINDRA BANK LTD",
+    "sector": "Banks",
+    "sector_market_cap_inr_cr": 421084.28,
+    "company_profile": "Kotak Mahindra Bank Limited is an India-based diversified financial services company. The Company's segments include Corporate/Wholesale Banking; Reta..."
+  },
+  "NSE_EQ|INE758T01015": {
+    "symbol": "ETERNAL",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ETERNAL LIMITED",
+    "sector": "e-Commerce",
+    "sector_market_cap_inr_cr": 312671.36,
+    "company_profile": "Eternal Limited, formerly Zomato Limited, operates as an Internet portal that helps in connecting the users, restaurant partners/third-party merchants..."
+  },
+  "NSE_EQ|INE238A01034": {
+    "symbol": "AXISBANK",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "AXIS BANK LIMITED",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 389113.18,
+    "company_profile": "Axis Bank Limited (the Bank) is a private sector bank. The Bank\u2019s segments include Treasury, Retail Banking, Corporate/Wholesale Banking and Other Ban..."
+  },
+  "NSE_EQ|INE009A01021": {
+    "symbol": "INFY",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "INFOSYS LIMITED",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 449084.83,
+    "company_profile": "Infosys Limited is an India-based company, which provides digital services and consulting. The Company enables clients in approximately 59 countries t..."
+  },
+  "NSE_EQ|INE081A01020": {
+    "symbol": "TATASTEEL",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TATA STEEL LIMITED",
+    "sector": "Steel & Iron Products",
+    "sector_market_cap_inr_cr": 232692.95,
+    "company_profile": "Tata Steel Limited is an India-based global steel company with an annual crude steel capacity of approximately 35 million tons per annum. The Company ..."
+  },
+  "NSE_EQ|INE101A01026": {
+    "symbol": "M&M",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "MAHINDRA & MAHINDRA LTD",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 415089.92,
+    "company_profile": "Mahindra and Mahindra Limited is engaged in offering farm equipment, electric vehicles, sport utility vehicles (SUVs), information technology (IT), an..."
+  },
+  "NSE_EQ|INE296A01032": {
+    "symbol": "BAJFINANCE",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "BAJAJ FINANCE LIMITED",
+    "sector": "Finance",
+    "sector_market_cap_inr_cr": 670535.28,
+    "company_profile": "Bajaj Finance Ltd. is an India-based non-banking financial company (NBFC). The Company is mainly engaged in the business of lending and accepting depo..."
+  },
+  "NSE_EQ|INE423A01024": {
+    "symbol": "ADANIENT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ADANI ENTERPRISES LIMITED",
+    "sector": "Trading",
+    "sector_market_cap_inr_cr": 427007.04,
+    "company_profile": "Adani Enterprises Limited is an India-based integrated infrastructure company that operates with various businesses spanning across integrated resourc..."
+  },
+  "NSE_EQ|INE280A01028": {
+    "symbol": "TITAN",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TITAN COMPANY LIMITED",
+    "sector": "Jewellery",
+    "sector_market_cap_inr_cr": 453259.22,
+    "company_profile": "Titan Company Limited is an India-based lifestyle company. The Company is primarily involved in the manufacturing and sale of Watches, Jewelry, Eyewea..."
+  },
+  "NSE_EQ|INE062A01020": {
+    "symbol": "SBIN",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "STATE BANK OF INDIA",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 964507.23,
+    "company_profile": "State Bank of India is an India-based banking and financial services provider. The Company is engaged in providing a wide range of products and servic..."
+  },
+  "NSE_EQ|INE721A01047": {
+    "symbol": "SHRIRAMFIN",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "SHRIRAM FINANCE LIMITED",
+    "sector": "NBFC",
+    "sector_market_cap_inr_cr": 259298.79,
+    "company_profile": "Shriram Finance Limited is an India-based retail asset financing non-banking finance company (NBFC). The Company is a finance provider catering to the..."
+  },
+  "NSE_EQ|INE018A01030": {
+    "symbol": "LT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "LARSEN & TOUBRO LTD.",
+    "sector": "Engineering",
+    "sector_market_cap_inr_cr": 554900.55,
+    "company_profile": "Larsen and Toubro Limited is an India-based multinational company, which is engaged in engineering, procurement, and construction (EPC) projects, hi-t..."
+  },
+  "NSE_EQ|INE733E01010": {
+    "symbol": "NTPC",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "NTPC LTD",
+    "sector": "Power",
+    "sector_market_cap_inr_cr": 318729.42,
+    "company_profile": "NTPC Limited is an India-based power generating company. The Company is involved in the generation and sale of bulk power to State Power Utilities. It..."
+  },
+  "NSE_EQ|INE585B01010": {
+    "symbol": "MARUTI",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "MARUTI SUZUKI INDIA LTD.",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 422179.78,
+    "company_profile": "Maruti Suzuki India Limited is engaged in the manufacturing, purchasing and sale of motor vehicles, components, and spare parts. The other activities ..."
+  },
+  "NSE_EQ|INE467B01029": {
+    "symbol": "TCS",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TATA CONSULTANCY SERV LT",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 814793.31,
+    "company_profile": "Tata Consultancy Services Ltd is an India-based company engaged in providing information technology (IT) services, consulting, and business solutions...."
+  },
+  "NSE_EQ|INE263A01024": {
+    "symbol": "BEL",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "BHARAT ELECTRONICS LTD",
+    "sector": "Engineering",
+    "sector_market_cap_inr_cr": 299335.44,
+    "company_profile": "Bharat Electronics Limited is an India-based company, which manufactures and supplies electronic equipment and systems for the defense sector as well ..."
+  },
+  "NSE_EQ|INE481G01011": {
+    "symbol": "ULTRACEMCO",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ULTRATECH CEMENT LIMITED",
+    "sector": "Construction Materials",
+    "sector_market_cap_inr_cr": 345300.63,
+    "company_profile": "UltraTech Cement Limited is an India-based company, which is engaged in the business of manufacturing and sale of cement and cement related products. ..."
+  },
+  "NSE_EQ|INE038A01020": {
+    "symbol": "HINDALCO",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "HINDALCO  INDUSTRIES  LTD",
+    "sector": "Metal",
+    "sector_market_cap_inr_cr": 230116.0,
+    "company_profile": "Hindalco Industries Limited is an India-based metals flagship company. The Company is primarily engaged in the business of manufacturing and distribut..."
+  },
+  "NSE_EQ|INE019A01038": {
+    "symbol": "JSWSTEEL",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "JSW STEEL LIMITED",
+    "sector": "Steel & Iron Products",
+    "sector_market_cap_inr_cr": 327372.92,
+    "company_profile": "JSW Steel Limited is an India-based company, which is engaged in the business of manufacturing steel products. The Company's steel types include flat ..."
+  },
+  "NSE_EQ|INE742F01042": {
+    "symbol": "ADANIPORTS",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ADANI PORT & SEZ LTD",
+    "sector": "Port",
+    "sector_market_cap_inr_cr": 392859.59,
+    "company_profile": "Adani Ports and Special Economic Zone Limited is an India-based integrated ports and logistics company. The Company's segments include port and specia..."
+  },
+  "NSE_EQ|INE669C01036": {
+    "symbol": "TECHM",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TECH MAHINDRA LIMITED",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 155402.25,
+    "company_profile": "Tech Mahindra Limited is a global consulting service and systems integrator. The Company specializes in digital transformation, consulting, and busine..."
+  },
+  "NSE_EQ|INE066A01021": {
+    "symbol": "EICHERMOT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "EICHER MOTORS LTD",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 222390.04,
+    "company_profile": "Eicher Motors Limited is an India-based multinational automobile company. The Company is engaged in the manufacturing and selling of motorcycles, spar..."
+  },
+  "NSE_EQ|INE213A01029": {
+    "symbol": "ONGC",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "OIL AND NATURAL GAS CORP.",
+    "sector": "Oil Exploration",
+    "sector_market_cap_inr_cr": 291862.48,
+    "company_profile": "Oil and Natural Gas Corporation Limited is an India-based integrated oil and gas company. The Company is engaged in exploration, development and produ..."
+  },
+  "NSE_EQ|INE917I01010": {
+    "symbol": "BAJAJ-AUTO",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "BAJAJ AUTO LIMITED",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 320833.48,
+    "company_profile": "Bajaj Auto Limited is an India-based company, which is engaged in the business of the development, manufacturing, and distribution of automobiles, suc..."
+  },
+  "NSE_EQ|INE155A01022": {
+    "symbol": "TMPV",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TATA MOTORS PASS VEH LTD",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 116434.62,
+    "company_profile": "Tata Motors Passenger Vehicles Limited, formerly Tata Motors Limited, is an India-based company. The Company is engaged in the passenger vehicles busi..."
+  },
+  "NSE_EQ|INE860A01027": {
+    "symbol": "HCLTECH",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "HCL TECHNOLOGIES LTD",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 347946.14,
+    "company_profile": "HCL Technologies Limited is a technology company. It is engaged in providing a range of information technology (IT) and business services, engineering..."
+  },
+  "NSE_EQ|INE047A01021": {
+    "symbol": "GRASIM",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "GRASIM INDUSTRIES LTD",
+    "sector": "Diversified",
+    "sector_market_cap_inr_cr": 222194.93,
+    "company_profile": "Grasim Industries Limited is an India-based producer of cellulosic fibers, diversified chemicals, fashion yarn and fabrics producer. Its segments incl..."
+  },
+  "NSE_EQ|INE154A01025": {
+    "symbol": "ITC",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ITC LTD",
+    "sector": "Tobacco",
+    "sector_market_cap_inr_cr": 335046.37,
+    "company_profile": "ITC Limited is an India-based diversified conglomerate company. The Company\u2019s segments include Fast Moving Consumer Goods (FMCG), Paperboards, Paper a..."
+  },
+  "NSE_EQ|INE437A01024": {
+    "symbol": "APOLLOHOSP",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "APOLLO HOSPITALS ENTER. L",
+    "sector": "Healthcare Services",
+    "sector_market_cap_inr_cr": 126609.58,
+    "company_profile": "Apollo Hospitals Enterprise Limited is an integrated healthcare company. It is engaged in the business of providing hospital services and selling phar..."
+  },
+  "NSE_EQ|INE044A01036": {
+    "symbol": "SUNPHARMA",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "SUN PHARMACEUTICAL IND L",
+    "sector": "Pharmaceuticals",
+    "sector_market_cap_inr_cr": 455993.61,
+    "company_profile": "Sun Pharmaceutical Industries Limited is an India-based specialty generic pharmaceutical company with a presence in specialty, generics and consumer h..."
+  },
+  "NSE_EQ|INE030A01027": {
+    "symbol": "HINDUNILVR",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "HINDUSTAN UNILEVER LTD.",
+    "sector": "Household Products",
+    "sector_market_cap_inr_cr": 471562.97,
+    "company_profile": "Hindustan Unilever Limited is an India-based fast-moving consumer goods company. The Company's segments include Home Care, Beauty & Wellbeing, Persona..."
+  },
+  "NSE_EQ|INE752E01010": {
+    "symbol": "POWERGRID",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "POWER GRID CORP. LTD.",
+    "sector": "Power",
+    "sector_market_cap_inr_cr": 246326.49,
+    "company_profile": "Power Grid Corporation of India Limited is an electric power transmission utility company. The Company is primarily engaged in the implementation, ope..."
+  },
+  "NSE_EQ|INE646L01027": {
+    "symbol": "INDIGO",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "INTERGLOBE AVIATION LTD",
+    "sector": "Airlines",
+    "sector_market_cap_inr_cr": 200099.96,
+    "company_profile": "InterGlobe Aviation Limited (IndiGo) is an India-based company, which is engaged in the airline business. The principal activities of IndiGo comprise ..."
+  },
+  "NSE_EQ|INE758E01017": {
+    "symbol": "JIOFIN",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "JIO FIN SERVICES LTD",
+    "sector": "NBFC",
+    "sector_market_cap_inr_cr": 157484.93,
+    "company_profile": "Jio Financial Services Ltd. is an India-based core investment company. The Company provides full-stack financial services to customers, enabling them ..."
+  },
+  "NSE_EQ|INE522F01014": {
+    "symbol": "COALINDIA",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "COAL INDIA LTD",
+    "sector": "Minerals",
+    "sector_market_cap_inr_cr": 247741.68,
+    "company_profile": "Coal India Ltd. is an India-based coal mining company. The Company along with its subsidiaries, is primarily engaged in the mining and production of c..."
+  },
+  "NSE_EQ|INE849A01020": {
+    "symbol": "TRENT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TRENT LTD",
+    "sector": "Retailing",
+    "sector_market_cap_inr_cr": 153304.29,
+    "company_profile": "Trent Limited is part of the Tata Group and operates a portfolio of retail concepts. Its brands are divided into two groups, namely Fashion and Lifest..."
+  },
+  "NSE_EQ|INE123W01016": {
+    "symbol": "SBILIFE",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "SBI LIFE INSURANCE CO LTD",
+    "sector": "Insurance",
+    "sector_market_cap_inr_cr": 178791.15,
+    "company_profile": "SBI Life Insurance Company Limited is an India-based company, which offers life insurance. The Company operates through three segments: Participating,..."
+  },
+  "NSE_EQ|INE027H01010": {
+    "symbol": "MAXHEALTH",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "MAX HEALTHCARE INS LTD",
+    "sector": "Healthcare Services",
+    "sector_market_cap_inr_cr": 98106.27,
+    "company_profile": "Max Healthcare Institute Limited is an India-based integrated healthcare provider. The Company operates through a single segment, namely Medical and H..."
+  },
+  "NSE_EQ|INE021A01026": {
+    "symbol": "ASIANPAINT",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "ASIAN PAINTS LIMITED",
+    "sector": "Paints",
+    "sector_market_cap_inr_cr": 252269.02,
+    "company_profile": "Asian Paints Limited is an India-based company, which is engaged in the business of manufacturing, selling and distribution of paints, coatings, produ..."
+  },
+  "NSE_EQ|INE795G01014": {
+    "symbol": "HDFCLIFE",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "HDFC LIFE INS CO LTD",
+    "sector": "Insurance",
+    "sector_market_cap_inr_cr": 118725.76,
+    "company_profile": "HDFC Life Insurance Company Ltd is an India-based life insurance company. The Company provides a range of individual and group insurance solutions acr..."
+  },
+  "NSE_EQ|INE089A01031": {
+    "symbol": "DRREDDY",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "DR. REDDY S LABORATORIES",
+    "sector": "Pharmaceuticals",
+    "sector_market_cap_inr_cr": 98074.41,
+    "company_profile": "Dr. Reddy\u2019s Laboratories Limited is an India-based pharmaceutical company. Its products and services are spread across its core businesses of active p..."
+  },
+  "NSE_EQ|INE918I01026": {
+    "symbol": "BAJAJFINSV",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "BAJAJ FINSERV LTD.",
+    "sector": "Investment",
+    "sector_market_cap_inr_cr": 320772.73,
+    "company_profile": "Bajaj Finserv Limited is a holding company for various financial services businesses. It is engaged in the business of promoting financial services su..."
+  },
+  "NSE_EQ|INE192A01025": {
+    "symbol": "TATACONSUM",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "TATA CONSUMER PRODUCT LTD",
+    "sector": "Tea/Coffee",
+    "sector_market_cap_inr_cr": 103115.8,
+    "company_profile": "Tata Consumer Products Limited is an India-based company engaged in trading, production and distribution of consumer products. The Company operates th..."
+  },
+  "NSE_EQ|INE239A01024": {
+    "symbol": "NESTLEIND",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "NESTLE INDIA LIMITED",
+    "sector": "Consumer Food",
+    "sector_market_cap_inr_cr": 279509.16,
+    "company_profile": "Nestle India Limited is an India-based company that is engaged in the food business. The Company's product categories include milk products and nutrit..."
+  },
+  "NSE_EQ|INE075A01022": {
+    "symbol": "WIPRO",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "WIPRO LTD",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 175310.31,
+    "company_profile": "Wipro Limited is a technology services and consulting company. The Company operates through two segments: Information Technology (IT) Services, and IT..."
+  },
+  "NSE_EQ|INE059A01026": {
+    "symbol": "CIPLA",
+    "exchange": "NSE_EQ",
+    "index": "NIFTY_50",
+    "company_name": "CIPLA LTD",
+    "sector": "Pharmaceuticals",
+    "sector_market_cap_inr_cr": 114707.07,
+    "company_profile": "Cipla Limited is an India-based global pharmaceutical company. The Company is engaged in manufacturing, developing and marketing a wide range of brand..."
+  },
+  "BSE_EQ|INE002A01018": {
+    "symbol": "RELIANCE",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "RELIANCE INDUSTRIES LTD.",
+    "sector": "Refineries",
+    "sector_market_cap_inr_cr": 1740284.0,
+    "company_profile": "Reliance Industries Limited is engaged in the activities of hydrocarbon exploration and production, petroleum refining and marketing, petrochemicals, ..."
+  },
+  "BSE_EQ|INE397D01024": {
+    "symbol": "BHARTIARTL",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "BHARTI AIRTEL LTD.",
+    "sector": "Telecommunication",
+    "sector_market_cap_inr_cr": 1171966.1,
+    "company_profile": "Bharti Airtel Limited is a telecommunication company. It operates through two business divisions: India & South Asia and Africa. Its B2C Services cons..."
+  },
+  "BSE_EQ|INE040A01034": {
+    "symbol": "HDFCBANK",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "HDFC BANK LTD.",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 1097271.81,
+    "company_profile": "HDFC Bank Limited (the Bank) is a private bank. The Bank, together with its subsidiaries, is engaged in providing a range of banking and financial ser..."
+  },
+  "BSE_EQ|INE090A01021": {
+    "symbol": "ICICIBANK",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "ICICI BANK LTD.",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 1036297.7,
+    "company_profile": "ICICI Bank Limited is a diversified financial services company offering a range of banking and financial services to corporate and retail customers th..."
+  },
+  "BSE_EQ|INE062A01020": {
+    "symbol": "SBIN",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "STATE BANK OF INDIA",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 964507.23,
+    "company_profile": "State Bank of India is an India-based banking and financial services provider. The Company is engaged in providing a wide range of products and servic..."
+  },
+  "BSE_EQ|INE467B01029": {
+    "symbol": "TCS",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "TATA CONSULTANCY SERVICES LTD.",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 814793.31,
+    "company_profile": "Tata Consultancy Services Ltd is an India-based company engaged in providing information technology (IT) services, consulting, and business solutions...."
+  },
+  "BSE_EQ|INE296A01032": {
+    "symbol": "BAJFINANCE",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "BAJAJ FINANCE LIMITED",
+    "sector": "Finance",
+    "sector_market_cap_inr_cr": 670535.28,
+    "company_profile": "Bajaj Finance Ltd. is an India-based non-banking financial company (NBFC). The Company is mainly engaged in the business of lending and accepting depo..."
+  },
+  "BSE_EQ|INE018A01030": {
+    "symbol": "LT",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "LARSEN & TOUBRO LTD.",
+    "sector": "Engineering",
+    "sector_market_cap_inr_cr": 554900.55,
+    "company_profile": "Larsen and Toubro Limited is an India-based multinational company, which is engaged in engineering, procurement, and construction (EPC) projects, hi-t..."
+  },
+  "BSE_EQ|INE030A01027": {
+    "symbol": "HINDUNILVR",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "HINDUSTAN UNILEVER LTD.",
+    "sector": "Household Products",
+    "sector_market_cap_inr_cr": 471562.97,
+    "company_profile": "Hindustan Unilever Limited is an India-based fast-moving consumer goods company. The Company's segments include Home Care, Beauty & Wellbeing, Persona..."
+  },
+  "BSE_EQ|INE044A01036": {
+    "symbol": "SUNPHARMA",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "SUN PHARMACEUTICAL INDUSTRIES",
+    "sector": "Pharmaceuticals",
+    "sector_market_cap_inr_cr": 455993.61,
+    "company_profile": "Sun Pharmaceutical Industries Limited is an India-based specialty generic pharmaceutical company with a presence in specialty, generics and consumer h..."
+  },
+  "BSE_EQ|INE280A01028": {
+    "symbol": "TITAN",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "TITAN COMPANY LIMITED",
+    "sector": "Jewellery",
+    "sector_market_cap_inr_cr": 453259.22,
+    "company_profile": "Titan Company Limited is an India-based lifestyle company. The Company is primarily involved in the manufacturing and sale of Watches, Jewelry, Eyewea..."
+  },
+  "BSE_EQ|INE009A01021": {
+    "symbol": "INFY",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "INFOSYS LTD.",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 449084.83,
+    "company_profile": "Infosys Limited is an India-based company, which provides digital services and consulting. The Company enables clients in approximately 59 countries t..."
+  },
+  "BSE_EQ|INE585B01010": {
+    "symbol": "MARUTI",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "MARUTI SUZUKI INDIA LTD.",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 422179.78,
+    "company_profile": "Maruti Suzuki India Limited is engaged in the manufacturing, purchasing and sale of motor vehicles, components, and spare parts. The other activities ..."
+  },
+  "BSE_EQ|INE237A01036": {
+    "symbol": "KOTAKBANK",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "KOTAK MAHINDRA BANK LTD.",
+    "sector": "Banks",
+    "sector_market_cap_inr_cr": 421084.28,
+    "company_profile": "Kotak Mahindra Bank Limited is an India-based diversified financial services company. The Company's segments include Corporate/Wholesale Banking; Reta..."
+  },
+  "BSE_EQ|INE101A01026": {
+    "symbol": "M&M",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "MAHINDRA & MAHINDRA LTD.",
+    "sector": "Automobile",
+    "sector_market_cap_inr_cr": 415089.92,
+    "company_profile": "Mahindra and Mahindra Limited is engaged in offering farm equipment, electric vehicles, sport utility vehicles (SUVs), information technology (IT), an..."
+  },
+  "BSE_EQ|INE742F01042": {
+    "symbol": "ADANIPORTS",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "ADANI PORTS AND SPECIAL ECONOM",
+    "sector": "Port",
+    "sector_market_cap_inr_cr": 392859.59,
+    "company_profile": "Adani Ports and Special Economic Zone Limited is an India-based integrated ports and logistics company. The Company's segments include port and specia..."
+  },
+  "BSE_EQ|INE238A01034": {
+    "symbol": "AXISBANK",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "AXIS BANK LTD.",
+    "sector": "Bank",
+    "sector_market_cap_inr_cr": 389113.18,
+    "company_profile": "Axis Bank Limited (the Bank) is a private sector bank. The Bank\u2019s segments include Treasury, Retail Banking, Corporate/Wholesale Banking and Other Ban..."
+  },
+  "BSE_EQ|INE860A01027": {
+    "symbol": "HCLTECH",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "HCL TECHNOLOGIES LTD.",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 347946.14,
+    "company_profile": "HCL Technologies Limited is a technology company. It is engaged in providing a range of information technology (IT) and business services, engineering..."
+  },
+  "BSE_EQ|INE481G01011": {
+    "symbol": "ULTRACEMCO",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "ULTRATECH CEMENT LTD.",
+    "sector": "Construction Materials",
+    "sector_market_cap_inr_cr": 345300.63,
+    "company_profile": "UltraTech Cement Limited is an India-based company, which is engaged in the business of manufacturing and sale of cement and cement related products. ..."
+  },
+  "BSE_EQ|INE154A01025": {
+    "symbol": "ITC",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "ITC LTD.",
+    "sector": "Tobacco",
+    "sector_market_cap_inr_cr": 335046.37,
+    "company_profile": "ITC Limited is an India-based diversified conglomerate company. The Company\u2019s segments include Fast Moving Consumer Goods (FMCG), Paperboards, Paper a..."
+  },
+  "BSE_EQ|INE918I01026": {
+    "symbol": "BAJAJFINSV",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "BAJAJ FINSERV LTD.",
+    "sector": "Investment",
+    "sector_market_cap_inr_cr": 320772.73,
+    "company_profile": "Bajaj Finserv Limited is a holding company for various financial services businesses. It is engaged in the business of promoting financial services su..."
+  },
+  "BSE_EQ|INE733E01010": {
+    "symbol": "NTPC",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "NTPC LTD.",
+    "sector": "Power",
+    "sector_market_cap_inr_cr": 318729.42,
+    "company_profile": "NTPC Limited is an India-based power generating company. The Company is involved in the generation and sale of bulk power to State Power Utilities. It..."
+  },
+  "BSE_EQ|INE758T01015": {
+    "symbol": "ETERNAL",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "Eternal Limited",
+    "sector": "e-Commerce",
+    "sector_market_cap_inr_cr": 312671.36,
+    "company_profile": "Eternal Limited, formerly Zomato Limited, operates as an Internet portal that helps in connecting the users, restaurant partners/third-party merchants..."
+  },
+  "BSE_EQ|INE263A01024": {
+    "symbol": "BEL",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "BHARAT ELECTRONICS LTD.",
+    "sector": "Engineering",
+    "sector_market_cap_inr_cr": 299335.44,
+    "company_profile": "Bharat Electronics Limited is an India-based company, which manufactures and supplies electronic equipment and systems for the defense sector as well ..."
+  },
+  "BSE_EQ|INE021A01026": {
+    "symbol": "ASIANPAINT",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "ASIAN PAINTS LTD.",
+    "sector": "Paints",
+    "sector_market_cap_inr_cr": 252269.02,
+    "company_profile": "Asian Paints Limited is an India-based company, which is engaged in the business of manufacturing, selling and distribution of paints, coatings, produ..."
+  },
+  "BSE_EQ|INE752E01010": {
+    "symbol": "POWERGRID",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "POWER GRID CORPORATION OF INDI",
+    "sector": "Power",
+    "sector_market_cap_inr_cr": 246326.49,
+    "company_profile": "Power Grid Corporation of India Limited is an electric power transmission utility company. The Company is primarily engaged in the implementation, ope..."
+  },
+  "BSE_EQ|INE081A01020": {
+    "symbol": "TATASTEEL",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "TATA STEEL LTD.",
+    "sector": "Steel & Iron Products",
+    "sector_market_cap_inr_cr": 232692.95,
+    "company_profile": "Tata Steel Limited is an India-based global steel company with an annual crude steel capacity of approximately 35 million tons per annum. The Company ..."
+  },
+  "BSE_EQ|INE646L01027": {
+    "symbol": "INDIGO",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "InterGlobe Aviation Limited",
+    "sector": "Airlines",
+    "sector_market_cap_inr_cr": 200099.96,
+    "company_profile": "InterGlobe Aviation Limited (IndiGo) is an India-based company, which is engaged in the airline business. The principal activities of IndiGo comprise ..."
+  },
+  "BSE_EQ|INE669C01036": {
+    "symbol": "TECHM",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "TECH MAHINDRA LTD.",
+    "sector": "IT - Software",
+    "sector_market_cap_inr_cr": 155402.25,
+    "company_profile": "Tech Mahindra Limited is a global consulting service and systems integrator. The Company specializes in digital transformation, consulting, and busine..."
+  },
+  "BSE_EQ|INE849A01020": {
+    "symbol": "TRENT",
+    "exchange": "BSE_EQ",
+    "index": "SENSEX_30",
+    "company_name": "TRENT LTD.",
+    "sector": "Retailing",
+    "sector_market_cap_inr_cr": 153304.29,
+    "company_profile": "Trent Limited is part of the Tata Group and operates a portfolio of retail concepts. Its brands are divided into two groups, namely Fashion and Lifest..."
+  }
+}
