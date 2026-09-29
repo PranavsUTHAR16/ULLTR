@@ -1,4 +1,5 @@
 {
+  "starting_capital": 25000.0,
   "skip_historical_catchup": true,
   "access_token_file": "/Users/prana/Desktop/open_source/web/login/access_token.json",
   "host": "api.upstox.com",

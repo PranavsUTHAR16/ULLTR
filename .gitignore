@@ -1,20 +1,41 @@
-# C++ Build & Binaries
-collector/build/
-collector/collector
-*.o
-*.out
-
 # Secrets & Authentication
+*.pem
+openalgo-aws-key.pem
 login/.env
 login/access_token.json
 access_token.json
 nifty_option_symbols.json
 NFO.csv.gz
 
+# Terraform & Cloud
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+aws_scheduler_lambda.zip
+
+# C++ Build & Binaries
+collector/build/
+collector/collector
+collector/benchmark_speed
+collector/stress_test_forward_engine
+collector/test_parity
+test_trimodel_replay_parity
+*.o
+*.out
+
 # Local Sockets & Runtime Files
 *.sock
 *.log
 collector_bg.log
+collector/collector.log
+
+# Session & Trade Logs / CSVs
+collector/session_*.csv
+forward_tester/*.csv
+forward_tester/daily_logs/
+*.csv
+today_mtm_*.json
+*.png
 
 # Python Caches & Environments
 __pycache__/
@@ -25,8 +46,11 @@ venv/
 ENV/
 env/
 .pytest_cache/
+*.egg-info/
 
-# System Files
+# System & IDE Files
 .DS_Store
+.vscode/
 .gemini/
 .system_generated/
+

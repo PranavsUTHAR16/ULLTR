@@ -23,6 +23,9 @@ set(PROTO_SRC
 set(SOURCES
     src/main.cpp
     src/candle_manager.cpp
+    src/microstructure_engine.cpp
+    src/fifo_pool.cpp
+    src/strategy_engine.cpp
     ${PROTO_SRC}
 )
 
