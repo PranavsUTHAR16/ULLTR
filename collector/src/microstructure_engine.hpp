@@ -44,6 +44,7 @@ public:
 
     struct SymbolState {
         std::string symbol;
+        std::string session_date;
         double last_ltp = 0.0;
         double last_bid = 0.0;
         double last_ask = 0.0;
@@ -115,7 +116,7 @@ public:
 private:
     std::unordered_map<std::string, SymbolState> m_states;
 
-    void restore_session_from_redis(redisContext* redis, const std::string& symbol, SymbolState& state, int64_t now_sec);
+    void restore_session_from_redis(redisContext* redis, const std::string& symbol, SymbolState& state);
     void update_minute_boundary(SymbolState& state, int64_t minute_ts, double current_oi, double ltp);
     void write_to_redis(redisContext* redis, SymbolState& state, const MicrostructureMetrics& m);
 };

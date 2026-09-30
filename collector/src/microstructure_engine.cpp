@@ -1,4 +1,5 @@
 #include "microstructure_engine.hpp"
+#include "redis_utils.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -81,9 +82,12 @@ void MicrostructureEngine::process_tick(
     int64_t ts_sec = now_ms / 1000;
     int64_t minute_ts = (ts_sec / 60) * 60;
 
+    std::string today_date = redis_utils::now_ist_date();
+
     SymbolState& state = m_states[symbol];
     if (state.symbol.empty()) {
         state.symbol = symbol;
+        state.session_date = today_date;
         state.last_ltp = ltp;
         state.last_bid = bid;
         state.last_ask = ask;
@@ -91,7 +95,24 @@ void MicrostructureEngine::process_tick(
         state.last_oi = oi;
         state.initial_oi = oi;
         state.initial_oi_set = true;
-        restore_session_from_redis(redis, symbol, state, ts_sec);
+        restore_session_from_redis(redis, symbol, state);
+    } else if (state.session_date != today_date) {
+        // Daily rollover reset: clear previous day accumulators
+        state.session_date = today_date;
+        state.cum_cvd = 0.0;
+        state.cum_session_dollar = 0.0;
+        state.cum_session_vol = 0.0;
+        state.poc_bins.clear();
+        state.max_poc_bin = 0;
+        state.max_poc_vol = 0.0;
+        state.initial_oi_set = false;
+        state.initial_price_set = false;
+        for (size_t i = 0; i < VWAP_WINDOW_MINS; ++i) state.buckets_90m[i] = MinuteBucket();
+        state.roll_buy_vol_90m = 0.0;
+        state.roll_sell_vol_90m = 0.0;
+        state.roll_buy_dollar_90m = 0.0;
+        state.roll_sell_dollar_90m = 0.0;
+        restore_session_from_redis(redis, symbol, state);
     }
 
     if (!state.initial_oi_set && oi > 0.0) {
@@ -169,20 +190,23 @@ void MicrostructureEngine::process_tick(
     state.roll_sell_dollar_90m += sell_d;
 
     // 5. Developing Point of Control (dPOC 5.0 pt bins from 09:20 IST) & Session VWAP
-    if (inc_vol > 0) {
-        state.cum_session_dollar += (static_cast<double>(inc_vol) * ltp);
-        state.cum_session_vol += static_cast<double>(inc_vol);
-    }
+    std::string tick_date = redis_utils::format_ist_date(now_ms);
+    if (tick_date == today_date) {
+        if (inc_vol > 0) {
+            state.cum_session_dollar += (static_cast<double>(inc_vol) * ltp);
+            state.cum_session_vol += static_cast<double>(inc_vol);
+        }
 
-    // 09:15 IST = 33,300 seconds from midnight IST (+19800s offset from UTC)
-    // Matches ModelPOCV2 backtest profile accumulation starting at 09:15:00 open
-    int64_t ist_sec_of_day = (ts_sec + 19800) % 86400;
-    if (ist_sec_of_day >= 33300 && inc_vol > 0) {
-        int64_t bin_idx = static_cast<int64_t>(std::round(ltp / 5.0));
-        state.poc_bins[bin_idx] += inc_vol;
-        if (state.poc_bins[bin_idx] > state.max_poc_vol) {
-            state.max_poc_vol = state.poc_bins[bin_idx];
-            state.max_poc_bin = bin_idx;
+        // 09:15 IST = 33,300 seconds from midnight IST (+19800s offset from UTC)
+        // Matches ModelPOCV2 backtest profile accumulation starting at 09:15:00 open
+        int64_t ist_sec_of_day = (ts_sec + 19800) % 86400;
+        if (ist_sec_of_day >= 33300 && inc_vol > 0) {
+            int64_t bin_idx = static_cast<int64_t>(std::round(ltp / 5.0));
+            state.poc_bins[bin_idx] += inc_vol;
+            if (state.poc_bins[bin_idx] > state.max_poc_vol) {
+                state.max_poc_vol = state.poc_bins[bin_idx];
+                state.max_poc_bin = bin_idx;
+            }
         }
     }
 
@@ -297,12 +321,22 @@ bool MicrostructureEngine::get_metrics(const std::string& symbol, Microstructure
 void MicrostructureEngine::restore_session_from_redis(
     redisContext* redis,
     const std::string& symbol,
-    SymbolState& state,
-    int64_t now_sec
+    SymbolState& state
 ) {
     if (!redis) return;
-    int64_t ist_sec = (now_sec + 19800) % 86400;
-    int64_t today_0915_sec = now_sec - ist_sec + 33300;
+
+    int64_t now_wall_sec = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+    std::string today_date = redis_utils::now_ist_date();
+    int64_t ist_wall_sec = (now_wall_sec + 19800) % 86400;
+    int64_t today_0915_sec = now_wall_sec - ist_wall_sec + 33300;
+    int64_t today_1530_sec = now_wall_sec - ist_wall_sec + 55800;
+
+    // If starting before 09:15 AM IST, there are no session candles to restore
+    if (now_wall_sec < today_0915_sec) {
+        return;
+    }
 
     std::string pattern = "md:candle:" + symbol + ":1m:*";
     redisReply* r_keys = (redisReply*)redisCommand(redis, "KEYS %s", pattern.c_str());
@@ -318,7 +352,10 @@ void MicrostructureEngine::restore_session_from_redis(
             if (last_colon == std::string::npos) continue;
             try {
                 int64_t c_ts = std::stoll(k_str.substr(last_colon + 1));
-                if (c_ts >= today_0915_sec && c_ts < now_sec) {
+                // Strictly require candle belongs to TODAY's date and session window
+                std::string bar_date = redis_utils::format_ist_date(c_ts * 1000);
+                if (bar_date != today_date) continue;
+                if (c_ts >= today_0915_sec && c_ts < now_wall_sec && c_ts <= today_1530_sec) {
                     redisReply* r_c = (redisReply*)redisCommand(redis, "HMGET %s close volume", k_str.c_str());
                     if (r_c && r_c->type == REDIS_REPLY_ARRAY && r_c->elements >= 2) {
                         double c = (r_c->element[0]->str) ? std::atof(r_c->element[0]->str) : 0.0;
@@ -341,7 +378,8 @@ void MicrostructureEngine::restore_session_from_redis(
         if (sum_vol > 0.0) {
             state.cum_session_dollar = sum_dollar;
             state.cum_session_vol = sum_vol;
-            state.last_cum_vol = static_cast<int64_t>(sum_vol);
+            // NOTE: Do NOT overwrite state.last_cum_vol with sum_vol!
+            // state.last_cum_vol must track Upstox exchange-reported cumulative volume.
             std::cout << "✅ [MicrostructureEngine] Restored session VWAP from Redis for " << symbol
                       << ": VWAP = " << (sum_dollar / sum_vol) << " | Volume = " << sum_vol
                       << " | dPOC = " << (state.max_poc_bin * 5.0) << std::endl;

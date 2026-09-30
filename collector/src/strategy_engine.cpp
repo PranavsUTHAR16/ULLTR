@@ -231,6 +231,13 @@ void StrategyEngine::on_1m_bar(
     const Candle1M& prev_bar,
     const MicrostructureMetrics& metrics
 ) {
+    std::string bar_date = format_ist_date(bar.minute_ts * 1000);
+    std::string today_date = format_ist_date(std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count());
+    if (bar_date != today_date) {
+        return; // Guard against stale bar closes from previous sessions
+    }
+
     std::string time_str = format_ist_time(bar.minute_ts * 1000);
 
     // Update TPO Market Profile brackets (09:15 to 15:30 IST)
