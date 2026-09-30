@@ -530,7 +530,18 @@ def run_model07_live(
         today_str = datetime.date.today().strftime("%Y-%m-%d")
 
     # Front Expiry resolution
-    front_exp = r.get("exp:NIFTY:front") or today_str
+    front_exp = r.get("exp:NIFTY:front")
+    if not front_exp:
+        chain_keys = [k for k in r.keys("chain:NIFTY:*") if ":meta" not in k]
+        valid_chains = sorted([k.split(":")[-1] for k in chain_keys if k.split(":")[-1] >= today_str])
+        if valid_chains:
+            front_exp = valid_chains[0]
+            try:
+                r.set("exp:NIFTY:front", front_exp)
+            except Exception:
+                pass
+        else:
+            front_exp = today_str
     logger.info("Front Expiry resolved: %s", front_exp)
 
     strategy = Model07Strategy(
