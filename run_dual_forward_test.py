@@ -319,6 +319,12 @@ def run_live_forward_test(
     last_bar_ts = 0
     while True:
         try:
+            # Dynamically refresh front futures symbol from Redis
+            curr_front = redis_conn.get("fut:NIFTY:front")
+            if curr_front and curr_front != fut_sym:
+                logger.info("Front NIFTY Future updated: %s -> %s", fut_sym, curr_front)
+                fut_sym = curr_front
+
             # Check latest 1m candle for the futures instrument
             pattern = f"md:candle:{fut_sym}:1m:*"
             candle_keys = redis_conn.keys(pattern)
