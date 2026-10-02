@@ -106,11 +106,15 @@ class Model07Tranche:
     roi_pct: float = 0.0
     is_closed: bool = False
     exit_actual_time: str = ""
+    tranches_covered: List[int] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert tranche record to dictionary for logging and reporting."""
+        label = f"T{'-T'.join(str(x) for x in self.tranches_covered)}" if self.tranches_covered else f"T{self.tranche_id}"
         return {
             "tranche_id": self.tranche_id,
+            "tranche_label": label,
+            "tranches_covered": self.tranches_covered or [self.tranche_id],
             "date": self.date,
             "entry_time": self.entry_time,
             "exit_time": self.exit_actual_time if self.exit_actual_time else self.exit_time,
@@ -244,6 +248,47 @@ class Model07Strategy:
 
         return calc_bs_price(spot, strike, is_call, self.ref_iv, tau, self.rate)
 
+    def _close_normal_decay(
+        self,
+        t: Model07Tranche,
+        close_px: float,
+        bar_time_str: str,
+        quotes_lookup: Optional[Dict[Tuple[float, str], float]],
+        events: List[Dict[str, Any]]
+    ) -> None:
+        """Close an active tranche upon completion of its decay window."""
+        hours_held = max(1, len(t.tranches_covered))
+        decay_dt = hours_held / (365.0 * 6.25)
+        tau_exit = max(1.0 / (365.0 * 24.0), self.tau_dte - decay_dt)
+
+        t.ce_exit_px = self.get_quote_or_fallback(close_px, t.ce_strike, True, tau_exit, quotes_lookup)
+        t.pe_exit_px = self.get_quote_or_fallback(close_px, t.pe_strike, False, tau_exit, quotes_lookup)
+        t.gross_points = t.total_entry_prem - (t.ce_exit_px + t.pe_exit_px)
+        t.net_points = t.gross_points - self.friction_pt
+        t.realized_pnl = t.net_points * self.units_traded
+        t.roi_pct = (t.realized_pnl / self.margin_deployed) * 100.0
+        t.exit_reason = "NORMAL_DECAY"
+        t.is_closed = True
+        t.exit_actual_time = bar_time_str
+
+        self.closed_tranches.append(t)
+        self.active_tranche = None
+
+        label = f"T{'-T'.join(str(x) for x in t.tranches_covered)}" if t.tranches_covered else f"T{t.tranche_id}"
+        events.append({
+            "event": "TRANCHE_HARVESTED",
+            "tranche": t.to_dict(),
+            "message": (
+                f"🎯 <b>MODEL 07 [TRANCHE {label}/5 HARVEST COMPLETED]</b>\n"
+                f"• Decay Window Held: Spot Range <b>{t.running_low:.1f} – {t.running_high:.1f}</b> (SAFE)\n"
+                f"• CE {t.ce_strike:.0f}: ₹{t.ce_entry_px:.2f} ➔ ₹{t.ce_exit_px:.2f} ({t.ce_entry_px - t.ce_exit_px:+5.2f} pts)\n"
+                f"• PE {t.pe_strike:.0f}: ₹{t.pe_entry_px:.2f} ➔ ₹{t.pe_exit_px:.2f} ({t.pe_entry_px - t.pe_exit_px:+5.2f} pts)\n"
+                f"• Gross Harvest: <b>{t.gross_points:+5.2f} pts</b> | Friction: <b>-{self.friction_pt:.2f} pts</b>\n"
+                f"• Net Harvested: <b>{t.net_points:+5.2f} pts</b> | Realized: <b>₹{t.realized_pnl:+,.2f}</b>\n"
+                f"• ⏱️ Exit Time: {bar_time_str} IST"
+            )
+        })
+
     def on_minute_bar(
         self,
         bar_time_str: str,
@@ -364,34 +409,48 @@ class Model07Strategy:
 
             # Check Normal 60-Minute Decay Exit (time reached or passed target)
             elif bar_time_str >= t.exit_time:
-                # Case A: No breach occurred, normal theta decay exit
-                tau_exit = max(1.0 / (365.0 * 24.0), self.tau_dte - (1.0 / (365.0 * 6.25)))
-                t.ce_exit_px = self.get_quote_or_fallback(close_px, t.ce_strike, True, tau_exit, quotes_lookup)
-                t.pe_exit_px = self.get_quote_or_fallback(close_px, t.pe_strike, False, tau_exit, quotes_lookup)
-                t.gross_points = t.total_entry_prem - (t.ce_exit_px + t.pe_exit_px)
-                t.net_points = t.gross_points - self.friction_pt
-                t.realized_pnl = t.net_points * self.units_traded
-                t.roi_pct = (t.realized_pnl / self.margin_deployed) * 100.0
-                t.exit_reason = "NORMAL_DECAY"
-                t.is_closed = True
-                t.exit_actual_time = bar_time_str
+                # Check if there is a next tranche scheduled to start at this roll time
+                next_tranche_info = None
+                for n_idx, (n_entry, n_exit) in enumerate(self.tranche_schedules, start=1):
+                    if n_entry == t.exit_time and n_idx not in self.executed_tranche_indices:
+                        next_tranche_info = (n_idx, n_entry, n_exit)
+                        break
 
-                self.closed_tranches.append(t)
-                self.active_tranche = None
+                if next_tranche_info is not None:
+                    n_idx, n_entry, n_exit = next_tranche_info
+                    # Candidate strikes for next tranche
+                    atm_next = round(close_px / 50.0) * 50.0
+                    ce_next = atm_next + self.otm_offset
+                    pe_next = atm_next - self.otm_offset
 
-                events.append({
-                    "event": "TRANCHE_HARVESTED",
-                    "tranche": t.to_dict(),
-                    "message": (
-                        f"🎯 <b>MODEL 07 [TRANCHE {t.tranche_id}/5 HARVEST COMPLETED]</b>\n"
-                        f"• 60-Min Decay Window Held: Spot Range <b>{t.running_low:.1f} – {t.running_high:.1f}</b> (SAFE)\n"
-                        f"• CE {t.ce_strike}: ₹{t.ce_entry_px:.2f} ➔ ₹{t.ce_exit_px:.2f} ({t.ce_entry_px - t.ce_exit_px:+5.2f} pts)\n"
-                        f"• PE {t.pe_strike}: ₹{t.pe_entry_px:.2f} ➔ ₹{t.pe_exit_px:.2f} ({t.pe_entry_px - t.pe_exit_px:+5.2f} pts)\n"
-                        f"• Gross Harvest: <b>{t.gross_points:+5.2f} pts</b> | Friction: <b>-{self.friction_pt:.2f} pts</b>\n"
-                        f"• Net Harvested: <b>{t.net_points:+5.2f} pts</b> | Realized: <b>₹{t.realized_pnl:+,.2f}</b>\n"
-                        f"• ⏱️ Exit Time: {bar_time_str} IST"
-                    )
-                })
+                    if ce_next == t.ce_strike and pe_next == t.pe_strike:
+                        # STRIKES UNCHANGED: DO NOT EXIT AND RE-ENTER!
+                        # Seamlessly roll window forward into next tranche without paying transaction friction
+                        old_exit = t.exit_time
+                        t.exit_time = n_exit
+                        if n_idx not in t.tranches_covered:
+                            t.tranches_covered.append(n_idx)
+                        self.executed_tranche_indices.add(n_idx)
+
+                        label = f"T{'-T'.join(str(x) for x in t.tranches_covered)}"
+                        events.append({
+                            "event": "TRANCHE_ROLLED_OVER",
+                            "tranche": t.to_dict(),
+                            "message": (
+                                f"🔄 <b>MODEL 07 [STRIKES UNCHANGED — POSITION ROLLED FORWARD]</b>\n"
+                                f"• Current Strikes: <b>{t.ce_strike:.0f} CE / {t.pe_strike:.0f} PE</b> (ATM: <b>{atm_next:.0f}</b>)\n"
+                                f"• Next roll strikes match existing strangle. Skipping redundant exit & re-entry!\n"
+                                f"• 💰 Friction Saved: <b>+{self.friction_pt:.2f} pts (₹{self.friction_pt * self.units_traded:,.2f})</b>\n"
+                                f"• Seamlessly holding into {label} (Window: <b>{t.entry_time} ➔ {n_exit} IST</b>)\n"
+                                f"• ⏱️ Rolled at {bar_time_str} IST"
+                            )
+                        })
+                    else:
+                        # Strikes have changed: close current tranche normally
+                        self._close_normal_decay(t, close_px, bar_time_str, quotes_lookup, events)
+                else:
+                    # Final tranche reached (14:30) or no matching next tranche: close normally
+                    self._close_normal_decay(t, close_px, bar_time_str, quotes_lookup, events)
 
         # 2. Check Tranche Entry Triggers
         # Tranche entries occur at: 09:30, 10:30, 11:30, 12:30, 13:30
@@ -430,7 +489,8 @@ class Model07Strategy:
                     lots=self.lots,
                     units=self.units_traded,
                     margin_deployed=self.margin_deployed,
-                    friction_pts=self.friction_pt
+                    friction_pts=self.friction_pt,
+                    tranches_covered=[idx]
                 )
 
                 self.active_tranche = new_tranche
@@ -451,7 +511,7 @@ class Model07Strategy:
                 break
 
         # 3. Session End Check at 14:30
-        if bar_time_str >= "14:30" and len(self.closed_tranches) >= 5 and not self.session_completed:
+        if bar_time_str >= "14:30" and (len(self.executed_tranche_indices) >= 5 or len(self.closed_tranches) >= 1) and not self.session_completed:
             self.session_completed = True
             summary = self.get_daily_summary()
             events.append({
