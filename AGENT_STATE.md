@@ -1,7 +1,7 @@
 # AGENT STATE: FORWARD TEST ENGINE REPAIR
 
 ## 1. CURRENT STAGE & LIFECYCLE
-- **Active Lifecycle Stage**: Phase 7 (Deploy to AWS VM) **COMPLETE**.
+- **Active Lifecycle Stage**: Phase 7 (Deploy to AWS VM & ClickHouse Migration) **COMPLETE**.
 - **Active Models**:
   - Model 06 (Strategy 6: Volatility-Adaptive Regime Engine)
   - Model 07 (Strategy 7: Pure Nifty OTM VRP Harvesting)
@@ -9,7 +9,25 @@
 
 ---
 
-## 2. VERIFIED REPLAY PARITY RESULTS
+## 2. CLICKHOUSE CLOUD MIGRATION (COMPLETE)
+- **Source Cluster**: `ra5fptcofl.ap-south-1.aws.clickhouse.cloud:8443` (Database: `default`)
+- **Target Cluster**: `uwmxpy364g.ap-south-1.aws.clickhouse.cloud:8443` (Database: `default`, User: `default`)
+- **Data Transfer Protocol**: High-speed server-to-server native streaming via `remoteSecure()` over AWS ap-south-1 backbone.
+- **Verification Table Scorecard**:
+  1. `index_weights`: 80 / 80 rows -> **MATCH (100.0%)**
+  2. `cas_index_estimates`: 314,710 / 314,710 rows -> **MATCH (100.0%)**
+  3. `market_ticks`: 247,063,826 / 247,063,826 rows -> **MATCH (100.0%)**
+  4. `stock_orderbook_depth`: 118,076,626 / 118,076,626 rows -> **MATCH (100.0%)**
+  - **Total Rows Migrated**: **365,455,242 rows** with zero loss.
+- **Collector Services Updated**:
+  - `clickhouse_streamer.py`: Updated default `CH_HOST` and `CH_PASSWORD`.
+  - `stock_depth_collector.py`: Updated `CH_HOST` and `CH_PASS`.
+  - `market_replay_engine.py` & `scripts/market_replay.py`: Updated credentials.
+  - VM services (`ulltr-clickhouse-streamer`, `ulltr-depth-collector`) synchronized and verified on VM.
+
+---
+
+## 3. VERIFIED REPLAY PARITY RESULTS
 
 ### A. Model 07 Multi-Session Parity (10 Historical Trading Days)
 Verified between backtest (`shadow/main07.py`) and forward test replay (`web/forward_tester/run_model_07.py`):
@@ -31,14 +49,14 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
 
 ---
 
-## 3. REGRESSION TEST STATUS
+## 4. REGRESSION TEST STATUS
 - **Automated Test Suite**: `pytest -v tests/test_parity_lock.py`
 - **Local Result**: **11 PASSED / 0 FAILED** (in 2.73s)
-- **AWS VM Result**: **11 PASSED / 0 FAILED** (in 2.63s on `ULLTR-System-VM`)
+- **AWS VM Result**: **11 PASSED / 0 FAILED** (in 2.96s on `ULLTR-System-VM`)
 
 ---
 
-## 4. REPOSITORY COMMITS
+## 5. REPOSITORY COMMITS
 - **Web Repo** (`/Users/prana/Desktop/open_source/web` on `feat/strategy-engine-rehydration-and-fixes`, pushed to `origin`):
   - `83dc82a`: feat(parity): isolate pure quantitative calculation cores and add parity regression lock tests
   - `e15385c`: fix(def-008): remove premature 80% decay TP exit for Strategy 6 to match backtest
@@ -51,6 +69,8 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
   - `70d5ace`: fix(strategy_6): resolve DEF-013 expiry selection failure on DTE >= 6
   - `ffd3fc5`: test(model_07): add multi-day replay parity lock test covering 5 historical sessions
   - `869e472`: docs(registers): update AGENT_STATE, DECISIONS, and DEFECTS with DEF-013 and multi-day parity logs
+  - `832ea5e`: docs(agent_state): mark phase 7 VM deployment complete and instance stopped
+  - `48827c3`: feat(clickhouse): migrate cloud database to new cluster uwmxpy364g and update all collectors
   - **Git Tag**: `backup-pre-model-cleanup`
 - **Shadow Repo** (`/Users/prana/Desktop/black_box/shadow` on `main`):
   - `1a3890f`: fix(def-003): remove double-counted rollover friction in Model 07 backtest
@@ -59,7 +79,7 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
 
 ---
 
-## 5. INFRASTRUCTURE & VM STATE
+## 6. INFRASTRUCTURE & VM STATE
 - **AWS Host**: `ULLTR-System-VM` (`i-0c3e67b057e7b3e00`, Elastic IP `65.1.219.83`).
 - **VM State**: `stopped` (zero idle AWS compute billing).
-- **Deployment Status**: Verified and fully synchronized. Systemd timers enabled. Ready for scheduled auto-boot Monday morning 08:30 IST.
+- **Deployment Status**: Verified and fully synchronized with new ClickHouse cluster. Systemd timers enabled. Ready for scheduled auto-boot Monday morning 08:30 IST.
