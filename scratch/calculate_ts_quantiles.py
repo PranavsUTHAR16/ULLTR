@@ -1,10 +1,10 @@
 import clickhouse_connect
 
 client = clickhouse_connect.get_client(
-    host="ra5fptcofl.ap-south-1.aws.clickhouse.cloud",
+    host="uwmxpy364g.ap-south-1.aws.clickhouse.cloud",
     port=8443,
     username="default",
-    password="BhhYrZvtF3lA~",
+    password="WqJbsqU5_Odq4",
     secure=True
 )
 

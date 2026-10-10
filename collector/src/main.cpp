@@ -71,7 +71,15 @@ inline void pin_thread_to_core(int core_id) {
 #endif
 }
 
-// P5: Low-Latency Socket Tuning (TCP_NODELAY, SO_RCVBUF, TCP_QUICKACK, SO_BUSY_POLL)
+// P5: Low-Latency Socket Tuning (TCP_NODELAY, SO_RCVBUF, TCP_QUICKACK, SO_BUSY_POLL, TCP Keepalive)
+inline void rearm_quickack(tcp::socket& sock) {
+#ifdef __linux__
+    int fd = sock.native_handle();
+    int quickack = 1;
+    setsockopt(fd, IPPROTO_TCP, TCP_QUICKACK, &quickack, sizeof(quickack));
+#endif
+}
+
 inline void configure_low_latency_socket(tcp::socket& sock) {
     try {
         // 1. Disable Nagle's algorithm (TCP_NODELAY) - immediate transmission without packet buffering
@@ -93,8 +101,16 @@ inline void configure_low_latency_socket(tcp::socket& sock) {
         // 5. SO_BUSY_POLL for kernel-level low-latency polling (50 microseconds)
         int busy_poll = 50;
         setsockopt(fd, SOL_SOCKET, SO_BUSY_POLL, &busy_poll, sizeof(busy_poll));
+
+        // 6. Fast TCP Keepalive (idle 3s, interval 1s, count 3) for intra-AWS connection failure detection
+        int keepidle = 3;
+        int keepintvl = 1;
+        int keepcnt = 3;
+        setsockopt(fd, IPPROTO_TCP, TCP_KEEPIDLE, &keepidle, sizeof(keepidle));
+        setsockopt(fd, IPPROTO_TCP, TCP_KEEPINTVL, &keepintvl, sizeof(keepintvl));
+        setsockopt(fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof(keepcnt));
 #endif
-        std::cout << "⚡ [Network Engine] TCP socket tuned: TCP_NODELAY=1, SO_RCVBUF=4MB, QUICKACK=1, BUSY_POLL=50us" << std::endl;
+        std::cout << "⚡ [Network Engine] TCP socket tuned: TCP_NODELAY=1, SO_RCVBUF=4MB, QUICKACK=1, BUSY_POLL=50us, KEEPALIVE=3s/1s/3" << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "⚠️ [Network Engine] Notice while configuring low-latency socket: " << e.what() << std::endl;
     }
@@ -477,6 +493,7 @@ public:
                             for (;;) {
                                 buffer.clear();
                                 ws_redirect.read(buffer);
+                                rearm_quickack(beast::get_lowest_layer(ws_redirect));
                                 process_message(buffer);
                             }
                             m_is_connected.store(false, std::memory_order_release);
@@ -507,6 +524,7 @@ public:
                 for (;;) {
                     buffer.clear();
                     ws.read(buffer);
+                    rearm_quickack(beast::get_lowest_layer(ws));
                     process_message(buffer);
                 }
                 m_is_connected.store(false, std::memory_order_release);

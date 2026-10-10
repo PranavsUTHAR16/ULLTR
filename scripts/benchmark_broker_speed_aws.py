@@ -113,7 +113,7 @@ def main():
 
     # 4. Timer Precision Drift Test
     drift_us = HighPrecisionClock.wait_until_sharp_time(
-        *time.localtime(time.time() + 0.1)[:3]
+        *time.localtime(time.time() + 0.1)[3:6]
     )
     print(f"  • Timer Arming Drift      : {drift_us:+.2f} µs ({drift_us / 1000.0:+.4f} ms)")
 

@@ -83,8 +83,8 @@ fi
 source venv/bin/activate
 pip install --upgrade pip
 
-# Install required Python packages for ULLTR (redis, requests, aiohttp, pytz, upstox-python-sdk)
-pip install redis requests aiohttp pytz upstox-python-sdk pyotp lightgbm clickhouse-connect pandas numpy scipy playwright tqdm pyarrow
+# Install required Python packages for ULLTR (redis, requests, aiohttp, pytz, upstox-python-sdk, httpx[http2])
+pip install redis requests aiohttp pytz upstox-python-sdk pyotp lightgbm clickhouse-connect pandas numpy scipy playwright tqdm pyarrow 'httpx[http2]'
 # Install ULLTR package in editable mode
 pip install -e .
 

@@ -75,4 +75,35 @@ EOF
 
 sysctl -p "$SYSCTL_CONF" > /dev/null 2>&1 || sysctl --system > /dev/null 2>&1 || true
 
+# 5. DNS Pre-pinning for Intra-AWS Endpoints (0µs DNS resolution time)
+echo "$LOG_PREFIX Pre-resolving and pinning Upstox AWS Mumbai endpoints in /etc/hosts..."
+python3 -c "
+import socket
+
+domains = ['api-hft.upstox.com', 'wsfeeder-api.upstox.com', 'api.upstox.com']
+hosts_path = '/etc/hosts'
+try:
+    with open(hosts_path, 'r') as f:
+        lines = f.readlines()
+    
+    pinned = {}
+    for d in domains:
+        try:
+            ip = socket.gethostbyname(d)
+            if ip:
+                pinned[d] = ip
+        except Exception:
+            pass
+
+    if pinned:
+        filtered = [l for l in lines if not any(l.strip().endswith(d) for d in pinned)]
+        for d, ip in pinned.items():
+            filtered.append(f'{ip} {d}\n')
+            print(f'   [DNS-PIN] Pinned {d} -> {ip} in /etc/hosts')
+        with open(hosts_path, 'w') as f:
+            f.writelines(filtered)
+except Exception as e:
+    print(f'   [DNS-PIN] Notice updating /etc/hosts: {e}')
+" 2>/dev/null || true
+
 echo "$LOG_PREFIX ✅ Network latency tuning successfully applied!"
