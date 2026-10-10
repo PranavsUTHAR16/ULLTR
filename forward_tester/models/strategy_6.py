@@ -10,6 +10,13 @@ from scipy.stats import linregress
 from forward_tester.models.base_model import BaseTradingModel
 from forward_tester.position import ForwardTestPosition
 from forward_tester.shadow_greeks import select_delta_strike
+from forward_tester.core.strategy_6_core import (
+    compute_rv5,
+    compute_rv_slope,
+    classify_micro_regime,
+    detect_morning_jump as core_detect_morning_jump,
+    resolve_strategy6_allocation
+)
 
 class Strategy6Model(BaseTradingModel):
     """
@@ -74,34 +81,46 @@ class Strategy6Model(BaseTradingModel):
         best_und = min(info.keys(), key=lambda k: info[k]["dte"])
         return best_und, info[best_und]["expiry"], info[best_und]["dte"]
 
+
     def _compute_micro_regime(self, underlying: str) -> Tuple[str, str]:
         """Calculates 5-day RV5 + 5-day slope micro-regime from Redis/ClickHouse candle cache."""
-        try:
-            spot_sym = "BSE_INDEX|SENSEX" if underlying == "SENSEX" else "NSE_INDEX|Nifty 50"
-            c_keys = self.data_client.client.r.keys(f"md:candle:{spot_sym}:1d:*")
-            closes = []
-            if c_keys:
-                for k in sorted(c_keys):
-                    try:
-                        px = float(self.data_client.client.r.hget(k, "close"))
-                        if px > 0:
-                            closes.append(px)
-                    except Exception:
-                        continue
-            
-            if len(closes) >= 6:
-                closes_arr = np.array(closes[-10:])
-                log_rets = np.log(closes_arr[1:] / closes_arr[:-1])
-                if len(log_rets) >= 5:
-                    rv5 = np.std(log_rets[-5:]) * np.sqrt(375 * 252)
-                    x = np.arange(5)
-                    slope = linregress(x, log_rets[-5:]).slope
-                    rv_band = "Low" if rv5 < 0.12 else ("High" if rv5 >= 0.18 else "Medium")
-                    slope_dir = "Rising" if slope > 0 else "Falling"
-                    return (rv_band, slope_dir)
-        except Exception:
-            pass
-        return ("Medium", "Falling")
+        spot_sym = "BSE_INDEX|SENSEX" if underlying == "SENSEX" else "NSE_INDEX|Nifty 50"
+        c_keys = self.data_client.client.r.keys(f"md:candle:{spot_sym}:1d:*")
+        daily_bars = []
+        if c_keys:
+            for k in c_keys:
+                d_str = k.split(":")[-1]
+                if d_str == "1970-01-01" or len(d_str) != 10:
+                    continue
+                try:
+                    px = float(self.data_client.client.r.hget(k, "close"))
+                    if px > 0:
+                        daily_bars.append((d_str, px))
+                except Exception:
+                    continue
+
+        daily_bars.sort(key=lambda x: x[0])
+        closes = [x[1] for x in daily_bars]
+
+        if len(closes) < 10:
+            raise ValueError(
+                f"INSUFFICIENT_DATA: Need at least 10 daily closes to compute 5-day slope of RV5, "
+                f"found only {len(closes)} for {underlying} in Redis. Refusing silent fallback per Rule 6."
+            )
+
+        closes_arr = np.array(closes, dtype=float)
+        log_rets = np.log(closes_arr[1:] / closes_arr[:-1])
+        s_rets = pd.Series(log_rets)
+        rv5_series = s_rets.rolling(5, min_periods=5).std() * np.sqrt(375 * 252)
+        rv5_window = rv5_series.dropna().values
+        if len(rv5_window) < 5:
+            raise ValueError(f"INSUFFICIENT_DATA: Need 5 rolling RV5 values, got {len(rv5_window)}")
+
+        rv5 = float(rv5_window[-1])
+        slope = compute_rv_slope(rv5_window[-5:])
+        p33 = getattr(self.config, "rv5_p33", 0.14)
+        p67 = getattr(self.config, "rv5_p67", 0.18)
+        return classify_micro_regime(rv5, slope, p33=p33, p67=p67)
 
     def _detect_morning_jump(self, underlying: str) -> Tuple[bool, float]:
         """Queries 09:15-09:17 1-min candles for Strategy 6 morning jump signal."""
