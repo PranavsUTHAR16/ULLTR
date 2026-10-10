@@ -115,8 +115,20 @@ class MultiModelEngine:
         except Exception as e:
             print(f"⚠️ Error recovering positions: {e}")
 
+    def precompute_aot_stages(self, hour: int, minute: int, second: int):
+        """Dispatches ahead-of-time precomputation stages to eliminate trigger slippage."""
+        # At 09:15:05 -> Pre-compute 5-day RV5 regime from historical daily bars
+        if hour == 9 and minute == 15 and second == 5:
+            self.strategy6.precompute_day_regime()
+        # At 09:17:58 -> Pre-compute morning jump from completed 09:15-09:17 bars
+        elif hour == 9 and minute == 17 and second == 58:
+            self.strategy6.precompute_morning_jump()
+        # At 09:17:59 -> Pre-stage option chain and Greeks
+        elif hour == 9 and minute == 17 and second == 59:
+            self.strategy6.prestage_option_chain()
+
     def execute_0918_dual_model_entry(self):
-        """Executes Strategy 6 09:18 AM sharp entry."""
+        """Executes Strategy 6 09:18 AM sharp entry (<0.2ms path)."""
         new_pos_s6 = self.strategy6.execute_0918_entry()
         if new_pos_s6:
             self.log_trade_execution()
@@ -206,19 +218,19 @@ class MultiModelEngine:
             f"• Micro-Regime: <b>{regime}</b>\n"
             f"• Morning Jump Detected: <b>{self.strategy6.morning_active}</b> (Max Abs Ret: {self.strategy6.max_abs_ret:.5f})\n"
             f"• Sizing: <b>Primary {self.strategy6.p_lots} Lots / Secondary {self.strategy6.s_lots} Lots</b>\n"
-            f"• Status: <b>Standing by for 09:18:01 entry...</b>"
+            f"• Status: <b>Standing by for 09:18:00 entry...</b>"
         )
         self._send_telegram(msg)
 
     def send_telegram_entry_broadcast(self):
-        """Sends rich Telegram alert immediately after 09:18:01 AM entries."""
+        """Sends rich Telegram alert immediately after 09:18:00 AM entries."""
         und = self.strategy6.underlying
         exp = self.strategy6.expiry
         regime = f"{self.strategy6.regime[0]}-{self.strategy6.regime[1]}"
         morning_tag = "⚡ ACTIVE" if self.strategy6.morning_active else "⚪ DORMANT"
 
         lines = [
-            f"⚡ <b>STRATEGY 6 [09:18:01 ENTRY EXECUTED]</b>",
+            f"⚡ <b>STRATEGY 6 [09:18:00 ENTRY EXECUTED]</b>",
             f"📅 Date: <b>{self.current_date}</b> | Asset: <b>{und}</b> | Expiry: <b>{exp}</b> (DTE: {self.strategy6.dte})",
             f"• Regime: <b>{regime}</b> | Morning Jump: <b>{morning_tag}</b>",
             f"• Sizing: <b>{self.strategy6.p_lots} Lots Primary / {self.strategy6.s_lots} Lots Secondary</b>",

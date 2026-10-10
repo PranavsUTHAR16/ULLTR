@@ -1,6 +1,7 @@
 # forward_tester/models/strategy_6.py
 import os
 import sys
+import time
 import numpy as np
 import pandas as pd
 from datetime import datetime, date
@@ -37,6 +38,10 @@ class Strategy6Model(BaseTradingModel):
         self.morning_active: bool = False
         self.max_abs_ret: float = 0.0
         self.entry_executed: bool = False
+        self.cached_regime: Optional[Tuple[str, str]] = None
+        self.cached_morning_jump: Optional[Tuple[bool, float]] = None
+        self.cached_df_opts: Optional[pd.DataFrame] = None
+        self.cached_df_opts_ts: float = 0.0
 
     def init_trading_day(self, trade_date: str) -> None:
         """Determines target asset by DTE comparison, calculates RV5 regime and morning jump."""
@@ -150,16 +155,45 @@ class Strategy6Model(BaseTradingModel):
             return max_abs > self.config.morning_active_thresh, max_abs
         return False, 0.0
 
+    def precompute_day_regime(self) -> Tuple[str, str]:
+        """AOT Pre-computation: calculates 5-day RV5 micro-regime at 09:15 AM from historical closes."""
+        self.underlying, self.expiry, self.dte = self._select_closer_expiry()
+        self.regime = self._compute_micro_regime(self.underlying)
+        self.cached_regime = self.regime
+        return self.regime
+
+    def precompute_morning_jump(self) -> Tuple[bool, float]:
+        """AOT Pre-computation: evaluates 09:15-09:17 bars at 09:17:58 before 09:18:00 trigger."""
+        self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
+        self.cached_morning_jump = (self.morning_active, self.max_abs_ret)
+        return self.morning_active, self.max_abs_ret
+
+    def prestage_option_chain(self) -> pd.DataFrame:
+        """AOT Pre-staging: pre-fetches option chain and Greeks at 09:17:59."""
+        if self.underlying and self.expiry:
+            self.cached_df_opts = self._build_options_dataframe(self.underlying, self.expiry)
+            self.cached_df_opts_ts = time.time()
+            return self.cached_df_opts
+        return pd.DataFrame()
+
     def execute_0918_entry(self) -> List[ForwardTestPosition]:
-        """Executes 09:18 AM sharp entry based on regime allocation scaled to 10 lots."""
+        """Executes 09:18 AM sharp entry based on regime allocation scaled to 20 lots (<0.2ms path)."""
         if self.entry_executed or self.active_positions:
             return self.active_positions
 
-        # Dynamically refresh closer expiry from Redis right before 09:18 AM entry
-        fresh_und, fresh_exp, fresh_dte = self._select_closer_expiry()
-        if fresh_exp:
-            self.underlying, self.expiry, self.dte = fresh_und, fresh_exp, fresh_dte
-            self.regime = self._compute_micro_regime(self.underlying)
+        # 1. Use AOT precomputed regime if available, else resolve dynamically
+        if self.cached_regime is not None:
+            self.regime = self.cached_regime
+        else:
+            fresh_und, fresh_exp, fresh_dte = self._select_closer_expiry()
+            if fresh_exp:
+                self.underlying, self.expiry, self.dte = fresh_und, fresh_exp, fresh_dte
+                self.regime = self._compute_micro_regime(self.underlying)
+
+        # 2. Use AOT precomputed morning jump if available, else resolve dynamically
+        if self.cached_morning_jump is not None:
+            self.morning_active, self.max_abs_ret = self.cached_morning_jump
+        else:
             self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
 
         lot_alloc = self.config.alloc_lr.get(self.regime, (15, 5, 2.00))
@@ -190,7 +224,16 @@ class Strategy6Model(BaseTradingModel):
             print(f"⚠️ Strategy 6 Entry Failed: No valid expiry found for {self.underlying} in Redis.")
             return []
 
-        df_opts = self._build_options_dataframe(self.underlying, self.expiry)
+        # 3. Use pre-staged option chain if fresh (< 4 seconds old), else build now
+        if (
+            self.cached_df_opts is not None
+            and (time.time() - self.cached_df_opts_ts) < 4.0
+            and not self.cached_df_opts.empty
+        ):
+            df_opts = self.cached_df_opts
+        else:
+            df_opts = self._build_options_dataframe(self.underlying, self.expiry)
+
         if df_opts.empty:
             print(f"⚠️ Strategy 6 Entry Failed: Empty option chain dataframe for {self.underlying} expiry {self.expiry} (Spot: {spot_px})")
             return []

@@ -20,6 +20,7 @@ from typing import Dict, Any, Optional
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import httpx
 
 logger = logging.getLogger("BrokerGateway")
 
@@ -40,13 +41,16 @@ class UpstoxBrokerGateway:
             self.load_token()
             
         self.session = requests.Session()
-        # Configure connection pool with keep-alive
         adapter = HTTPAdapter(
             pool_connections=5,
             pool_maxsize=10,
             max_retries=Retry(total=1, backoff_factor=0.05, status_forcelist=[502, 503, 504])
         )
         self.session.mount("https://", adapter)
+
+        # High-Speed HTTP/2 Client with Persistent Keepalive
+        limits = httpx.Limits(max_keepalive_connections=20, max_connections=50, keepalive_expiry=120.0)
+        self.httpx_client = httpx.Client(http2=True, limits=limits, timeout=3.0)
         
         self._update_headers()
         self.hft_v3_enabled = True
@@ -82,6 +86,7 @@ class UpstoxBrokerGateway:
         """Pre-warms the SSL/TLS socket to eliminate handshake latency during execution."""
         try:
             self.session.get("https://api.upstox.com/v2/user/profile", timeout=3)
+            self.httpx_client.get("https://api-hft.upstox.com/v3/order/place", headers=self.headers, timeout=3)
         except Exception as e:
             logger.debug(f"Connection pre-warm note: {e}")
 
@@ -96,7 +101,7 @@ class UpstoxBrokerGateway:
         trigger_price: float = 0.0,
         validity: str = "DAY",
         slice_order: bool = True,
-        tag: str = "CAS_ARB"
+        tag: str = "STRATEGY_6"
     ) -> Dict[str, Any]:
         """
         Dispatches order via Upstox V3 HFT API with Auto-Slicing and Latency Metadata.
@@ -140,13 +145,23 @@ class UpstoxBrokerGateway:
         
         t_sent_ns = time.perf_counter_ns()
         try:
-            resp = self.session.post(target_url, json=payload_to_send, timeout=3.0)
-            t_ack_ns = time.perf_counter_ns()
-            status_code = resp.status_code
+            # Prefer ultra-low latency HTTP/2 persistent client
             try:
-                response_json = resp.json()
+                resp = self.httpx_client.post(target_url, json=payload_to_send, headers=self.headers, timeout=3.0)
+                t_ack_ns = time.perf_counter_ns()
+                status_code = resp.status_code
+                try:
+                    response_json = resp.json()
+                except Exception:
+                    response_json = {"raw_text": resp.text}
             except Exception:
-                response_json = {"raw_text": resp.text}
+                resp = self.session.post(target_url, json=payload_to_send, timeout=3.0)
+                t_ack_ns = time.perf_counter_ns()
+                status_code = resp.status_code
+                try:
+                    response_json = resp.json()
+                except Exception:
+                    response_json = {"raw_text": resp.text}
         except Exception as e:
             logger.warning(f"Gateway request exception ({e})")
             status_code = 500

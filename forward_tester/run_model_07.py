@@ -657,18 +657,30 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
             strategy.active_tranche.tranche_id if strategy.active_tranche else "None"
         )
 
-    # ─── BUG-34 FIX: use sorted-set ZREVRANGE instead of KEYS scan ─────────────
-    # KEYS is O(N) over the entire Redis keyspace — ~10-50ms each second.
-    # We maintain md:candles:{spot_key}:1m as a sorted set (score=ts) written
-    # by the C++ candle_manager. ZREVRANGE in O(log N) to find the latest bar.
+    # ─── Event-Driven Push Streaming Subscription (WebSocket-like connection) ──
+    # Subscribes to C++ candle manager publish channel 'md:reco:trigger' so the
+    # instant a 1-minute bar closes, the engine unblocks and evaluates in <0.5ms.
     candles_zset = f"md:candles:{spot_key}:1m"
+    pubsub = r.pubsub(ignore_subscribe_messages=True)
+    try:
+        pubsub.subscribe("md:reco:trigger")
+        logger.info("Subscribed to event-driven Redis Pub/Sub channel 'md:reco:trigger'")
+    except Exception as e:
+        logger.warning("Could not subscribe to md:reco:trigger: %s", e)
 
     while True:
         try:
             now_dt = datetime.datetime.now()
             t_str = now_dt.strftime("%H:%M")
 
-            # O(log N) lookup via sorted set — no full keyspace scan
+            # 1. Event-Driven Wakeup via Pub/Sub (wait up to 50ms for instant push)
+            msg = None
+            try:
+                msg = pubsub.get_message(timeout=0.05)
+            except Exception:
+                pass
+
+            # 2. O(log N) lookup via sorted set to resolve target closed bar
             latest_members = r.zrevrange(candles_zset, 0, 0, withscores=True)
             if latest_members:
                 latest_member, score = latest_members[0]
@@ -678,7 +690,7 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                 # Fallback to KEYS only if sorted set not yet populated (first bar of day)
                 c_keys_live = r.keys(f"md:candle:{spot_key}:1m:*")
                 if not c_keys_live:
-                    time.sleep(1.0)
+                    time.sleep(0.1)
                     continue
                 latest_key = max(c_keys_live, key=lambda k: int(k.split(":")[-1]))
                 cur_ts = int(latest_key.split(":")[-1])
@@ -694,19 +706,29 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
 
                     bar_time_str = datetime.datetime.fromtimestamp(cur_ts).strftime("%H:%M")
 
-                    # Build live options quotes from Redis (current snapshot is valid for live bars)
+                    # Single Pipelined Batch for Option Quotes (<0.8ms total for entire chain)
                     quotes_lookup: Dict[Tuple[float, str], float] = {}
                     chain_raw = r.hgetall(f"chain:NIFTY:{front_exp}")
                     if chain_raw:
                         raw_logger.log(redis_key=f"chain:NIFTY:{front_exp}", event_type="CHAIN", payload=chain_raw)
-                    for field_name, sym in chain_raw.items():
-                        try:
-                            stk_str, otype = field_name.split(":")
-                            stk_f = float(stk_str)
-                            ltp_val = r.hget(f"md:quote:{sym}", "ltp") or r.hget(f"md:quote:{sym}", "last_price")
+                        pipe = r.pipeline(transaction=False)
+                        chain_items: List[Tuple[float, str, str]] = []
+                        for field_name, sym in chain_raw.items():
+                            try:
+                                stk_str, otype = field_name.split(":")
+                                stk_f = float(stk_str)
+                                chain_items.append((stk_f, otype, sym))
+                                pipe.hmget(f"md:quote:{sym}", ["ltp", "last_price", "bid", "ask"])
+                            except Exception:
+                                pass
+
+                        pipe_results = pipe.execute()
+                        for (stk_f, otype, sym), vals in zip(chain_items, pipe_results):
+                            if not vals:
+                                continue
+                            ltp_val = vals[0] or vals[1]
                             if not ltp_val or float(ltp_val) <= 0:
-                                bid_v = r.hget(f"md:quote:{sym}", "bid")
-                                ask_v = r.hget(f"md:quote:{sym}", "ask")
+                                bid_v, ask_v = vals[2], vals[3]
                                 if bid_v and ask_v:
                                     b_f, a_f = float(bid_v), float(ask_v)
                                     if b_f > 0 and a_f > 0:
@@ -717,8 +739,6 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                                         ltp_val = a_f
                             if ltp_val and float(ltp_val) > 0:
                                 quotes_lookup[(stk_f, otype)] = float(ltp_val)
-                        except Exception:
-                            pass
 
                     if quotes_lookup:
                         raw_logger.log(

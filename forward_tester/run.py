@@ -55,13 +55,25 @@ def run_live(engine: MultiModelEngine):
                 engine.send_telegram_morning_heartbeat()
                 market_open_refreshed = True
 
-            # 2. Check 09:18 AM Strategy 6 Entry
-            if not entry_triggered and now >= dtime(entry_h, entry_m, entry_s) and now < dtime(15, 0, 0):
-                if not engine.strategy6.expiry:
-                    engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
-                engine.execute_0918_dual_model_entry()
-                if len(engine.strategy6.active_positions) > 0:
-                    entry_triggered = True
+            # 1b. Ahead-of-Time (AOT) Pre-computation Stages (09:15:05, 09:17:58, 09:17:59)
+            if not entry_triggered and hasattr(engine, "precompute_aot_stages"):
+                engine.precompute_aot_stages(now_dt.hour, now_dt.minute, now_dt.second)
+
+            # 2. Check 09:18:00 AM Strategy 6 Entry (Armed with Microsecond Precision)
+            if not entry_triggered and now < dtime(15, 0, 0):
+                # If within 500ms of entry, arm precision clock wheel to hit 09:18:00.000 sharp
+                if (now_dt.hour, now_dt.minute) == (entry_h, entry_m) and now_dt.second == (entry_s - 1 if entry_s > 0 else 59) and now_dt.microsecond >= 500_000:
+                    from forward_tester.streaming_engine import HighPrecisionClock
+                    HighPrecisionClock.wait_until_sharp_time(entry_h, entry_m, entry_s)
+                    now_dt = datetime.now()
+                    now = now_dt.time()
+
+                if now >= dtime(entry_h, entry_m, entry_s):
+                    if not engine.strategy6.expiry:
+                        engine.init_trading_day(now_dt.strftime("%Y-%m-%d"))
+                    engine.execute_0918_dual_model_entry()
+                    if len(engine.strategy6.active_positions) > 0:
+                        entry_triggered = True
                 
             # 3. Monitor active positions & trailing stops
             engine.update_and_monitor()

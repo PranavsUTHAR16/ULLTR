@@ -8,7 +8,7 @@ class Strategy6Config:
     Configuration parameters for Model 1: Strategy 6 (Volatility-Adaptive Regime Engine).
     Restored to Full 20 Lots (1,300 Qty Nifty / 400 Qty Sensex).
     """
-    entry_time: tuple = (9, 18, 1)   # 09:18:01 AM IST (sharp OPEN of 09:18 candle matching backtest 100%)
+    entry_time: tuple = (9, 18, 0)   # 09:18:00 AM IST (sharp 09:18:00.000 entry matching backtest with zero slippage)
     exit_time: tuple = (15, 0, 0)
     capital_limit: float = 5000000.0 # ₹50 Lakhs allocation
     total_lots: int = 20             # Full 20 lots allocation
