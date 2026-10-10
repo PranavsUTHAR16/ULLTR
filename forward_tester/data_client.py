@@ -14,14 +14,18 @@ class ForwardTestDataClient:
     Ultra-low latency, direct-access Python client for real-time market data
     and Greeks lookups over Redis memory hashes.
     """
-    def __init__(self):
+    def __init__(self, raw_logger: Optional[Any] = None):
         self.client = MarketDataClient()
+        self.raw_logger = raw_logger
         self._cached_expiries: Dict[str, Tuple[str, float]] = {}
         self._cached_chains: Dict[str, Tuple[dict, float]] = {}
 
     def get_spot_price(self, underlying: str) -> float:
         """Fetch spot price for NIFTY or SENSEX in <0.05ms."""
-        return self.client.get_spot_price(underlying)
+        px = self.client.get_spot_price(underlying)
+        if self.raw_logger and px > 0:
+            self.raw_logger.log(f"spot:{underlying}", "SPOT", {"price": px})
+        return px
 
     def get_atm_strike(self, underlying: str) -> int:
         """Get current ATM strike for NIFTY or SENSEX."""
@@ -125,6 +129,8 @@ class ForwardTestDataClient:
         """Fetch full option chain dict from Redis (mapping strike -> {'CE': sym, 'PE': sym})."""
         try:
             chain_raw = self.client.r.hgetall(f"chain:{underlying.upper()}:{expiry}")
+            if self.raw_logger and chain_raw:
+                self.raw_logger.log(f"chain:{underlying.upper()}:{expiry}", "CHAIN", chain_raw)
             chain = {}
             for f, sym in chain_raw.items():
                 stk, opt_type = f.split(":")
@@ -149,16 +155,25 @@ class ForwardTestDataClient:
                     if v is not None:
                         flt_v = float(v)
                         if flt_v > 0:
+                            if self.raw_logger:
+                                self.raw_logger.log(f"md:quote:{k}", "QUOTE", {"ltp": flt_v})
                             return flt_v
                 # 2. Midpoint fallback if ltp is momentarily missing/zero (NEVER yesterday's close)
                 try:
                     bid_v = float(vals[2]) if vals[2] is not None else 0.0
                     ask_v = float(vals[3]) if vals[3] is not None else 0.0
                     if bid_v > 0 and ask_v > 0:
-                        return (bid_v + ask_v) / 2.0
+                        mid_px = (bid_v + ask_v) / 2.0
+                        if self.raw_logger:
+                            self.raw_logger.log(f"md:quote:{k}", "QUOTE", {"mid": mid_px, "bid": bid_v, "ask": ask_v})
+                        return mid_px
                     elif bid_v > 0:
+                        if self.raw_logger:
+                            self.raw_logger.log(f"md:quote:{k}", "QUOTE", {"bid": bid_v})
                         return bid_v
                     elif ask_v > 0:
+                        if self.raw_logger:
+                            self.raw_logger.log(f"md:quote:{k}", "QUOTE", {"ask": ask_v})
                         return ask_v
                 except Exception:
                     pass

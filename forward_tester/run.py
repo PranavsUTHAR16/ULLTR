@@ -8,6 +8,7 @@ from datetime import datetime, time as dtime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from forward_tester.engine import MultiModelEngine
 from forward_tester.config import MultiModelConfig
+from forward_tester.raw_logger import RawInputLogger
 from expiry_manager import is_market_open_today
 
 def run_live(engine: MultiModelEngine):
@@ -19,6 +20,13 @@ def run_live(engine: MultiModelEngine):
         sys.exit(0)
         
     print("🟢 NSE Exchange is OPEN today. Initiating execution loop...")
+    
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    raw_logger = RawInputLogger(
+        log_dir=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "forward_tester", "raw_logs"),
+        session_date=today_str
+    )
+    engine.data_client.raw_logger = raw_logger
     
     entry_h, entry_m, entry_s = engine.config.strategy6.entry_time  # 09:18:01
     exit_h, exit_m, exit_s = 15, 0, 5                                # Runs through 15:00:05 for Strategy 6 squareoff
@@ -82,6 +90,7 @@ def run_live(engine: MultiModelEngine):
             # 8. Check 15:00:05 Session Exit
             if now >= dtime(exit_h, exit_m, exit_s):
                 print("\n🏁 15:00:05 Trading session completed. Exiting forward test loop.")
+                raw_logger.close()
                 break
                 
             time.sleep(0.005)
@@ -90,6 +99,7 @@ def run_live(engine: MultiModelEngine):
             print("\n👋 Keyboard interrupt received. Exiting gracefully...")
             if engine.active_positions:
                 engine.execute_eod_squareoff()
+            raw_logger.close()
             break
         except Exception as e:
             print(f"⚠️ Error in execution loop: {e}")

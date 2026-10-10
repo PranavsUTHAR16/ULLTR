@@ -52,6 +52,7 @@ if os.path.exists(SHADOW_DIR) and SHADOW_DIR not in sys.path:
     sys.path.insert(0, SHADOW_DIR)
 
 from forward_tester.config import Model07Config
+from forward_tester.raw_logger import RawInputLogger
 from forward_tester.models.model_07 import (
     Model07Strategy,
     Model07Tranche,
@@ -577,6 +578,10 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
     )
     strategy.init_trading_day(trade_date=today_str, expiry_date=front_exp)
 
+    raw_logger = RawInputLogger(
+        log_dir=os.path.join(PROJECT_ROOT, "forward_tester", "raw_logs"),
+        session_date=today_str
+    )
 
     # Morning Alert
     morning_msg = (
@@ -669,6 +674,7 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
             if cur_ts > last_processed_ts:
                 c_data = r.hgetall(latest_key)
                 if c_data:
+                    raw_logger.log(redis_key=latest_key, event_type="BAR", payload=c_data)
                     open_px  = float(c_data.get("open",  0.0))
                     high_px  = float(c_data.get("high",  0.0))
                     low_px   = float(c_data.get("low",   0.0))
@@ -679,6 +685,8 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                     # Build live options quotes from Redis (current snapshot is valid for live bars)
                     quotes_lookup: Dict[Tuple[float, str], float] = {}
                     chain_raw = r.hgetall(f"chain:NIFTY:{front_exp}")
+                    if chain_raw:
+                        raw_logger.log(redis_key=f"chain:NIFTY:{front_exp}", event_type="CHAIN", payload=chain_raw)
                     for field_name, sym in chain_raw.items():
                         try:
                             stk_str, otype = field_name.split(":")
@@ -700,6 +708,13 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                         except Exception:
                             pass
 
+                    if quotes_lookup:
+                        raw_logger.log(
+                            redis_key="quotes_snapshot",
+                            event_type="QUOTES_SNAPSHOT",
+                            payload={f"{k[0]}:{k[1]}": v for k, v in quotes_lookup.items()}
+                        )
+
                     events = strategy.on_minute_bar(
                         bar_time_str=bar_time_str,
                         open_px=open_px,
@@ -718,6 +733,7 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
 
             if t_str >= "15:30":
                 logger.info("Market session closed. Saving EOD ledger...")
+                raw_logger.close()
                 summary = strategy.get_daily_summary()
                 trade_logger.save_session_trades(today_str, summary["tranches"], summary)
                 print_model07_terminal_scorecard(summary)
@@ -738,10 +754,10 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                 time.sleep(sleep_sec)
                 break
 
-
             time.sleep(1.0)
         except KeyboardInterrupt:
             logger.info("Live tester stopped by user.")
+            raw_logger.close()
             break
         except Exception as e:
             logger.error("Live streaming loop error: %s", e)
