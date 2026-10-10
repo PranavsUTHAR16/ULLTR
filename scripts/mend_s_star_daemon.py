@@ -55,10 +55,10 @@ UNIX_SOCKET_PATHS = [
 REDIS_HOST = "127.0.0.1"
 REDIS_PORT = 6379
 
-CH_HOST = os.environ.get("CLICKHOUSE_HOST", "ra5fptcofl.ap-south-1.aws.clickhouse.cloud")
+CH_HOST = os.environ.get("CLICKHOUSE_HOST", "uwmxpy364g.ap-south-1.aws.clickhouse.cloud")
 CH_PORT = int(os.environ.get("CLICKHOUSE_PORT", "8443"))
 CH_USER = os.environ.get("CLICKHOUSE_USER", "default")
-CH_PASS = os.environ.get("CLICKHOUSE_PASSWORD", "BhhYrZvtF3lA~")
+CH_PASS = os.environ.get("CLICKHOUSE_PASSWORD", "WqJbsqU5_Odq4")
 CH_DATABASE = os.environ.get("CLICKHOUSE_DATABASE", "default")
 
 

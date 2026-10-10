@@ -38,10 +38,10 @@ logger = logging.getLogger("StockDepthCollector")
 IST = timezone(timedelta(hours=5, minutes=30))
 
 # ClickHouse Cloud Credentials
-CH_HOST = "ra5fptcofl.ap-south-1.aws.clickhouse.cloud"
-CH_USER = "default"
-CH_PASS = "BhhYrZvtF3lA~"
-CH_PORT = 8443
+CH_HOST = os.environ.get("CLICKHOUSE_HOST", "uwmxpy364g.ap-south-1.aws.clickhouse.cloud")
+CH_USER = os.environ.get("CLICKHOUSE_USER", "default")
+CH_PASS = os.environ.get("CLICKHOUSE_PASSWORD", "WqJbsqU5_Odq4")
+CH_PORT = int(os.environ.get("CLICKHOUSE_PORT", "8443"))
 
 BATCH_SIZE = 2500
 FLUSH_INTERVAL_SEC = 2.0

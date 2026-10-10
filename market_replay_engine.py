@@ -43,9 +43,9 @@ logger = logging.getLogger("MarketReplayEngine")
 @dataclass
 class ClickHouseConfig:
     """ClickHouse Cloud Connection Credentials and Settings."""
-    host: str = "ra5fptcofl.ap-south-1.aws.clickhouse.cloud"
+    host: str = "uwmxpy364g.ap-south-1.aws.clickhouse.cloud"
     user: str = "default"
-    password: str = "BhhYrZvtF3lA~"
+    password: str = "WqJbsqU5_Odq4"
     port: int = 8443
     database: str = "default"
     secure: bool = True
