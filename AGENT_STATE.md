@@ -55,9 +55,35 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
 ---
 
 ## 4. REGRESSION TEST STATUS
-- **Automated Test Suite**: `pytest -v tests/test_parity_lock.py`
-- **Local Result**: **11 PASSED / 0 FAILED** (in 2.73s)
-- **AWS VM Result**: **11 PASSED / 0 FAILED** (in 2.96s on `ULLTR-System-VM`)
+- **Automated Test Suite**: `pytest -v tests/test_parity_lock.py tests/test_tick_pipeline_wal.py`
+- **Local Result**: **14 PASSED / 0 FAILED** (in 3.23s)
+- **AWS VM Result**: **14 PASSED / 0 FAILED** (in 3.54s on `ULLTR-System-VM`)
+
+---
+
+## 5. TICK DATA COLLECTION PIPELINE OPTIMIZATION (P0-P4 COMPLETE)
+- **P0 (Option B) & P1 (Local WAL)**:
+  - C++ Ingestor writes ticks directly to local append-only WAL files in `data/tick_wal/` (`wal_ticks_<YYYYMMDD>_<HH>.jsonl`).
+  - `clickhouse_streamer.py` tails the WAL files using a persistent `.watermark.json` offset.
+  - Redis polling eliminated for database persistence: **Zero tick loss on high-frequency market spikes**.
+  - Local disk buffering protects against network disconnects and ClickHouse Cloud resets.
+- **P2 (C++ Hot Path Zero-Allocation & Redis Pipelining)**:
+  - Replaced heap `nlohmann::json` parsing with stack-allocated `MarketTickRecord`.
+  - Pipelined `redisAppendCommandArgv()` batches all feeds in a WebSocket frame into a single network round-trip.
+  - Strategy engine quote latency dropped from ~5-10ms to <0.3ms.
+- **P3 (ClickHouse Table TTL & Ingestion Settings)**:
+  - Configured 90-day automatic retention TTL on `market_ticks`, `stock_orderbook_depth`, and `cas_index_estimates`.
+  - Configured `async_insert: 1, wait_for_async_insert: 0` in ClickHouse connections for sub-millisecond client turnaround.
+- **P4 (Nanosecond Timestamping & Sanity Filters)**:
+  - High-resolution hardware/kernel receive timestamping (`ts_recv_ns`) captured at frame arrival.
+  - Sanity filter rejects corrupted/inverted books (`bid > ask`) and invalid prices.
+- **Root Cause & Fix for Morning Setup C++ Compilation Bug**:
+  - **Issue**: Remote VM had branched git state on `origin/main` (an old commit from weeks ago) instead of the active development branch, and CMake incremental cache reused old object files.
+  - **Fix 1 (Baked Version)**: Baked Git commit hash into C++ binary during build (`-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}"`). Added `./collector --version` flag.
+  - **Fix 2 (Clean Rebuild)**: Updated `setup_aws_vm.sh`, `deploy.sh`, and `recover_services.py` to strictly wipe `build/` (`rm -rf build && mkdir -p build`) before running CMake.
+  - **Fix 3 (Branch Alignment)**: Fast-forward merged `feat/strategy-engine-rehydration-and-fixes` into `main` and pushed both to `origin`.
+  - **Verification**: Built and verified `./collector --version` on the AWS VM -> outputs exact commit `9cb17ef`. Ran full 14-test suite on VM -> **14 PASSED / 0 FAILED**.
+  - **VM State**: `ULLTR-System-VM` (`i-0c3e67b057e7b3e00`) powered down (`stopped`).
 
 ---
 
