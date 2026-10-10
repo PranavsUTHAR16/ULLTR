@@ -103,6 +103,56 @@ def test_def_003_main07_friction_double_count():
     )
 
 
+def test_def_004_model07_reject_futures_csv(tmp_path):
+    """
+    DEF-004 LOCK TEST:
+    collector/session_bars_<date>.csv contains NIFTY FUTURES order-flow data (delta, oi, etc.).
+    load_session_from_csv must reject futures bars and return None, preventing spot price corruption.
+    """
+    from forward_tester.run_model_07 import load_session_from_csv
+
+    # 1. Create a synthetic futures CSV with delta/oi columns
+    collector_dir = str(tmp_path)
+    date_clean = "20260928"
+    bars_path = os.path.join(collector_dir, f"session_bars_{date_clean}.csv")
+    opts_path = os.path.join(collector_dir, f"session_options_{date_clean}.csv")
+
+    df_fut = pd.DataFrame({
+        "time_str": ["09:15", "09:16"],
+        "open": [23080.0, 22983.0],
+        "high": [23080.0, 23005.0],
+        "low": [23071.0, 22983.0],
+        "close": [23071.0, 23003.0],
+        "delta": [2145.0, -59995.0],
+        "oi": [11651705.0, 11662755.0]
+    })
+    df_fut.to_csv(bars_path, index=False)
+
+    df_opt = pd.DataFrame({"time_str": ["09:15"], "strike": [23000], "option_type": ["CE"], "close": [100.0]})
+    df_opt.to_csv(opts_path, index=False)
+
+    # Must reject futures bars
+    bars, opts = load_session_from_csv("2026-09-28", collector_dir)
+    assert bars is None and opts is None, (
+        "DEF-004 VIOLATION: load_session_from_csv accepted futures CSV with delta/oi columns as spot data"
+    )
+
+    # 2. Genuine spot bars (no futures columns) should be accepted
+    df_spot = pd.DataFrame({
+        "timestamp": ["2026-09-28 09:15:00", "2026-09-28 09:16:00"],
+        "open": [23000.0, 23005.0],
+        "high": [23010.0, 23015.0],
+        "low": [22995.0, 23000.0],
+        "close": [23005.0, 23010.0]
+    })
+    df_spot.to_csv(bars_path, index=False)
+
+    bars_ok, opts_ok = load_session_from_csv("2026-09-28", collector_dir)
+    assert bars_ok is not None and len(bars_ok) == 2, (
+        "DEF-004 ERROR: Genuine spot CSV was incorrectly rejected"
+    )
+
+
 def test_def_005_strategy6_slope_math():
     """
     DEF-005 LOCK TEST:

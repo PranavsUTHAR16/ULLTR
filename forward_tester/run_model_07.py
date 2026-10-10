@@ -117,13 +117,25 @@ def load_session_from_csv(
     target_date: str,
     collector_dir: str
 ) -> Tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]]:
-    """Loads 1m bars and options data from collector CSVs if present."""
+    """
+    Loads 1m bars and options data from collector CSVs if present.
+    Rejects futures bars containing order flow indicators (DEF-004).
+    """
     date_clean = target_date.replace("-", "")
     bars_path = os.path.join(collector_dir, f"session_bars_{date_clean}.csv")
     opts_path = os.path.join(collector_dir, f"session_options_{date_clean}.csv")
 
     if os.path.exists(bars_path) and os.path.exists(opts_path):
         df_bars = pd.read_csv(bars_path)
+        # DEF-004: Validate that df_bars is NOT futures data
+        if any(col in df_bars.columns for col in ["delta", "oi", "cum_cvd", "dpoc"]):
+            logger.error(
+                "DEF-004 REJECTION: %s contains NIFTY FUTURES order-flow bars, not SPOT index bars. "
+                "Refusing to parse futures bars as spot per Rule 6.",
+                bars_path
+            )
+            return None, None
+
         df_opts = pd.read_csv(opts_path)
         logger.info("Loaded CSV session files: %s (%d bars, %d quotes)",
                     target_date, len(df_bars), len(df_opts))
