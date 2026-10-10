@@ -15,6 +15,7 @@
 #include <direct.h>
 #define MKDIR(d) _mkdir(d)
 #else
+#include <sys/statvfs.h>
 #define MKDIR(d) mkdir(d, 0755)
 #endif
 
@@ -78,11 +79,16 @@ inline bool validate_tick_sanity(MarketTickRecord& t) {
     return true;
 }
 
+// Bounded WAL Segment & Storage Limits
+static constexpr size_t MAX_WAL_SEGMENT_BYTES = 25 * 1024 * 1024;        // 25 MB segment size limit
+static constexpr int64_t MAX_WAL_SEGMENT_SECONDS = 900;                    // 15 minutes segment duration limit
+static constexpr uint64_t MIN_DISK_SPACE_BYTES = 1024ULL * 1024 * 1024;    // 1 GB minimum free disk space threshold
+
 // P0 (Option B) & P1: Local Write-Ahead Log (WAL) Spooler
 class TickWalWriter {
 public:
     TickWalWriter() 
-        : m_current_hour_tag(""), m_ticks_written(0), m_bytes_buffered(0) {}
+        : m_ticks_written(0), m_bytes_buffered(0), m_current_file_bytes(0), m_disk_healthy(true) {}
 
     ~TickWalWriter() {
         close();
@@ -96,6 +102,13 @@ public:
 
     void write_tick(const MarketTickRecord& t) {
         if (!t.is_valid) return;
+
+        // Periodic disk health check every 10,000 ticks
+        if (m_ticks_written % 10000 == 0) {
+            check_disk_space();
+        }
+
+        if (!m_disk_healthy) return;
 
         rotate_if_needed();
 
@@ -155,6 +168,7 @@ public:
         m_file.write(m_buf.data(), m_buf.size());
         m_ticks_written++;
         m_bytes_buffered += m_buf.size();
+        m_current_file_bytes += m_buf.size();
 
         // Flush buffer every 1,000 ticks or 64 KB
         if (m_ticks_written % 1000 == 0 || m_bytes_buffered >= 65536) {
@@ -181,11 +195,14 @@ public:
 
 private:
     std::string m_wal_dir;
-    std::string m_current_hour_tag;
     std::ofstream m_file;
+    std::string m_current_filename;
     std::string m_buf;
-    uint64_t m_ticks_written;
-    size_t m_bytes_buffered;
+    uint64_t m_ticks_written{0};
+    size_t m_bytes_buffered{0};
+    size_t m_current_file_bytes{0};
+    std::chrono::steady_clock::time_point m_segment_start_time;
+    bool m_disk_healthy{true};
 
     static void ensure_directory(const std::string& path) {
         struct stat st;
@@ -194,7 +211,26 @@ private:
         }
     }
 
-    static std::string get_hour_tag() {
+    void check_disk_space() {
+#ifndef _WIN32
+        struct statvfs vfs;
+        if (statvfs(m_wal_dir.c_str(), &vfs) == 0) {
+            uint64_t free_bytes = (uint64_t)vfs.f_bavail * (uint64_t)vfs.f_frsize;
+            if (free_bytes < MIN_DISK_SPACE_BYTES) {
+                if (m_disk_healthy) {
+                    std::cerr << "🚨 [TickWalWriter] CRITICAL: Root disk space below 1 GB (" 
+                              << (free_bytes / (1024 * 1024)) << " MB available)! "
+                              << "Halting WAL file creation to protect VM stability." << std::endl;
+                }
+                m_disk_healthy = false;
+                return;
+            }
+        }
+#endif
+        m_disk_healthy = true;
+    }
+
+    static std::string generate_segment_tag() {
         auto now = std::chrono::system_clock::now();
         std::time_t tt = std::chrono::system_clock::to_time_t(now);
         std::tm tm_buf;
@@ -203,27 +239,70 @@ private:
 #else
         localtime_r(&tt, &tm_buf);
 #endif
-        std::ostringstream ss;
-        ss << std::put_time(&tm_buf, "%Y%m%d_%H");
-        return ss.str();
+        char buf[32];
+        std::strftime(buf, sizeof(buf), "%Y%m%d_%H%M%S", &tm_buf);
+        return std::string(buf);
+    }
+
+    std::string get_unique_segment_path() {
+        std::string base_tag = generate_segment_tag();
+        std::string path = m_wal_dir + "/wal_ticks_" + base_tag + ".jsonl";
+        struct stat st;
+        if (stat(path.c_str(), &st) == 0 && (size_t)st.st_size >= MAX_WAL_SEGMENT_BYTES) {
+            int seq = 1;
+            while (true) {
+                char sbuf[16];
+                std::snprintf(sbuf, sizeof(sbuf), "_%02d", seq);
+                std::string alt = m_wal_dir + "/wal_ticks_" + base_tag + sbuf + ".jsonl";
+                if (stat(alt.c_str(), &st) != 0 || (size_t)st.st_size < MAX_WAL_SEGMENT_BYTES) {
+                    return alt;
+                }
+                seq++;
+            }
+        }
+        return path;
+    }
+
+    bool should_rotate() const {
+        if (!m_file.is_open()) return true;
+        if (m_current_file_bytes >= MAX_WAL_SEGMENT_BYTES) return true;
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - m_segment_start_time).count();
+        if (elapsed >= MAX_WAL_SEGMENT_SECONDS) return true;
+        return false;
     }
 
     bool rotate_if_needed() {
-        std::string tag = get_hour_tag();
-        if (tag != m_current_hour_tag) {
-            if (m_file.is_open()) {
-                m_file.flush();
-                m_file.close();
-            }
-            m_current_hour_tag = tag;
-            std::string filename = m_wal_dir + "/wal_ticks_" + tag + ".jsonl";
-            m_file.open(filename, std::ios::out | std::ios::app);
-            if (!m_file.is_open()) {
-                std::cerr << "❌ [TickWalWriter] Error opening WAL file: " << filename << std::endl;
-                return false;
-            }
-            std::cout << "📝 [TickWalWriter] Active WAL rotated to: " << filename << std::endl;
+        if (!should_rotate()) return true;
+
+        if (m_file.is_open()) {
+            m_file.flush();
+            m_file.close();
         }
+
+        check_disk_space();
+        if (!m_disk_healthy) {
+            return false;
+        }
+
+        std::string filename = get_unique_segment_path();
+        m_file.open(filename, std::ios::out | std::ios::app);
+        if (!m_file.is_open()) {
+            std::cerr << "❌ [TickWalWriter] Error opening WAL file: " << filename << std::endl;
+            return false;
+        }
+
+        struct stat st;
+        if (stat(filename.c_str(), &st) == 0) {
+            m_current_file_bytes = static_cast<size_t>(st.st_size);
+        } else {
+            m_current_file_bytes = 0;
+        }
+
+        m_current_filename = filename;
+        m_segment_start_time = std::chrono::steady_clock::now();
+        std::cout << "📝 [TickWalWriter] Active WAL rotated to segment: " << filename 
+                  << " (initial size: " << m_current_file_bytes << " bytes)" << std::endl;
         return true;
     }
 };

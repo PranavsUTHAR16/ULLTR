@@ -56,17 +56,25 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
 
 ## 4. REGRESSION TEST STATUS
 - **Automated Test Suite**: `pytest -v tests/test_parity_lock.py tests/test_tick_pipeline_wal.py`
-- **Local Result**: **14 PASSED / 0 FAILED** (in 3.23s)
-- **AWS VM Result**: **14 PASSED / 0 FAILED** (in 3.54s on `ULLTR-System-VM`)
+- **Local Result**: **16 PASSED / 0 FAILED** (in 3.48s)
+- **AWS VM Result**: **14 PASSED / 0 FAILED** (previous baseline before DEC-011)
 
 ---
 
-## 5. TICK DATA COLLECTION PIPELINE OPTIMIZATION (P0-P4 COMPLETE)
+## 5. TICK DATA COLLECTION PIPELINE OPTIMIZATION (P0-P4 & BOUNDED WAL STORAGE)
 - **P0 (Option B) & P1 (Local WAL)**:
-  - C++ Ingestor writes ticks directly to local append-only WAL files in `data/tick_wal/` (`wal_ticks_<YYYYMMDD>_<HH>.jsonl`).
+  - C++ Ingestor writes ticks directly to local append-only WAL files in `data/tick_wal/` (`wal_ticks_<YYYYMMDD>_<HHMMSS>.jsonl`).
   - `clickhouse_streamer.py` tails the WAL files using a persistent `.watermark.json` offset.
   - Redis polling eliminated for database persistence: **Zero tick loss on high-frequency market spikes**.
   - Local disk buffering protects against network disconnects and ClickHouse Cloud resets.
+- **DEC-011 (Bounded WAL Segments & Storage Ceiling Auto-Purge)**:
+  - **Segment Rotation**: C++ `TickWalWriter` rotates WAL files when segment reaches 25 MB or duration reaches 15 minutes.
+  - **Auto-Purging Ingested Chunks**: `clickhouse_streamer.py` immediately unlinks completed WAL segment files upon confirming ClickHouse batch insertion.
+  - **Historical Pruning**: Historical completed files strictly older than active watermark are cleaned automatically on startup and file transitions.
+  - **Hard Storage Ceiling**: Enforces 500 MB max directory quota with FIFO eviction if unconsumed files accumulate during network outages.
+  - **Disk Space Protection**: `statvfs` check in C++ halts WAL file allocation if free disk space on root volume drops below 1 GB.
+  - **EOD Disk Maintenance**: `scripts/eod_cleanup.sh` sweeps all leftover WAL files (`wal_ticks_*.jsonl`), watermark state, and depth spillover buffers at 16:15 IST.
+  - **Steady-State Footprint**: Under 50 MB total disk usage during active trading sessions (0.2% of 25 GB root EBS volume).
 - **P2 (C++ Hot Path Zero-Allocation & Redis Pipelining)**:
   - Replaced heap `nlohmann::json` parsing with stack-allocated `MarketTickRecord`.
   - Pipelined `redisAppendCommandArgv()` batches all feeds in a WebSocket frame into a single network round-trip.
@@ -82,7 +90,7 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
   - **Fix 1 (Baked Version)**: Baked Git commit hash into C++ binary during build (`-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}"`). Added `./collector --version` flag.
   - **Fix 2 (Clean Rebuild)**: Updated `setup_aws_vm.sh`, `deploy.sh`, and `recover_services.py` to strictly wipe `build/` (`rm -rf build && mkdir -p build`) before running CMake.
   - **Fix 3 (Branch Alignment)**: Fast-forward merged `feat/strategy-engine-rehydration-and-fixes` into `main` and pushed both to `origin`.
-  - **Verification**: Built and verified `./collector --version` on the AWS VM -> outputs exact commit `9cb17ef`. Ran full 14-test suite on VM -> **14 PASSED / 0 FAILED**.
+  - **Verification**: Built and verified `./collector --version` on the AWS VM -> outputs exact commit `9cb17ef`. Ran full test suite on VM -> **PASSED**.
   - **VM State**: `ULLTR-System-VM` (`i-0c3e67b057e7b3e00`) powered down (`stopped`).
 
 ---

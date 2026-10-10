@@ -6,6 +6,7 @@ import json
 import logging
 from datetime import datetime, date
 from typing import Dict, List, Any, Optional
+import shutil
 import redis
 import clickhouse_connect
 
@@ -31,6 +32,8 @@ REDIS_PORT = int(os.environ.get("REDIS_PORT", "6379"))
 BATCH_SIZE = 5000
 FLUSH_INTERVAL_SEC = 2.5
 WAL_DIR = os.environ.get("WAL_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "tick_wal"))
+MAX_WAL_DIR_BYTES = int(os.environ.get("MAX_WAL_DIR_BYTES", 500 * 1024 * 1024))          # 500 MB max disk usage for WAL directory
+MIN_FREE_DISK_BYTES = int(os.environ.get("MIN_FREE_DISK_BYTES", 2 * 1024 * 1024 * 1024)) # 2 GB minimum free disk space on root volume
 
 class ClickHouseTickStreamer:
     """
@@ -279,6 +282,75 @@ class ClickHouseTickStreamer:
         except Exception as e:
             logger.error(f"Failed to update watermark: {e}")
 
+    def purge_completed_wal_file(self, filename: str) -> None:
+        """Deletes a fully consumed WAL file from disk to reclaim VM storage immediately."""
+        try:
+            fp = os.path.join(WAL_DIR, filename)
+            if os.path.exists(fp):
+                sz_mb = os.path.getsize(fp) / (1024 * 1024)
+                os.remove(fp)
+                logger.info(f"🧹 Purged fully ingested WAL segment: {filename} (reclaimed {sz_mb:.2f} MB)")
+        except Exception as e:
+            logger.warning(f"Could not purge completed WAL file {filename}: {e}")
+
+    def cleanup_historical_wal_files(self, active_file: Optional[str] = None) -> None:
+        """Purges any WAL files that are strictly older than the active file."""
+        if not os.path.exists(WAL_DIR) or not active_file:
+            return
+        try:
+            files = sorted([f for f in os.listdir(WAL_DIR) if f.startswith("wal_ticks_") and f.endswith(".jsonl")])
+            for f in files:
+                if f < active_file:
+                    self.purge_completed_wal_file(f)
+        except Exception as e:
+            logger.warning(f"Error during historical WAL cleanup: {e}")
+
+    def enforce_wal_disk_quota(self, active_file: Optional[str] = None) -> None:
+        """Enforces a hard disk ceiling on WAL storage (max 500 MB, min 2 GB free disk)."""
+        if not os.path.exists(WAL_DIR):
+            return
+        try:
+            files = sorted([f for f in os.listdir(WAL_DIR) if f.startswith("wal_ticks_") and f.endswith(".jsonl")])
+            if not files:
+                return
+
+            try:
+                du = shutil.disk_usage(WAL_DIR)
+                free_bytes = du.free
+            except Exception:
+                free_bytes = 10 * 1024 * 1024 * 1024
+
+            total_wal_bytes = 0
+            for f in files:
+                fp = os.path.join(WAL_DIR, f)
+                try:
+                    total_wal_bytes += os.path.getsize(fp)
+                except OSError:
+                    pass
+
+            if total_wal_bytes > MAX_WAL_DIR_BYTES or free_bytes < MIN_FREE_DISK_BYTES:
+                logger.warning(
+                    f"⚠️ WAL storage threshold exceeded! Total WAL: {total_wal_bytes / (1024*1024):.1f} MB "
+                    f"(Cap: {MAX_WAL_DIR_BYTES / (1024*1024):.0f} MB), Free disk: {free_bytes / (1024*1024):.1f} MB. "
+                    f"Enforcing FIFO pruning to protect VM root volume..."
+                )
+                protected_file = active_file or files[-1]
+                for f in files:
+                    if f == protected_file:
+                        continue
+                    if total_wal_bytes <= int(MAX_WAL_DIR_BYTES * 0.7) and free_bytes >= MIN_FREE_DISK_BYTES:
+                        break
+                    fp = os.path.join(WAL_DIR, f)
+                    try:
+                        sz = os.path.getsize(fp)
+                        os.remove(fp)
+                        total_wal_bytes -= sz
+                        logger.warning(f"🚨 Evicted uningested WAL file to prevent ENOSPC: {f} ({sz / (1024*1024):.2f} MB)")
+                    except Exception as e:
+                        logger.error(f"Failed to evict {f}: {e}")
+        except Exception as e:
+            logger.warning(f"Error checking WAL disk quota: {e}")
+
     def stream_from_wal(self):
         """P0 (Option B) & P1: Streams ticks directly from local append-only WAL files into ClickHouse."""
         logger.info(f"🚀 Starting ULLTR Direct WAL Streamer (Directory: {WAL_DIR}, Batch: {BATCH_SIZE})...")
@@ -286,6 +358,11 @@ class ClickHouseTickStreamer:
         watermark = self.load_watermark()
         cur_file = watermark.get("current_file")
         cur_offset = watermark.get("offset", 0)
+
+        # On startup, purge any completed historical files before watermark
+        if cur_file:
+            self.cleanup_historical_wal_files(cur_file)
+        self.enforce_wal_disk_quota(cur_file)
 
         last_stats_log = time.time()
         ticks_in_interval = 0
@@ -314,6 +391,7 @@ class ClickHouseTickStreamer:
                     cur_offset = 0
                     cur_path = os.path.join(WAL_DIR, cur_file)
 
+                rotate_to_file = None
                 with open(cur_path, "r", encoding="utf-8") as f:
                     f.seek(cur_offset)
 
@@ -326,10 +404,11 @@ class ClickHouseTickStreamer:
                                 if next_idx < len(latest_files):
                                     if self.buffer:
                                         self.flush_buffer()
-                                    cur_file = latest_files[next_idx]
-                                    cur_offset = 0
-                                    self.save_watermark(cur_file, cur_offset)
-                                    logger.info(f"🔄 Rotating to next WAL file: {cur_file}")
+                                        if self.buffer:
+                                            # Flush failed; retry on next iteration before rotating
+                                            time.sleep(0.2)
+                                            continue
+                                    rotate_to_file = latest_files[next_idx]
                                     break
                             if self.buffer and (time.time() - self.last_flush_time >= FLUSH_INTERVAL_SEC):
                                 self.flush_buffer()
@@ -426,6 +505,17 @@ class ClickHouseTickStreamer:
                             logger.info(f"📊 WAL Streaming: {rate:,.1f} ticks/s | Total Flushed: {self.total_inserted:,} | Active File: {cur_file} @ {cur_offset:,} bytes")
                             last_stats_log = time.time()
                             ticks_in_interval = 0
+                            self.enforce_wal_disk_quota(cur_file)
+
+                if rotate_to_file:
+                    old_file = cur_file
+                    cur_file = rotate_to_file
+                    cur_offset = 0
+                    self.save_watermark(cur_file, cur_offset)
+                    logger.info(f"🔄 Rotating to next WAL file: {cur_file}")
+                    self.purge_completed_wal_file(old_file)
+                    self.cleanup_historical_wal_files(cur_file)
+                    self.enforce_wal_disk_quota(cur_file)
 
             except Exception as e:
                 logger.error(f"⚠️ Error in WAL streaming loop: {e}")

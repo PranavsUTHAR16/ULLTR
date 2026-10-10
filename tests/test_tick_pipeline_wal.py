@@ -166,3 +166,71 @@ def test_clickhouse_ttl_enforcement():
         
         assert has_ttl_market_ticks, "Expected ALTER TABLE market_ticks MODIFY TTL in executed commands"
         assert has_ttl_cas, "Expected ALTER TABLE cas_index_estimates MODIFY TTL in executed commands"
+
+
+def test_wal_file_purge_after_consumption():
+    """Verify ClickHouseTickStreamer purges completed WAL files and cleans historical files."""
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        file1 = os.path.join(tmp_dir, "wal_ticks_20261010_091500.jsonl")
+        file2 = os.path.join(tmp_dir, "wal_ticks_20261010_093000.jsonl")
+
+        with open(file1, "w") as f:
+            f.write('{"sym":"NSE_INDEX|Nifty 50","ltp":25000.0}\n')
+        with open(file2, "w") as f:
+            f.write('{"sym":"NSE_INDEX|Nifty 50","ltp":25010.0}\n')
+
+        assert os.path.exists(file1)
+        assert os.path.exists(file2)
+
+        with patch.object(clickhouse_streamer, "WAL_DIR", tmp_dir), \
+             patch("redis.Redis"), \
+             patch("clickhouse_connect.get_client"):
+            
+            streamer = ClickHouseTickStreamer()
+            
+            # 1. Test purge_completed_wal_file
+            streamer.purge_completed_wal_file("wal_ticks_20261010_091500.jsonl")
+            assert not os.path.exists(file1), "file1 should have been deleted"
+            assert os.path.exists(file2), "file2 should still exist"
+
+            # 2. Test cleanup_historical_wal_files
+            file3 = os.path.join(tmp_dir, "wal_ticks_20261010_094500.jsonl")
+            with open(file3, "w") as f:
+                f.write('{"sym":"NSE_INDEX|Nifty 50","ltp":25020.0}\n')
+
+            streamer.cleanup_historical_wal_files(active_file="wal_ticks_20261010_094500.jsonl")
+            assert not os.path.exists(file2), "file2 (< active) should have been cleaned"
+            assert os.path.exists(file3), "active file3 should remain"
+
+
+def test_wal_disk_quota_enforcement():
+    """Verify FIFO eviction occurs when WAL directory exceeds storage limits."""
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        f_old1 = os.path.join(tmp_dir, "wal_ticks_20261010_090000.jsonl")
+        f_old2 = os.path.join(tmp_dir, "wal_ticks_20261010_091500.jsonl")
+        f_active = os.path.join(tmp_dir, "wal_ticks_20261010_093000.jsonl")
+
+        payload = '{"sym":"NSE_INDEX|Nifty 50","ltp":25000.0}\n' * 50  # ~2.5 KB
+        with open(f_old1, "w") as f:
+            f.write(payload)
+        with open(f_old2, "w") as f:
+            f.write(payload)
+        with open(f_active, "w") as f:
+            f.write(payload)
+
+        # Set max WAL quota to 3 KB (forcing eviction of oldest files)
+        test_max_bytes = 3000
+
+        with patch.object(clickhouse_streamer, "WAL_DIR", tmp_dir), \
+             patch.object(clickhouse_streamer, "MAX_WAL_DIR_BYTES", test_max_bytes), \
+             patch("redis.Redis"), \
+             patch("clickhouse_connect.get_client"):
+            
+            streamer = ClickHouseTickStreamer()
+            streamer.enforce_wal_disk_quota(active_file="wal_ticks_20261010_093000.jsonl")
+
+            # Oldest file must be evicted first
+            assert not os.path.exists(f_old1), "Oldest file f_old1 should have been evicted"
+            # Active file being actively appended must NEVER be evicted
+            assert os.path.exists(f_active), "Active file must be preserved"
+

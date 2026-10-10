@@ -10,13 +10,33 @@ LOG_PREFIX="[$(date '+%Y-%m-%d %H:%M:%S')] [ULLTR-EOD-CLEANUP]"
 
 echo "$LOG_PREFIX 🧹 Starting daily automated disk cleanup and maintenance..."
 
-# 1. Truncate heavy log files exceeding 50MB
+# Detect WEB_DIR
 WEB_DIR="/Users/prana/Desktop/open_source/web"
+for candidate in "/Users/prana/Desktop/open_source/web" "/home/ubuntu/web"; do
+    if [ -d "$candidate" ]; then
+        WEB_DIR="$candidate"
+        break
+    fi
+done
+
+# 1. Truncate heavy log files exceeding 50MB
 if [ -d "$WEB_DIR" ]; then
     find "$WEB_DIR" -maxdepth 2 -type f \( -name "*.log" -o -name "*_stdout.log" \) -size +50M | while read -r logfile; do
         echo "$LOG_PREFIX Truncating oversized log file: $logfile ($(du -h "$logfile" | cut -f1))"
         truncate -s 0 "$logfile"
     done
+fi
+
+# 1b. Clean Tick WAL files and depth spillover buffers (Zero overnight disk residue)
+if [ -d "$WEB_DIR/data/tick_wal" ]; then
+    echo "$LOG_PREFIX Cleaning Tick WAL files in $WEB_DIR/data/tick_wal..."
+    rm -f "$WEB_DIR/data/tick_wal"/wal_ticks_*.jsonl 2>/dev/null || true
+    rm -f "$WEB_DIR/data/tick_wal"/.watermark.json* 2>/dev/null || true
+fi
+
+if [ -d "$WEB_DIR/data/depth_spillover" ]; then
+    echo "$LOG_PREFIX Cleaning depth spillover files in $WEB_DIR/data/depth_spillover..."
+    rm -f "$WEB_DIR/data/depth_spillover"/depth_spillover_*.json 2>/dev/null || true
 fi
 
 # 2. Vacuum systemd journal logs to retain maximum 100MB
