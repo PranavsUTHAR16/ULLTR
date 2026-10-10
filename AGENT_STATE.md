@@ -19,6 +19,11 @@
   3. `market_ticks`: 247,063,826 / 247,063,826 rows -> **MATCH (100.0%)**
   4. `stock_orderbook_depth`: 118,076,626 / 118,076,626 rows -> **MATCH (100.0%)**
   - **Total Rows Migrated**: **365,455,242 rows** with zero loss.
+- **Old Server Decommissioning**:
+  - `TRUNCATE TABLE default.market_ticks`: Executed (0 rows remaining).
+  - `TRUNCATE TABLE default.stock_orderbook_depth`: Executed (0 rows remaining).
+  - `TRUNCATE TABLE default.cas_index_estimates`: Executed (0 rows remaining).
+  - Old server storage fully reclaimed.
 - **Collector Services Updated**:
   - `clickhouse_streamer.py`: Updated default `CH_HOST` and `CH_PASSWORD`.
   - `stock_depth_collector.py`: Updated `CH_HOST` and `CH_PASS`.
