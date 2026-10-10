@@ -306,3 +306,46 @@ def test_def_013_strategy6_dte6_expiry_resolution():
     assert exp == "2026-10-13" and dte == 6, (
         f"DEF-013 VIOLATION: Expected ('NIFTY', '2026-10-13', 6), got ('{und}', '{exp}', {dte})"
     )
+
+
+def test_model07_multi_day_replay_parity():
+    """
+    MODEL 07 MULTI-DAY PARITY LOCK TEST:
+    Verifies that run_model07_replay (forward test) and Model07NiftyEngine (backtest)
+    produce 100.000% identical Net PnL across multiple historical trading sessions.
+    """
+    from forward_tester.run_model_07 import run_model07_replay
+    from main07 import Model07NiftyEngine
+
+    test_dates = [
+        ("2026-09-28", 546.00),
+        ("2026-09-25", 1195.35),
+        ("2026-09-24", 282.10),
+        ("2026-09-23", 55.25),
+        ("2026-09-22", -958.75),
+    ]
+
+    for d_str, expected_pnl in test_dates:
+        # Run forward test replay
+        res_replay = run_model07_replay(
+            target_date=d_str,
+            lots=1,
+            notify_telegram=False
+        )
+        replay_pnl = float(res_replay["realized_pnl"])
+
+        # Run backtest
+        engine = Model07NiftyEngine(start_date=d_str, end_date=d_str, lots=1)
+        df_bt = engine.simulate()
+        bt_pnl = float(df_bt.iloc[0]["net_pnl_rs"])
+
+        assert round(replay_pnl, 2) == round(expected_pnl, 2), (
+            f"Forward test replay for {d_str} returned ₹{replay_pnl:.2f}, expected ₹{expected_pnl:.2f}"
+        )
+        assert round(bt_pnl, 2) == round(expected_pnl, 2), (
+            f"Backtest for {d_str} returned ₹{bt_pnl:.2f}, expected ₹{expected_pnl:.2f}"
+        )
+        assert round(replay_pnl, 2) == round(bt_pnl, 2), (
+            f"Parity mismatch on {d_str}: Replay=₹{replay_pnl:.2f} vs Backtest=₹{bt_pnl:.2f}"
+        )
+
