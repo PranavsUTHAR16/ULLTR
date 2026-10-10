@@ -72,8 +72,8 @@ class ForwardTestPosition:
                 self.pnl = self._calc_pnl(self.exit_price)
                 return True, "SL_HIT"
 
-        # 2. Check 80% Premium Decay Take-Profit breach (only for SELL/SHORT positions)
-        if not self.is_buy and self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
+        # Note: Strategy 6 has no 80% decay TP exit (holds until SL or 15:00 EOD squareoff)
+        if self.model_id != "STRATEGY_6" and not self.is_buy and self.entry_price >= 5.0 and self.current_price <= self.entry_price * 0.20:
             self.status = "TP_HIT"
             self.exit_price = self.current_price
             self.pnl = self._calc_pnl(self.exit_price)
