@@ -139,15 +139,71 @@ class StockDepthCollector:
             PARTITION BY toYYYYMM(timestamp)
             ORDER BY (underlying, symbol, timestamp);
             """)
+            try:
+                self.ch_client.command("ALTER TABLE default.stock_orderbook_depth MODIFY TTL timestamp + INTERVAL 90 DAY")
+                logger.info("✅ Configured 90-day retention TTL policy for stock_orderbook_depth.")
+            except Exception as e:
+                logger.warning(f"Could not update TTL on stock_orderbook_depth: {e}")
             logger.info("✅ Connected to ClickHouse Cloud and verified stock_orderbook_depth table.")
             return True
         except Exception as e:
             logger.error(f"❌ ClickHouse initialization error: {e}")
             return False
 
+    def spillover_buffer(self, rows):
+        """Spills unwritten depth rows to disk if ClickHouse is temporarily unreachable."""
+        if not rows:
+            return
+        spillover_dir = os.path.join(CURRENT_DIR, "data", "depth_spillover")
+        os.makedirs(spillover_dir, exist_ok=True)
+        ts_tag = int(time.time() * 1000)
+        spill_file = os.path.join(spillover_dir, f"depth_spillover_{ts_tag}.json")
+        try:
+            with open(spill_file, "w") as f:
+                json.dump(rows, f, default=str)
+            logger.warning(f"⚠️ Spilled {len(rows)} depth rows to local disk: {spill_file}")
+        except Exception as e:
+            logger.error(f"❌ Failed to write spillover file: {e}")
+
+    def drain_spillover_files(self):
+        """Flushes any accumulated local disk spillover files into ClickHouse."""
+        spillover_dir = os.path.join(CURRENT_DIR, "data", "depth_spillover")
+        if not os.path.exists(spillover_dir):
+            return
+        files = sorted([f for f in os.listdir(spillover_dir) if f.startswith("depth_spillover_") and f.endswith(".json")])
+        if not files:
+            return
+        columns = [
+            'timestamp', 'symbol', 'underlying', 'exchange',
+            'ltp', 'close', 'volume', 'total_buy_qty', 'total_sell_qty',
+            'bid1', 'bid_qty1', 'ask1', 'ask_qty1',
+            'bids_price', 'bids_qty', 'asks_price', 'asks_qty',
+            'market_buy_qty', 'market_sell_qty'
+        ]
+        for fname in files[:5]:
+            fpath = os.path.join(spillover_dir, fname)
+            try:
+                with open(fpath) as f:
+                    cached_rows = json.load(f)
+                if cached_rows:
+                    self.ch_client.insert('default.stock_orderbook_depth', cached_rows, column_names=columns)
+                    self.total_flushed += len(cached_rows)
+                    logger.info(f"💾 Recovered & flushed {len(cached_rows)} spilled depth rows from {fname}")
+                os.remove(fpath)
+            except Exception as e:
+                logger.error(f"Could not drain spillover {fname}: {e}")
+                break
+
     def flush_buffer(self):
         if not self.buffer:
             return
+        rows_to_insert = list(self.buffer)
+        self.buffer.clear()
+        self.last_flush = time.time()
+        
+        # Drain any accumulated disk spillover first
+        self.drain_spillover_files()
+
         try:
             columns = [
                 'timestamp', 'symbol', 'underlying', 'exchange',
@@ -156,14 +212,13 @@ class StockDepthCollector:
                 'bids_price', 'bids_qty', 'asks_price', 'asks_qty',
                 'market_buy_qty', 'market_sell_qty'
             ]
-            self.ch_client.insert('default.stock_orderbook_depth', self.buffer, column_names=columns)
-            count = len(self.buffer)
+            self.ch_client.insert('default.stock_orderbook_depth', rows_to_insert, column_names=columns)
+            count = len(rows_to_insert)
             self.total_flushed += count
-            self.buffer.clear()
-            self.last_flush = time.time()
             logger.info(f"💾 Flushed {count} depth rows to ClickHouse Cloud (Total: {self.total_flushed:,})")
         except Exception as e:
-            logger.error(f"❌ Failed to flush depth buffer to ClickHouse: {e}")
+            logger.error(f"❌ Failed to flush depth buffer to ClickHouse: {e}. Spooling to local disk...")
+            self.spillover_buffer(rows_to_insert)
 
     async def get_authorized_ws_url(self):
         import requests

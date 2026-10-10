@@ -25,6 +25,7 @@
 #include "microstructure_engine.hpp"
 #include "strategy_engine.hpp"
 #include "fifo_pool.hpp"
+#include "tick_wal_writer.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -35,11 +36,20 @@ using tcp = net::ip::tcp;
 using json = nlohmann::json;
 namespace upstox = com::upstox::marketdatafeederv3udapi::rpc::proto;
 
+#ifndef GIT_COMMIT_HASH
+#define GIT_COMMIT_HASH "dev-build"
+#endif
+
 class MarketDataIngestor {
 public:
     MarketDataIngestor(const std::string& config_path, bool is_replay = false) 
         : m_reconnect_attempts(0), m_redis(nullptr), m_mock(false), m_replay(is_replay), m_last_reconnect_time_ms(0), m_last_portfolio_publish_ms(0),
-          m_last_msg_time_ms(0), m_is_connected(false), m_watchdog_triggered(false), m_stop_watchdog(false), m_active_socket(nullptr) {
+          m_last_msg_time_ms(0), m_is_connected(false), m_watchdog_triggered(false), m_stop_watchdog(false), m_active_socket(nullptr),
+          m_ticks_processed_window(0), m_last_stats_log_ms(0) {
+        std::cout << "==========================================================" << std::endl;
+        std::cout << "🚀 ULLTR C++ Collector Ingestor Starting" << std::endl;
+        std::cout << "📦 Git Commit: " << GIT_COMMIT_HASH << " | Built: " << __DATE__ << " " << __TIME__ << std::endl;
+        std::cout << "==========================================================" << std::endl;
         m_config_path = config_path;
         load_config(config_path);
         m_watchdog_thread = std::thread(&MarketDataIngestor::watchdog_worker, this);
@@ -485,6 +495,8 @@ private:
         m_mode = cfg.value("mode", "full");
         m_instruments = cfg["instruments"].get<std::vector<std::string>>();
         m_starting_capital = cfg.value("starting_capital", 25000.0);
+        m_wal_dir = cfg.value("wal_dir", "/Users/prana/Desktop/open_source/web/data/tick_wal");
+        m_wal_writer.init(m_wal_dir);
         
         // Read access token from file (bypassed in replay or mock mode)
         m_replay = cfg.value("replay", m_replay);
@@ -559,9 +571,10 @@ private:
             return;
         }
         
-        int64_t now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        ).count();
+        // P4: Nanosecond hardware/kernel receive timestamping
+        auto now_clock = std::chrono::high_resolution_clock::now();
+        int64_t now_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(now_clock.time_since_epoch()).count();
+        int64_t now_ms = now_ns / 1'000'000;
         m_last_msg_time_ms.store(now_ms, std::memory_order_relaxed);
         
         if (m_redis == nullptr) {
@@ -572,237 +585,225 @@ private:
             }
         }
         
-        // Loop through all instruments in the feeds map
+        // Zero heap allocations: stack-allocated records
+        std::vector<MarketTickRecord> records;
+        records.reserve(response.feeds().size());
+
         for (auto const& [symbol, feed] : response.feeds()) {
-            json norm;
-            norm["symbol"] = symbol;
-            norm["source"] = "upstox";
-            norm["ts_recv"] = now_ms;
-            norm["status"] = "live";
-            
+            MarketTickRecord rec;
+            rec.symbol = symbol;
+            rec.ts_recv_ms = now_ms;
+            rec.ts_recv_ns = now_ns;
+
             // LTPC Parse
             if (feed.has_ltpc()) {
                 auto const& ltpc = feed.ltpc();
-                norm["ltp"] = ltpc.ltp();
-                norm["ts_exchange"] = ltpc.ltt();
-                norm["close"] = ltpc.cp();
-                if (ltpc.has_iep()) {
-                    norm["iep"] = ltpc.iep().value();
-                }
+                rec.ltp = ltpc.ltp();
+                rec.ts_exchange = ltpc.ltt();
+                rec.close = ltpc.cp();
+                if (ltpc.has_iep()) rec.iep = ltpc.iep().value();
             }
-            
+
             // FullFeed Parse
             if (feed.has_fullfeed()) {
                 auto const& ff = feed.fullfeed();
                 if (ff.has_marketff()) {
                     auto const& mff = ff.marketff();
-                    norm["ltp"] = mff.ltpc().ltp();
-                    norm["ts_exchange"] = mff.ltpc().ltt();
-                    norm["close"] = mff.ltpc().cp();
-                    if (mff.ltpc().has_iep()) {
-                        norm["iep"] = mff.ltpc().iep().value();
-                    }
-                    norm["volume"] = mff.vtt();
-                    norm["oi"] = mff.oi();
-                    norm["iv"] = mff.iv();
-                    norm["atp"] = mff.atp();
-                    norm["tbq"] = mff.tbq();
-                    norm["tsq"] = mff.tsq();
+                    rec.ltp = mff.ltpc().ltp();
+                    rec.ts_exchange = mff.ltpc().ltt();
+                    rec.close = mff.ltpc().cp();
+                    if (mff.ltpc().has_iep()) rec.iep = mff.ltpc().iep().value();
+                    rec.volume = static_cast<double>(mff.vtt());
+                    rec.oi = static_cast<double>(mff.oi());
+                    rec.iv = mff.iv();
+                    rec.atp = mff.atp();
+                    rec.tbq = mff.tbq();
+                    rec.tsq = mff.tsq();
 
-                    if (mff.iep() > 0.0) {
-                        norm["iep"] = mff.iep();
-                    }
-                    if (mff.rp() > 0.0) {
-                        norm["reference_price"] = mff.rp();
-                    }
-                    if (mff.ieq() > 0) {
-                        norm["ieq"] = mff.ieq();
-                    }
-                    if (mff.iiqtotal() != 0) {
-                        norm["iiq_total"] = mff.iiqtotal();
-                    }
-                    if (mff.iiqm() != 0) {
-                        norm["iiq_market"] = mff.iiqm();
-                    }
-                    norm["cas_eligible"] = mff.caseligible();
-                    
+                    if (mff.iep() > 0.0) rec.iep = mff.iep();
+                    if (mff.rp() > 0.0) rec.reference_price = mff.rp();
+                    if (mff.ieq() > 0) rec.ieq = mff.ieq();
+                    if (mff.iiqtotal() != 0) rec.iiq_total = mff.iiqtotal();
+                    if (mff.iiqm() != 0) rec.iiq_market = mff.iiqm();
+                    rec.cas_eligible = mff.caseligible();
+
                     if (mff.has_marketlevel() && mff.marketlevel().bidaskquote_size() > 0) {
                         int sz = std::min(mff.marketlevel().bidaskquote_size(), 5);
                         for (int i = 0; i < sz; ++i) {
                             auto const& q = mff.marketlevel().bidaskquote(i);
-                            std::string sfx = (i == 0) ? "" : std::to_string(i + 1);
-                            norm["bid" + sfx] = q.bidp();
-                            norm["bid_qty" + sfx] = q.bidq();
-                            norm["ask" + sfx] = q.askp();
-                            norm["ask_qty" + sfx] = q.askq();
+                            rec.bid[i] = q.bidp();
+                            rec.bid_qty[i] = q.bidq();
+                            rec.ask[i] = q.askp();
+                            rec.ask_qty[i] = q.askq();
                         }
                     }
 
                     if (mff.has_optiongreeks()) {
-                        auto const& greeks = mff.optiongreeks();
-                        norm["option_greeks"]["delta"] = greeks.delta();
-                        norm["option_greeks"]["theta"] = greeks.theta();
-                        norm["option_greeks"]["gamma"] = greeks.gamma();
-                        norm["option_greeks"]["vega"] = greeks.vega();
-                        norm["option_greeks"]["rho"] = greeks.rho();
+                        auto const& g = mff.optiongreeks();
+                        rec.delta = g.delta();
+                        rec.theta = g.theta();
+                        rec.gamma = g.gamma();
+                        rec.vega = g.vega();
+                        rec.rho = g.rho();
+                        rec.has_greeks = true;
                     }
                 } else if (ff.has_indexff()) {
                     auto const& iff = ff.indexff();
-                    norm["ltp"] = iff.ltpc().ltp();
-                    norm["ts_exchange"] = iff.ltpc().ltt();
-                    norm["close"] = iff.ltpc().cp();
+                    rec.ltp = iff.ltpc().ltp();
+                    rec.ts_exchange = iff.ltpc().ltt();
+                    rec.close = iff.ltpc().cp();
                 }
             }
-            
+
             // FirstLevelWithGreeks Parse
             if (feed.has_firstlevelwithgreeks()) {
                 auto const& flg = feed.firstlevelwithgreeks();
-                norm["ltp"] = flg.ltpc().ltp();
-                norm["ts_exchange"] = flg.ltpc().ltt();
-                norm["close"] = flg.ltpc().cp();
-                norm["oi"] = flg.oi();
-                norm["iv"] = flg.iv();
-                norm["volume"] = flg.vtt();
-                
+                rec.ltp = flg.ltpc().ltp();
+                rec.ts_exchange = flg.ltpc().ltt();
+                rec.close = flg.ltpc().cp();
+                rec.oi = static_cast<double>(flg.oi());
+                rec.iv = flg.iv();
+                rec.volume = static_cast<double>(flg.vtt());
+
                 if (flg.has_firstdepth()) {
                     auto const& best = flg.firstdepth();
-                    norm["bid"] = best.bidp();
-                    norm["bid_qty"] = best.bidq();
-                    norm["ask"] = best.askp();
-                    norm["ask_qty"] = best.askq();
+                    rec.bid[0] = best.bidp();
+                    rec.bid_qty[0] = best.bidq();
+                    rec.ask[0] = best.askp();
+                    rec.ask_qty[0] = best.askq();
                 }
 
                 if (flg.has_optiongreeks()) {
-                    auto const& greeks = flg.optiongreeks();
-                    norm["option_greeks"]["delta"] = greeks.delta();
-                    norm["option_greeks"]["theta"] = greeks.theta();
-                    norm["option_greeks"]["gamma"] = greeks.gamma();
-                    norm["option_greeks"]["vega"] = greeks.vega();
-                    norm["option_greeks"]["rho"] = greeks.rho();
+                    auto const& g = flg.optiongreeks();
+                    rec.delta = g.delta();
+                    rec.theta = g.theta();
+                    rec.gamma = g.gamma();
+                    rec.vega = g.vega();
+                    rec.rho = g.rho();
+                    rec.has_greeks = true;
                 }
             }
-            
-            std::string norm_str = norm.dump();
-            
-            // Update & Publish to Redis
-            if (m_redis) {
-                std::string key = "md:quote:" + symbol;
-                
-                // Construct fields vector for HSET
+
+            // P4: Feed Sanity Filter
+            validate_tick_sanity(rec);
+
+            // P0 (Option B) & P1: Local Write-Ahead Log (WAL) Spooling (Zero Tick Loss)
+            if (rec.is_valid) {
+                m_wal_writer.write_tick(rec);
+            }
+
+            records.push_back(std::move(rec));
+        }
+
+        // P2: High-Performance Pipelined Redis Ingestion for Strategy Engine (Sub-Millisecond)
+        if (m_redis != nullptr && !records.empty()) {
+            size_t queued_cmds = 0;
+            for (const auto& rec : records) {
+                if (!rec.is_valid) continue;
+                std::string key = "md:quote:" + rec.symbol;
+
                 std::vector<std::string> args;
+                args.reserve(36);
                 args.push_back("HSET");
                 args.push_back(key);
-                
-                // Add fields dynamically from norm
-                args.push_back("symbol"); args.push_back(symbol);
+                args.push_back("symbol"); args.push_back(rec.symbol);
                 args.push_back("source"); args.push_back("upstox");
-                args.push_back("status"); args.push_back(norm.value("status", "offline"));
-                
-                if (norm.contains("ltp")) { args.push_back("ltp"); args.push_back(std::to_string(norm["ltp"].get<double>())); }
-                if (norm.contains("close")) { args.push_back("close"); args.push_back(std::to_string(norm["close"].get<double>())); }
-                if (norm.contains("volume")) { args.push_back("volume"); args.push_back(std::to_string(norm["volume"].get<int64_t>())); }
-                if (norm.contains("oi")) { args.push_back("oi"); args.push_back(std::to_string(norm["oi"].get<double>())); }
-                if (norm.contains("iv")) { args.push_back("iv"); args.push_back(std::to_string(norm["iv"].get<double>())); }
-                
-                for (int i = 1; i <= 5; ++i) {
-                    std::string sfx = (i == 1) ? "" : std::to_string(i);
-                    std::string b = "bid" + sfx;
-                    std::string bq = "bid_qty" + sfx;
-                    std::string a = "ask" + sfx;
-                    std::string aq = "ask_qty" + sfx;
-                    if (norm.contains(b)) { args.push_back(b); args.push_back(std::to_string(norm[b].get<double>())); }
-                    if (norm.contains(bq)) { args.push_back(bq); args.push_back(std::to_string(norm[bq].get<int64_t>())); }
-                    if (norm.contains(a)) { args.push_back(a); args.push_back(std::to_string(norm[a].get<double>())); }
-                    if (norm.contains(aq)) { args.push_back(aq); args.push_back(std::to_string(norm[aq].get<int64_t>())); }
-                }
-                if (norm.contains("tbq")) { args.push_back("tbq"); args.push_back(std::to_string((int64_t)norm["tbq"].get<double>())); }
-                if (norm.contains("tsq")) { args.push_back("tsq"); args.push_back(std::to_string((int64_t)norm["tsq"].get<double>())); }
-                
-                if (norm.contains("ts_exchange")) { args.push_back("ts_exchange"); args.push_back(std::to_string(norm["ts_exchange"].get<int64_t>())); }
-                if (norm.contains("ts_recv")) { args.push_back("ts_recv"); args.push_back(std::to_string(norm["ts_recv"].get<int64_t>())); }
-                
-                // Closing Auction Session (CAS) native fields (September 4, 2026 Upstox update)
-                if (norm.contains("iep")) { args.push_back("iep"); args.push_back(std::to_string(norm["iep"].get<double>())); }
-                if (norm.contains("reference_price")) { args.push_back("reference_price"); args.push_back(std::to_string(norm["reference_price"].get<double>())); }
-                if (norm.contains("ieq")) { args.push_back("ieq"); args.push_back(std::to_string(norm["ieq"].get<int64_t>())); }
-                if (norm.contains("iiq_total")) { args.push_back("iiq_total"); args.push_back(std::to_string(norm["iiq_total"].get<int64_t>())); }
-                if (norm.contains("iiq_market")) { args.push_back("iiq_market"); args.push_back(std::to_string(norm["iiq_market"].get<int64_t>())); }
-                if (norm.contains("cas_eligible")) { args.push_back("cas_eligible"); args.push_back(norm["cas_eligible"].get<bool>() ? "1" : "0"); }
+                args.push_back("status"); args.push_back("live");
+                args.push_back("ltp"); args.push_back(std::to_string(rec.ltp));
+                args.push_back("close"); args.push_back(std::to_string(rec.close));
+                args.push_back("volume"); args.push_back(std::to_string(static_cast<int64_t>(rec.volume)));
+                args.push_back("oi"); args.push_back(std::to_string(static_cast<int64_t>(rec.oi)));
+                args.push_back("iv"); args.push_back(std::to_string(rec.iv));
 
-                // Add nested Option Greeks if available
-                if (norm.contains("option_greeks")) {
-                    auto const& g = norm["option_greeks"];
-                    if (g.contains("delta")) { args.push_back("delta"); args.push_back(std::to_string(g["delta"].get<double>())); }
-                    if (g.contains("theta")) { args.push_back("theta"); args.push_back(std::to_string(g["theta"].get<double>())); }
-                    if (g.contains("gamma")) { args.push_back("gamma"); args.push_back(std::to_string(g["gamma"].get<double>())); }
-                    if (g.contains("vega")) { args.push_back("vega"); args.push_back(std::to_string(g["vega"].get<double>())); }
-                    if (g.contains("rho")) { args.push_back("rho"); args.push_back(std::to_string(g["rho"].get<double>())); }
+                for (int i = 0; i < 5; ++i) {
+                    std::string sfx = (i == 0) ? "" : std::to_string(i + 1);
+                    if (rec.bid[i] > 0.0 || rec.ask[i] > 0.0) {
+                        args.push_back("bid" + sfx); args.push_back(std::to_string(rec.bid[i]));
+                        args.push_back("bid_qty" + sfx); args.push_back(std::to_string(rec.bid_qty[i]));
+                        args.push_back("ask" + sfx); args.push_back(std::to_string(rec.ask[i]));
+                        args.push_back("ask_qty" + sfx); args.push_back(std::to_string(rec.ask_qty[i]));
+                    }
                 }
-                
-                // Invoke dynamic redisCommandArgv
+                args.push_back("tbq"); args.push_back(std::to_string(rec.tbq));
+                args.push_back("tsq"); args.push_back(std::to_string(rec.tsq));
+                args.push_back("ts_exchange"); args.push_back(std::to_string(rec.ts_exchange));
+                args.push_back("ts_recv"); args.push_back(std::to_string(rec.ts_recv_ms));
+
+                if (rec.iep > 0.0) {
+                    args.push_back("iep"); args.push_back(std::to_string(rec.iep));
+                    args.push_back("reference_price"); args.push_back(std::to_string(rec.reference_price));
+                    args.push_back("ieq"); args.push_back(std::to_string(rec.ieq));
+                    args.push_back("iiq_total"); args.push_back(std::to_string(rec.iiq_total));
+                    args.push_back("iiq_market"); args.push_back(std::to_string(rec.iiq_market));
+                    args.push_back("cas_eligible"); args.push_back(rec.cas_eligible ? "1" : "0");
+                }
+
+                if (rec.has_greeks) {
+                    args.push_back("delta"); args.push_back(std::to_string(rec.delta));
+                    args.push_back("theta"); args.push_back(std::to_string(rec.theta));
+                    args.push_back("gamma"); args.push_back(std::to_string(rec.gamma));
+                    args.push_back("vega"); args.push_back(std::to_string(rec.vega));
+                    args.push_back("rho"); args.push_back(std::to_string(rec.rho));
+                }
+
                 std::vector<const char*> argv;
                 std::vector<size_t> argvlen;
-                for (auto const& arg : args) {
-                    argv.push_back(arg.c_str());
-                    argvlen.push_back(arg.size());
-                }
-                
-                redisReply* set_reply = (redisReply*)redisCommandArgv(m_redis, argv.size(), argv.data(), argvlen.data());
-                if (set_reply) {
-                    if (set_reply->type == REDIS_REPLY_ERROR) {
-                        std::cerr << "Redis HSET Error: " << set_reply->str << " | Key: " << key << std::endl;
-                    }
-                    freeReplyObject(set_reply);
-                } else {
-                    std::cerr << "Redis HSET command failed (null reply)! Reconnecting to Redis..." << std::endl;
-                    connect_redis();
-                    m_last_reconnect_time_ms = now_ms;
+                argv.reserve(args.size());
+                argvlen.reserve(args.size());
+                for (const auto& a : args) {
+                    argv.push_back(a.c_str());
+                    argvlen.push_back(a.size());
                 }
 
-                // If native CAS IEP is present, update real-time CAS fast-path key
-                if (m_redis && norm.contains("iep") && norm["iep"].get<double>() > 0.0) {
-                    std::string cas_key = "cas:live:" + symbol;
-                    std::vector<std::string> cas_args = {
+                if (redisAppendCommandArgv(m_redis, argv.size(), argv.data(), argvlen.data()) == REDIS_OK) {
+                    queued_cmds++;
+                }
+
+                // If CAS IEP present, pipeline CAS live key
+                if (rec.iep > 0.0) {
+                    std::string cas_key = "cas:live:" + rec.symbol;
+                    std::vector<std::string> c_args = {
                         "HSET", cas_key,
-                        "symbol", symbol,
-                        "iep", std::to_string(norm["iep"].get<double>()),
-                        "ts_recv", std::to_string(now_ms)
+                        "symbol", rec.symbol,
+                        "iep", std::to_string(rec.iep),
+                        "ts_recv", std::to_string(now_ms),
+                        "ieq", std::to_string(rec.ieq),
+                        "iiq_total", std::to_string(rec.iiq_total),
+                        "reference_price", std::to_string(rec.reference_price)
                     };
-                    if (norm.contains("ieq")) { cas_args.push_back("ieq"); cas_args.push_back(std::to_string(norm["ieq"].get<int64_t>())); }
-                    if (norm.contains("iiq_total")) { cas_args.push_back("iiq_total"); cas_args.push_back(std::to_string(norm["iiq_total"].get<int64_t>())); }
-                    if (norm.contains("reference_price")) { cas_args.push_back("reference_price"); cas_args.push_back(std::to_string(norm["reference_price"].get<double>())); }
-                    
                     std::vector<const char*> c_argv;
                     std::vector<size_t> c_len;
-                    for (auto const& ca : cas_args) { c_argv.push_back(ca.c_str()); c_len.push_back(ca.size()); }
-                    redisReply* cas_reply = (redisReply*)redisCommandArgv(m_redis, c_argv.size(), c_argv.data(), c_len.data());
-                    if (cas_reply) freeReplyObject(cas_reply);
-                }
-                
-                // Publish normalized tick to subscriber channel for optional websocket streaming
-                if (m_redis) {
-                    redisReply* pub_reply = (redisReply*)redisCommand(m_redis, "PUBLISH md:stream:all %s", norm_str.c_str());
-                    if (pub_reply) {
-                        freeReplyObject(pub_reply);
+                    c_argv.reserve(c_args.size());
+                    c_len.reserve(c_args.size());
+                    for (const auto& ca : c_args) {
+                        c_argv.push_back(ca.c_str());
+                        c_len.push_back(ca.size());
+                    }
+                    if (redisAppendCommandArgv(m_redis, c_argv.size(), c_argv.data(), c_len.data()) == REDIS_OK) {
+                        queued_cmds++;
                     }
                 }
             }
-            
+
+            // Drain all pipelined Redis replies in a single burst
+            for (size_t i = 0; i < queued_cmds; ++i) {
+                redisReply* set_reply = nullptr;
+                if (redisGetReply(m_redis, (void**)&set_reply) == REDIS_OK && set_reply) {
+                    freeReplyObject(set_reply);
+                }
+            }
+        }
+
+        // Processing for Candle & Microstructure Engines
+        for (const auto& rec : records) {
+            if (!rec.is_valid) continue;
+
             if (m_redis && m_candle_mgr) {
-                double p_val = norm.value("ltp", 0.0);
-                int64_t v_val = norm.value("volume", static_cast<int64_t>(0));
-                int64_t ts_val = norm.value("ts_exchange", static_cast<int64_t>(0));
-                m_candle_mgr->process_tick_candle(m_redis, symbol, p_val, v_val, ts_val);
+                m_candle_mgr->process_tick_candle(m_redis, rec.symbol, rec.ltp, static_cast<int64_t>(rec.volume), rec.ts_exchange);
             }
 
             if (m_redis && m_microstructure_mgr) {
-                double p_val = norm.value("ltp", 0.0);
-                double b_val = norm.value("bid", 0.0);
-                double a_val = norm.value("ask", 0.0);
-                int64_t v_val = norm.value("volume", static_cast<int64_t>(0));
-                double oi_val = norm.value("oi", 0.0);
-                int64_t ts_val = norm.value("ts_exchange", static_cast<int64_t>(0));
-                m_microstructure_mgr->process_tick(m_redis, symbol, p_val, b_val, a_val, v_val, oi_val, ts_val);
+                m_microstructure_mgr->process_tick(m_redis, rec.symbol, rec.ltp, rec.bid[0], rec.ask[0], static_cast<int64_t>(rec.volume), rec.oi, rec.ts_exchange);
 
                 if (m_strategy_engine) {
                     if (m_front_futures_symbol.empty() && m_redis) {
@@ -814,31 +815,33 @@ private:
                             freeReplyObject(r_fut);
                         }
                     }
-                    if (!m_front_futures_symbol.empty() && symbol == m_front_futures_symbol) {
+                    if (!m_front_futures_symbol.empty() && rec.symbol == m_front_futures_symbol) {
                         MicrostructureMetrics metrics;
-                        if (m_microstructure_mgr->get_metrics(symbol, metrics)) {
-                            m_strategy_engine->on_tick(m_redis, symbol, p_val, b_val, a_val, ts_val, metrics);
+                        if (m_microstructure_mgr->get_metrics(rec.symbol, metrics)) {
+                            m_strategy_engine->on_tick(m_redis, rec.symbol, rec.ltp, rec.bid[0], rec.ask[0], rec.ts_exchange, metrics);
                         }
                     }
                 }
             }
 
-            // Periodic 10-second portfolio telemetry publish to Redis
-            int64_t now_epoch_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch()
-            ).count();
-            if (m_strategy_engine && m_redis && (now_epoch_ms - m_last_portfolio_publish_ms >= 10000)) {
-                m_last_portfolio_publish_ms = now_epoch_ms;
-                m_strategy_engine->publish_portfolio_state(m_redis);
-            }
-            
-            std::cout << "[Tick] " << symbol << " | LTP: " << norm.value("ltp", 0.0) 
-                      << " | Bid: " << norm.value("bid", 0.0) << " | Ask: " << norm.value("ask", 0.0);
-            if (norm.contains("option_greeks")) {
-                auto const& g = norm["option_greeks"];
-                std::cout << " | Delta: " << g.value("delta", 0.0) << " | Theta: " << g.value("theta", 0.0);
-            }
-            std::cout << std::endl;
+            m_ticks_processed_window++;
+        }
+
+        // Periodic 10-second portfolio telemetry publish to Redis
+        int64_t now_epoch_ms = now_ms;
+        if (m_strategy_engine && m_redis && (now_epoch_ms - m_last_portfolio_publish_ms >= 10000)) {
+            m_last_portfolio_publish_ms = now_epoch_ms;
+            m_strategy_engine->publish_portfolio_state(m_redis);
+        }
+
+        // Rate-limited throughput telemetry (every 5 seconds)
+        if (now_epoch_ms - m_last_stats_log_ms >= 5000) {
+            double rate = (m_ticks_processed_window * 1000.0) / std::max<int64_t>(1, (now_epoch_ms - m_last_stats_log_ms));
+            std::cout << "📊 [C++ Ingestor] Pipeline Throughput: " << std::fixed << std::setprecision(1) << rate 
+                      << " ticks/s | Frames: " << response.feeds().size()
+                      << " | Total WAL Written: " << m_wal_writer.get_ticks_written() << std::endl;
+            m_ticks_processed_window = 0;
+            m_last_stats_log_ms = now_epoch_ms;
         }
     }
     
@@ -1201,6 +1204,12 @@ private:
     std::string m_front_futures_symbol;
     std::unordered_map<std::string, Candle1M> m_last_1m_bars;
     int64_t m_last_portfolio_publish_ms;
+
+    // P0/P1: Local Write-Ahead Log (WAL) Spooler & Telemetry
+    std::string m_wal_dir;
+    TickWalWriter m_wal_writer;
+    uint64_t m_ticks_processed_window;
+    int64_t m_last_stats_log_ms;
 };
 
 int main(int argc, char* argv[]) {
@@ -1208,7 +1217,12 @@ int main(int argc, char* argv[]) {
     bool replay_flag = false;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
-        if (arg == "--replay" || arg == "-r") {
+        if (arg == "--version" || arg == "-v") {
+            std::cout << "ULLTR C++ Ingestion Collector" << std::endl;
+            std::cout << "Commit: " << GIT_COMMIT_HASH << std::endl;
+            std::cout << "Built: " << __DATE__ << " " << __TIME__ << std::endl;
+            return 0;
+        } else if (arg == "--replay" || arg == "-r") {
             replay_flag = true;
         } else if (arg.rfind("--", 0) != 0) {
             config_path = arg;

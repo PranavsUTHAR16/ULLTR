@@ -35,15 +35,16 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential gcc g++ c
     libboost-all-dev libhiredis-dev libprotobuf-dev protobuf-compiler nlohmann-json3-dev
 echo -e "${GREEN}✓ System compilers and tools installed.${NC}"
 
-# 4. Compile ULLTR Low-Latency C++ Ingestor
+# 4. Compile ULLTR Low-Latency C++ Ingestor (Clean Rebuild to ensure fresh commit binary)
 echo -e "\n${YELLOW}[4/7] Compiling C++ Ingestion Collector binary...${NC}"
 cd /Users/prana/Desktop/open_source/web/collector
 protoc --cpp_out=. proto/MarketDataFeedV3.proto
+rm -rf build
 mkdir -p build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-echo -e "${GREEN}✓ C++ Collector compiled successfully at $(pwd)/collector${NC}"
+make -j$(nproc)
+echo -e "${GREEN}✓ C++ Collector compiled successfully: $(./collector --version)${NC}"
 
 # 5. Setup Python Virtual Environment and Libraries
 echo -e "\n${YELLOW}[5/7] Setting up Python virtual environment and dependencies...${NC}"

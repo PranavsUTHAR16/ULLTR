@@ -185,11 +185,13 @@ def recover_services():
         log_file = os.path.join(BASE_DIR, "collector_bg.log")
         # Ensure build directory and binary exist
         if not os.path.exists(COLLECTOR_BIN):
-            log("❌ Error: C++ collector binary not found at build directory. Attempting to build...")
             try:
+                import shutil
+                if os.path.exists(COLLECTOR_BUILD_DIR):
+                    shutil.rmtree(COLLECTOR_BUILD_DIR)
                 os.makedirs(COLLECTOR_BUILD_DIR, exist_ok=True)
-                subprocess.run(["cmake", ".."], check=True, cwd=COLLECTOR_BUILD_DIR)
-                subprocess.run(["make"], check=True, cwd=COLLECTOR_BUILD_DIR)
+                subprocess.run(["cmake", "-DCMAKE_BUILD_TYPE=Release", ".."], check=True, cwd=COLLECTOR_BUILD_DIR)
+                subprocess.run(["make", "-j4"], check=True, cwd=COLLECTOR_BUILD_DIR)
                 log("✅ C++ collector compiled successfully.")
             except Exception as e:
                 log(f"❌ Failed to compile C++ collector: {e}")

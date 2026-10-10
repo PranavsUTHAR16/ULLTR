@@ -4,6 +4,20 @@ project(upstox_collector CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Extract Git Commit Hash at configuration/build time
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+if(NOT GIT_COMMIT_HASH)
+    set(GIT_COMMIT_HASH "dev-build")
+endif()
+add_definitions(-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}")
+add_definitions(-DBUILD_TIMESTAMP="${CMAKE_SYSTEM_NAME} ${CMAKE_BUILD_TYPE}")
+
 # Homebrew paths for Apple Silicon macs
 include_directories(/opt/homebrew/include)
 link_directories(/opt/homebrew/lib)

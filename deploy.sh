@@ -105,6 +105,10 @@ ssh -i "$KEY_PATH" "${REMOTE_USER}@${VM_IP}" "
     echo '=========================================';
     echo -n 'C++ Collector Ingestor: '; pgrep -f './collector' || echo 'OFFLINE';
     echo '=========================================';
+    echo '🔍 C++ Collector Binary Build Verification:';
+    echo '=========================================';
+    /Users/prana/Desktop/open_source/web/collector/build/collector --version 2>&1 || echo 'Binary not built';
+    echo '=========================================';
 "
 
 echo -e "\n${GREEN}🎉 Deployment successfully completed!${NC}"

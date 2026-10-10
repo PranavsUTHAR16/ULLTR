@@ -30,6 +30,7 @@ REDIS_PORT = int(os.environ.get("REDIS_PORT", "6379"))
 
 BATCH_SIZE = 5000
 FLUSH_INTERVAL_SEC = 2.5
+WAL_DIR = os.environ.get("WAL_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "tick_wal"))
 
 class ClickHouseTickStreamer:
     """
@@ -60,7 +61,7 @@ class ClickHouseTickStreamer:
         ]
 
     def connect_clickhouse(self):
-        """Initializes connection to ClickHouse Cloud."""
+        """Initializes connection to ClickHouse Cloud with async insert batch coalescing."""
         while True:
             try:
                 logger.info(f"Connecting to ClickHouse Cloud at {CH_HOST}...")
@@ -70,7 +71,8 @@ class ClickHouseTickStreamer:
                     password=CH_PASSWORD,
                     port=CH_PORT,
                     database=CH_DATABASE,
-                    secure=True
+                    secure=True,
+                    settings={"async_insert": 1, "wait_for_async_insert": 0}
                 )
                 res = self.ch_client.query("SELECT 1").result_set[0][0]
                 logger.info(f"✅ Successfully connected to ClickHouse Cloud! (Heartbeat: {res})")
@@ -81,7 +83,7 @@ class ClickHouseTickStreamer:
                 time.sleep(5.0)
 
     def ensure_schema(self):
-        """Ensures the market_ticks table exists with optimal column compression codecs and 5-level depth."""
+        """Ensures the market_ticks table exists with optimal column compression codecs, 5-level depth, and 90d TTL."""
         schema_sql = """
         CREATE TABLE IF NOT EXISTS market_ticks (
             timestamp DateTime64(3, 'Asia/Kolkata') CODEC(DoubleDelta, LZ4),
@@ -131,6 +133,19 @@ class ClickHouseTickStreamer:
         """
         self.ch_client.command(schema_sql)
         logger.info("✅ Verified ClickHouse schema for 'market_ticks'")
+
+        # P3: Enforce 90-day data retention TTL policy
+        try:
+            self.ch_client.command("ALTER TABLE market_ticks MODIFY TTL timestamp + INTERVAL 90 DAY")
+            logger.info("✅ Configured 90-day retention TTL policy for 'market_ticks'")
+        except Exception as e:
+            logger.warning(f"TTL configuration notice for market_ticks: {e}")
+
+        try:
+            self.ch_client.command("ALTER TABLE cas_index_estimates MODIFY TTL timestamp + INTERVAL 90 DAY")
+            logger.info("✅ Configured 90-day retention TTL policy for 'cas_index_estimates'")
+        except Exception as e:
+            logger.warning(f"TTL configuration notice for cas_index_estimates: {e}")
 
     def refresh_symbol_metadata(self):
         """Loads and maps metadata (Underlying, Expiry, Strike, OptionType) for all symbols."""
@@ -241,12 +256,191 @@ class ClickHouseTickStreamer:
             self.buffer = rows_to_insert + self.buffer
             self.connect_clickhouse()
 
+    def load_watermark(self) -> Dict[str, Any]:
+        """Loads persistent read progress for WAL streaming."""
+        wm_file = os.path.join(WAL_DIR, ".watermark.json")
+        if os.path.exists(wm_file):
+            try:
+                with open(wm_file, "r") as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning(f"Could not read watermark file: {e}")
+        return {"current_file": None, "offset": 0}
+
+    def save_watermark(self, filename: str, offset: int) -> None:
+        """Atomically saves read progress for WAL streaming."""
+        os.makedirs(WAL_DIR, exist_ok=True)
+        wm_file = os.path.join(WAL_DIR, ".watermark.json")
+        tmp_file = wm_file + ".tmp"
+        try:
+            with open(tmp_file, "w") as f:
+                json.dump({"current_file": filename, "offset": offset, "updated_at": time.time()}, f)
+            os.replace(tmp_file, wm_file)
+        except Exception as e:
+            logger.error(f"Failed to update watermark: {e}")
+
+    def stream_from_wal(self):
+        """P0 (Option B) & P1: Streams ticks directly from local append-only WAL files into ClickHouse."""
+        logger.info(f"🚀 Starting ULLTR Direct WAL Streamer (Directory: {WAL_DIR}, Batch: {BATCH_SIZE})...")
+        self.refresh_symbol_metadata()
+        watermark = self.load_watermark()
+        cur_file = watermark.get("current_file")
+        cur_offset = watermark.get("offset", 0)
+
+        last_stats_log = time.time()
+        ticks_in_interval = 0
+
+        while True:
+            try:
+                if time.time() - self.last_meta_refresh >= 300.0:
+                    self.refresh_symbol_metadata()
+
+                if not os.path.exists(WAL_DIR):
+                    time.sleep(1.0)
+                    continue
+
+                wal_files = sorted([f for f in os.listdir(WAL_DIR) if f.startswith("wal_ticks_") and f.endswith(".jsonl")])
+                if not wal_files:
+                    time.sleep(0.5)
+                    continue
+
+                if not cur_file or cur_file not in wal_files:
+                    cur_file = wal_files[0]
+                    cur_offset = 0
+
+                cur_path = os.path.join(WAL_DIR, cur_file)
+                if not os.path.exists(cur_path):
+                    cur_file = wal_files[0]
+                    cur_offset = 0
+                    cur_path = os.path.join(WAL_DIR, cur_file)
+
+                with open(cur_path, "r", encoding="utf-8") as f:
+                    f.seek(cur_offset)
+
+                    while True:
+                        line = f.readline()
+                        if not line:
+                            latest_files = sorted([x for x in os.listdir(WAL_DIR) if x.startswith("wal_ticks_") and x.endswith(".jsonl")])
+                            if latest_files and latest_files[-1] > cur_file:
+                                next_idx = latest_files.index(cur_file) + 1 if cur_file in latest_files else 0
+                                if next_idx < len(latest_files):
+                                    if self.buffer:
+                                        self.flush_buffer()
+                                    cur_file = latest_files[next_idx]
+                                    cur_offset = 0
+                                    self.save_watermark(cur_file, cur_offset)
+                                    logger.info(f"🔄 Rotating to next WAL file: {cur_file}")
+                                    break
+                            if self.buffer and (time.time() - self.last_flush_time >= FLUSH_INTERVAL_SEC):
+                                self.flush_buffer()
+                                self.save_watermark(cur_file, cur_offset)
+                            time.sleep(0.05)
+                            continue
+
+                        cur_offset = f.tell()
+
+                        try:
+                            item = json.loads(line)
+                        except Exception:
+                            continue
+
+                        sym = item.get("sym")
+                        if not sym:
+                            continue
+
+                        ts_exch = int(item.get("ts_exch", 0))
+                        ts_recv = int(item.get("ts_recv", 0))
+
+                        m = self.symbol_meta.get(sym, {
+                            "underlying": "SENSEX" if "SENSEX" in sym or "BSE" in sym else "NIFTY",
+                            "expiry": "1970-01-01",
+                            "strike": 0.0,
+                            "option_type": "CE" if "CE" in sym else ("PE" if "PE" in sym else "INDEX")
+                        })
+
+                        if ts_exch > 0:
+                            tick_dt = datetime.fromtimestamp(ts_exch / 1000.0)
+                        elif ts_recv > 0:
+                            tick_dt = datetime.fromtimestamp(ts_recv / 1000.0)
+                        else:
+                            tick_dt = datetime.now()
+
+                        exp_str = m["expiry"]
+                        try:
+                            exp_date = datetime.strptime(exp_str, "%Y-%m-%d").date() if exp_str != "1970-01-01" else date(1970, 1, 1)
+                        except Exception:
+                            exp_date = date(1970, 1, 1)
+
+                        row = [
+                            tick_dt,
+                            sym,
+                            m["underlying"],
+                            exp_date,
+                            float(m["strike"]),
+                            m["option_type"],
+                            float(item.get("ltp", 0.0)),
+                            float(item.get("close", 0.0)),
+                            float(item.get("bid", 0.0)),
+                            int(float(item.get("bid_qty", 0))),
+                            float(item.get("ask", 0.0)),
+                            int(float(item.get("ask_qty", 0))),
+                            int(float(item.get("vol", 0))),
+                            int(float(item.get("oi", 0))),
+                            float(item.get("iv", 0.0)),
+                            float(item.get("delta", 0.0)),
+                            float(item.get("theta", 0.0)),
+                            float(item.get("gamma", 0.0)),
+                            float(item.get("vega", 0.0)),
+                            float(item.get("rho", 0.0)),
+                            ts_exch,
+                            ts_recv,
+                            float(item.get("bid2", 0.0)),
+                            int(float(item.get("bid_qty2", 0))),
+                            float(item.get("ask2", 0.0)),
+                            int(float(item.get("ask_qty2", 0))),
+                            float(item.get("bid3", 0.0)),
+                            int(float(item.get("bid_qty3", 0))),
+                            float(item.get("ask3", 0.0)),
+                            int(float(item.get("ask_qty3", 0))),
+                            float(item.get("bid4", 0.0)),
+                            int(float(item.get("bid_qty4", 0))),
+                            float(item.get("ask4", 0.0)),
+                            int(float(item.get("ask_qty4", 0))),
+                            float(item.get("bid5", 0.0)),
+                            int(float(item.get("bid_qty5", 0))),
+                            float(item.get("ask5", 0.0)),
+                            int(float(item.get("ask_qty5", 0))),
+                            int(float(item.get("tbq", 0))),
+                            int(float(item.get("tsq", 0)))
+                        ]
+
+                        self.buffer.append(row)
+                        ticks_in_interval += 1
+
+                        if len(self.buffer) >= BATCH_SIZE or (time.time() - self.last_flush_time >= FLUSH_INTERVAL_SEC):
+                            self.flush_buffer()
+                            self.save_watermark(cur_file, cur_offset)
+
+                        if time.time() - last_stats_log >= 10.0:
+                            rate = ticks_in_interval / (time.time() - last_stats_log)
+                            logger.info(f"📊 WAL Streaming: {rate:,.1f} ticks/s | Total Flushed: {self.total_inserted:,} | Active File: {cur_file} @ {cur_offset:,} bytes")
+                            last_stats_log = time.time()
+                            ticks_in_interval = 0
+
+            except Exception as e:
+                logger.error(f"⚠️ Error in WAL streaming loop: {e}")
+                time.sleep(1.0)
+
     def run(self):
-        """Main real-time tick streaming loop."""
-        self.run_streamer()
+        """Main real-time tick streaming runner. Prefers direct WAL streaming, falls back to Redis snapshot polling."""
+        if os.path.exists(WAL_DIR) and any(f.startswith("wal_ticks_") for f in os.listdir(WAL_DIR)):
+            self.stream_from_wal()
+        else:
+            logger.info("ℹ️ No active WAL files detected; starting streamer in hybrid monitor mode...")
+            self.run_streamer()
 
     def run_streamer(self):
-        """Main streaming loop: scans Redis quotes and pushes ticks to ClickHouse Cloud."""
+        """Legacy streaming loop: scans Redis quotes and pushes ticks to ClickHouse Cloud."""
         logger.info(f"Starting ULLTR ClickHouse Real-time Streamer (Batch size: {BATCH_SIZE}, Flush interval: {FLUSH_INTERVAL_SEC}s)...")
         
         self.refresh_symbol_metadata()
@@ -256,6 +450,12 @@ class ClickHouseTickStreamer:
 
         while True:
             try:
+                # If WAL directory has created files, seamlessly hand over to WAL streaming
+                if os.path.exists(WAL_DIR) and any(f.startswith("wal_ticks_") for f in os.listdir(WAL_DIR)):
+                    logger.info("⚡ WAL files detected! Switching to direct WAL streaming mode...")
+                    self.stream_from_wal()
+                    return
+
                 # Refresh metadata periodically (every 5 minutes)
                 if time.time() - self.last_meta_refresh >= 300.0:
                     self.refresh_symbol_metadata()
@@ -281,7 +481,6 @@ class ClickHouseTickStreamer:
                     ts_recv = int(float(q.get("ts_recv", 0)))
                     ts_exch = int(float(q.get("ts_exchange", 0)))
                     
-                    # Deduplication check: only insert if exchange/recv timestamp or quote is fresh
                     tick_id_ts = ts_recv if ts_recv > 0 else ts_exch
                     if tick_id_ts > 0 and self.last_seen_ts.get(sym) == tick_id_ts:
                         continue
@@ -289,7 +488,6 @@ class ClickHouseTickStreamer:
                     if tick_id_ts > 0:
                         self.last_seen_ts[sym] = tick_id_ts
 
-                    # Resolve metadata
                     m = self.symbol_meta.get(sym, {
                         "underlying": "SENSEX" if "SENSEX" in sym or "BSE" in sym else "NIFTY",
                         "expiry": "1970-01-01",
@@ -297,7 +495,6 @@ class ClickHouseTickStreamer:
                         "option_type": "CE" if "CE" in sym else ("PE" if "PE" in sym else "INDEX")
                     })
 
-                    # Calculate precise datetime timestamp from ms
                     if ts_exch > 0:
                         tick_dt = datetime.fromtimestamp(ts_exch / 1000.0)
                     elif ts_recv > 0:
@@ -357,11 +554,9 @@ class ClickHouseTickStreamer:
                     self.buffer.append(row)
                     ticks_in_interval += 1
 
-                # Flush buffer if limit reached or timeout passed
                 if len(self.buffer) >= BATCH_SIZE or (time.time() - self.last_flush_time >= FLUSH_INTERVAL_SEC):
                     self.flush_buffer()
 
-                # Log stats every 10 seconds
                 if time.time() - last_stats_log >= 10.0:
                     rate = ticks_in_interval / (time.time() - last_stats_log)
                     logger.info(f"📊 Streaming Throughput: {rate:,.1f} ticks/sec | Total Flushed: {self.total_inserted:,} | Buffer: {len(self.buffer)}")
