@@ -156,7 +156,8 @@ class Model07Strategy:
         margin_per_lot: float = 250000.0,
         otm_offset: float = 100.0,
         friction_pt: float = 1.25,
-        rate: float = 0.065
+        rate: float = 0.065,
+        allow_theoretical_fallback: bool = False
     ):
         self.lots = lots
         self.lot_size = 65  # Nifty units per lot
@@ -166,6 +167,8 @@ class Model07Strategy:
         self.otm_offset = otm_offset
         self.friction_pt = friction_pt
         self.rate = rate
+        self.allow_theoretical_fallback = allow_theoretical_fallback
+        self.state: str = "IDLE"
 
         # Tranche schedules: (entry_time_str, exit_time_str)
         self.tranche_schedules: List[Tuple[str, str]] = [
@@ -198,6 +201,7 @@ class Model07Strategy:
         vix: float = 14.0
     ):
         """Initializes state for a new trading session."""
+        self.state = "ACTIVE"
         self.current_date = trade_date
         self.is_excluded = trade_date in EXCLUDED_MACRO_DATES
 
@@ -233,10 +237,10 @@ class Model07Strategy:
         is_call: bool,
         tau: float,
         quotes_lookup: Optional[Dict[Tuple[float, str], float]] = None
-    ) -> float:
+    ) -> Optional[float]:
         """
-        Retrieves market quote if valid and within sanity range,
-        otherwise falls back to Black-Scholes European pricing with physical decay.
+        Retrieves market quote if valid and within sanity range.
+        If quotes are missing and allow_theoretical_fallback is False, returns None (No-Fallback Rule).
         """
         max_sane_px = max(100.0, spot * 0.015)
         opt_type = "CE" if is_call else "PE"
@@ -246,7 +250,10 @@ class Model07Strategy:
             if q is not None and 0.10 < q < max_sane_px:
                 return float(q)
 
-        return calc_bs_price(spot, strike, is_call, self.ref_iv, tau, self.rate)
+        if self.allow_theoretical_fallback:
+            return calc_bs_price(spot, strike, is_call, self.ref_iv, tau, self.rate)
+
+        return None
 
     def _close_normal_decay(
         self,
@@ -261,8 +268,23 @@ class Model07Strategy:
         decay_dt = hours_held / (365.0 * 6.25)
         tau_exit = max(1.0 / (365.0 * 24.0), self.tau_dte - decay_dt)
 
-        t.ce_exit_px = self.get_quote_or_fallback(close_px, t.ce_strike, True, tau_exit, quotes_lookup)
-        t.pe_exit_px = self.get_quote_or_fallback(close_px, t.pe_strike, False, tau_exit, quotes_lookup)
+        ce_exit = self.get_quote_or_fallback(close_px, t.ce_strike, True, tau_exit, quotes_lookup)
+        pe_exit = self.get_quote_or_fallback(close_px, t.pe_strike, False, tau_exit, quotes_lookup)
+
+        if ce_exit is None or pe_exit is None:
+            self.state = "HALTED"
+            events.append({
+                "event": "HALTED",
+                "message": (
+                    f"🚨 <b>MODEL 07 HALTED AT TRANCHE EXIT</b>\n"
+                    f"• Reason: Missing live market quotes for exit at {bar_time_str} IST.\n"
+                    f"• Action: Synthetic pricing prohibited. State set to HALTED per Rule 6."
+                )
+            })
+            return
+
+        t.ce_exit_px = ce_exit
+        t.pe_exit_px = pe_exit
         t.gross_points = t.total_entry_prem - (t.ce_exit_px + t.pe_exit_px)
         t.net_points = t.gross_points - self.friction_pt
         t.realized_pnl = t.net_points * self.units_traded
@@ -306,7 +328,7 @@ class Model07Strategy:
         """
         events: List[Dict[str, Any]] = []
 
-        if self.is_excluded:
+        if self.is_excluded or self.state == "HALTED":
             return events
 
         # 1. Update running price range for current active tranche
@@ -466,6 +488,19 @@ class Model07Strategy:
                 # Entry premiums
                 p_ce_0 = self.get_quote_or_fallback(close_px, ce_k, True, self.tau_dte, quotes_lookup)
                 p_pe_0 = self.get_quote_or_fallback(close_px, pe_k, False, self.tau_dte, quotes_lookup)
+
+                if p_ce_0 is None or p_pe_0 is None:
+                    self.state = "HALTED"
+                    events.append({
+                        "event": "HALTED",
+                        "message": (
+                            f"🚨 <b>MODEL 07 HALTED</b>\n"
+                            f"• Reason: Missing live market quotes for {ce_k} CE or {pe_k} PE at {bar_time_str} IST.\n"
+                            f"• Action: Refusing synthetic Black-Scholes fallback per Rule 6."
+                        )
+                    })
+                    break
+
                 tot_prem = p_ce_0 + p_pe_0
 
                 # Estimated Stop Caps for alert

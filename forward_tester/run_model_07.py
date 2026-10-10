@@ -529,26 +529,51 @@ def run_model07_live(
         # Update today_str after waking up
         today_str = datetime.date.today().strftime("%Y-%m-%d")
 
-    # Front Expiry resolution
+def resolve_front_expiry(r, today_str: str) -> Optional[str]:
+    """
+    Dynamically resolves front weekly expiry from Redis.
+    Guarantees no false fallback to today_str on non-expiry days.
+    """
     front_exp = r.get("exp:NIFTY:front")
+    if front_exp and front_exp >= today_str:
+        return front_exp
+
+    chain_keys = [k for k in r.keys("chain:NIFTY:*") if ":meta" not in k]
+    valid_chains = sorted([k.split(":")[-1] for k in chain_keys if k.split(":")[-1] >= today_str])
+    if valid_chains:
+        resolved = valid_chains[0]
+        try:
+            r.set("exp:NIFTY:front", resolved)
+        except Exception:
+            pass
+        return resolved
+
+    return None
+
+
+    # Front Expiry resolution
+    front_exp = resolve_front_expiry(r, today_str)
     if not front_exp:
-        chain_keys = [k for k in r.keys("chain:NIFTY:*") if ":meta" not in k]
-        valid_chains = sorted([k.split(":")[-1] for k in chain_keys if k.split(":")[-1] >= today_str])
-        if valid_chains:
-            front_exp = valid_chains[0]
-            try:
-                r.set("exp:NIFTY:front", front_exp)
-            except Exception:
-                pass
-        else:
-            front_exp = today_str
+        logger.warning("Option chains not yet populated in Redis at startup. Polling...")
+        for _ in range(30):
+            time.sleep(1.0)
+            front_exp = resolve_front_expiry(r, today_str)
+            if front_exp:
+                break
+
+    if not front_exp:
+        logger.error("CRITICAL: Failed to resolve valid front expiry from Redis. Halting Model 07 per Rule 6.")
+        tg.send(f"🚨 <b>MODEL 07 HALTED AT STARTUP</b>\n• Reason: No valid option chains found in Redis for {today_str}.\n• Action: Refusing fallback to today_str. Trading halted.")
+        return
+
     logger.info("Front Expiry resolved: %s", front_exp)
 
     strategy = Model07Strategy(
         lots=lots,
         margin_per_lot=margin_per_lot,
         otm_offset=otm_offset,
-        friction_pt=friction
+        friction_pt=friction,
+        allow_theoretical_fallback=False
     )
     strategy.init_trading_day(trade_date=today_str, expiry_date=front_exp)
 
