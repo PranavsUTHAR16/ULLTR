@@ -263,3 +263,20 @@ def test_def_008_strategy6_no_premature_tp_decay():
     assert triggered is False and pos.status == "OPEN", (
         f"DEF-008 VIOLATION: Strategy 6 position prematurely exited with {reason} (status={pos.status})"
     )
+
+
+def test_def_012_model07_20260924_parity():
+    """
+    DEF-012 LOCK TEST:
+    main07.py line 264 previously used p_pe_0 * 0.30 instead of p_ce_0 * 0.30 for CE wing harvest.
+    On 2026-09-24, after fixing this typo, main07.py Net PnL must be exactly +₹282.10 (+4.34 net pts),
+    matching run_model_07.py 100%.
+    """
+    from main07 import Model07NiftyEngine
+    engine = Model07NiftyEngine(start_date="2026-09-24", end_date="2026-09-24", lots=1)
+    df = engine.simulate()
+    assert len(df) == 1
+    net_pnl = float(df.iloc[0]["net_pnl_rs"])
+    assert round(net_pnl, 2) == 282.10, (
+        f"DEF-012 VIOLATION: main07.py Net PnL is ₹{net_pnl:.2f} instead of ₹282.10"
+    )
