@@ -2,6 +2,7 @@ import time
 import os
 import sys
 import json
+import shutil
 import redis
 import subprocess
 from datetime import datetime
@@ -186,10 +187,11 @@ def restart_collector(clear_logs: bool = False):
         build_dir = "/Users/prana/Desktop/open_source/web/collector/build"
         log_file = "/Users/prana/Desktop/open_source/web/collector_bg.log"
         
-        print(f"🔄 Launching C++ Collector in the background (logs: {log_file})...")
+        collector_cmd = ["taskset", "-c", "1", "./collector", "../config.json"] if shutil.which("taskset") else ["./collector", "../config.json"]
+        print(f"🔄 Launching C++ Collector in the background with core affinity (cmd: {' '.join(collector_cmd)}, logs: {log_file})...")
         with open(log_file, "a") as log:
             subprocess.Popen(
-                ["./collector", "../config.json"],
+                collector_cmd,
                 cwd=build_dir,
                 stdout=log,
                 stderr=log,

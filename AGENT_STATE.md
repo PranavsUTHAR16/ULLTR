@@ -56,12 +56,12 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
 
 ## 4. REGRESSION TEST STATUS
 - **Automated Test Suite**: `pytest -v tests/test_parity_lock.py tests/test_tick_pipeline_wal.py`
-- **Local Result**: **16 PASSED / 0 FAILED** (in 3.48s)
-- **AWS VM Result**: **14 PASSED / 0 FAILED** (previous baseline before DEC-011)
+- **Local Result**: **17 PASSED / 0 FAILED** (in 3.02s)
+- **AWS VM Result**: **14 PASSED / 0 FAILED** (previous baseline before DEC-011 and DEC-012)
 
 ---
 
-## 5. TICK DATA COLLECTION PIPELINE OPTIMIZATION (P0-P4 & BOUNDED WAL STORAGE)
+## 5. TICK DATA COLLECTION PIPELINE OPTIMIZATION (P0-P5 COMPLETE)
 - **P0 (Option B) & P1 (Local WAL)**:
   - C++ Ingestor writes ticks directly to local append-only WAL files in `data/tick_wal/` (`wal_ticks_<YYYYMMDD>_<HHMMSS>.jsonl`).
   - `clickhouse_streamer.py` tails the WAL files using a persistent `.watermark.json` offset.
@@ -75,6 +75,11 @@ Verified between backtest (`shadow/main07.py`) and forward test replay (`web/for
   - **Disk Space Protection**: `statvfs` check in C++ halts WAL file allocation if free disk space on root volume drops below 1 GB.
   - **EOD Disk Maintenance**: `scripts/eod_cleanup.sh` sweeps all leftover WAL files (`wal_ticks_*.jsonl`), watermark state, and depth spillover buffers at 16:15 IST.
   - **Steady-State Footprint**: Under 50 MB total disk usage during active trading sessions (0.2% of 25 GB root EBS volume).
+- **DEC-012 & P5 (Sub-Millisecond Network Ingestion & CPU Pinning)**:
+  - **C++ Socket Optimizations**: Enabled `TCP_NODELAY`, 4MB `SO_RCVBUF`, `TCP_QUICKACK`, and 50µs `SO_BUSY_POLL` on primary and redirected WebSockets.
+  - **Buffer Pre-Reservation**: Pre-allocated 64KB contiguous capacity on Beast flat buffers, avoiding reallocations during tick streaming.
+  - **CPU Core Pinning**: Hard-pinned C++ ingestion thread to Core 1 (`pthread_setaffinity_np` + `nice -20` / `taskset -c 1`). Keeps Core 0 dedicated to OS, Redis, and network IRQs.
+  - **AWS ENA & Kernel Tuning**: Automated via `scripts/tune_network_latency.sh` and `ulltr-network-tuning.service` (disables NIC interrupt coalescing `rx-usecs 0`, expands ring buffers to 4096, and enables Google BBR congestion control).
 - **P2 (C++ Hot Path Zero-Allocation & Redis Pipelining)**:
   - Replaced heap `nlohmann::json` parsing with stack-allocated `MarketTickRecord`.
   - Pipelined `redisAppendCommandArgv()` batches all feeds in a WebSocket frame into a single network round-trip.

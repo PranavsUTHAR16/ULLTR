@@ -30,10 +30,35 @@ echo -e "${GREEN}✓ OS packages upgraded.${NC}"
 
 # 3. Install System Dependencies & C++ Compiler Toolchain
 echo -e "\n${YELLOW}[3/7] Installing Compilers, Redis Server, and Python dependencies...${NC}"
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential gcc g++ cmake make redis-server \
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential gcc g++ cmake make redis-server ethtool \
     python3-pip python3-venv python3-dev libpq-dev libssl-dev \
     libboost-all-dev libhiredis-dev libprotobuf-dev protobuf-compiler nlohmann-json3-dev
 echo -e "${GREEN}✓ System compilers and tools installed.${NC}"
+
+# 3b. Configure Sub-Millisecond Network Latency & ENA Tuning
+echo -e "\n${YELLOW}[3b/7] Applying low-latency network and AWS ENA tuning...${NC}"
+chmod +x /Users/prana/Desktop/open_source/web/scripts/tune_network_latency.sh
+sudo bash /Users/prana/Desktop/open_source/web/scripts/tune_network_latency.sh
+
+sudo tee /etc/systemd/system/ulltr-network-tuning.service > /dev/null << EOF
+[Unit]
+Description=ULLTR Network Latency Optimizer & ENA Tuning
+After=network.target
+Before=ulltr-redis.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash /Users/prana/Desktop/open_source/web/scripts/tune_network_latency.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable ulltr-network-tuning.service
+echo -e "${GREEN}✓ Low-latency network tuning configured & enabled on boot.${NC}"
 
 # 4. Compile ULLTR Low-Latency C++ Ingestor (Clean Rebuild to ensure fresh commit binary)
 echo -e "\n${YELLOW}[4/7] Compiling C++ Ingestion Collector binary...${NC}"

@@ -234,3 +234,19 @@ def test_wal_disk_quota_enforcement():
             # Active file being actively appended must NEVER be evicted
             assert os.path.exists(f_active), "Active file must be preserved"
 
+
+def test_network_tuning_script_validity():
+    """Verify scripts/tune_network_latency.sh exists, is executable, and has valid bash syntax."""
+    script_path = os.path.join(PROJECT_ROOT, "scripts", "tune_network_latency.sh")
+    assert os.path.exists(script_path), f"Script not found: {script_path}"
+    assert os.access(script_path, os.X_OK), f"Script is not executable: {script_path}"
+
+    res = subprocess.run(["bash", "-n", script_path], capture_output=True, text=True)
+    assert res.returncode == 0, f"Bash syntax check failed: {res.stderr}"
+
+    config_path = os.path.join(PROJECT_ROOT, "collector", "config.json")
+    with open(config_path) as f:
+        cfg = json.load(f)
+    assert "pinned_core" in cfg, "Expected 'pinned_core' in collector/config.json"
+    assert cfg["pinned_core"] == 1
+

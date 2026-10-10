@@ -19,6 +19,14 @@
 #include <boost/asio/ssl/stream.hpp>
 #include <nlohmann/json.hpp>
 #include <hiredis/hiredis.h>
+#include <pthread.h>
+
+#ifdef __linux__
+#include <sched.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#endif
 
 #include "MarketDataFeedV3.pb.h"
 #include "candle_manager.hpp"
@@ -39,6 +47,58 @@ namespace upstox = com::upstox::marketdatafeederv3udapi::rpc::proto;
 #ifndef GIT_COMMIT_HASH
 #define GIT_COMMIT_HASH "dev-build"
 #endif
+
+// P5: Thread Core Pinning & CPU Affinity
+inline void pin_thread_to_core(int core_id) {
+    if (core_id < 0) return;
+#ifdef __linux__
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(core_id, &cpuset);
+    pthread_t current_thread = pthread_self();
+    int rc = pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
+    if (rc != 0) {
+        std::cerr << "⚠️ [CPU Pinning] Failed to set CPU affinity to Core " << core_id << ": " << strerror(rc) << std::endl;
+    } else {
+        std::cout << "🎯 [CPU Pinning] Successfully pinned ingestion hot path to CPU Core " << core_id << std::endl;
+    }
+
+    errno = 0;
+    nice(-20);
+#elif defined(__APPLE__)
+    pthread_set_qos_class_self_np(QOS_CLASS_USER_INTERACTIVE, 0);
+    std::cout << "🎯 [QoS Priority] Thread priority set to QOS_CLASS_USER_INTERACTIVE on macOS" << std::endl;
+#endif
+}
+
+// P5: Low-Latency Socket Tuning (TCP_NODELAY, SO_RCVBUF, TCP_QUICKACK, SO_BUSY_POLL)
+inline void configure_low_latency_socket(tcp::socket& sock) {
+    try {
+        // 1. Disable Nagle's algorithm (TCP_NODELAY) - immediate transmission without packet buffering
+        sock.set_option(boost::asio::ip::tcp::no_delay(true));
+
+        // 2. Expand receive & send buffer sizes to 4MB to prevent drops during market opening auctions
+        sock.set_option(boost::asio::socket_base::receive_buffer_size(4 * 1024 * 1024));
+        sock.set_option(boost::asio::socket_base::send_buffer_size(1 * 1024 * 1024));
+
+        // 3. Keepalive configuration to detect dead peers and prevent NAT timeouts
+        sock.set_option(boost::asio::socket_base::keep_alive(true));
+
+#ifdef __linux__
+        int fd = sock.native_handle();
+        // 4. TCP_QUICKACK to avoid 40ms delayed-ACK timeouts
+        int quickack = 1;
+        setsockopt(fd, IPPROTO_TCP, TCP_QUICKACK, &quickack, sizeof(quickack));
+
+        // 5. SO_BUSY_POLL for kernel-level low-latency polling (50 microseconds)
+        int busy_poll = 50;
+        setsockopt(fd, SOL_SOCKET, SO_BUSY_POLL, &busy_poll, sizeof(busy_poll));
+#endif
+        std::cout << "⚡ [Network Engine] TCP socket tuned: TCP_NODELAY=1, SO_RCVBUF=4MB, QUICKACK=1, BUSY_POLL=50us" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "⚠️ [Network Engine] Notice while configuring low-latency socket: " << e.what() << std::endl;
+    }
+}
 
 class MarketDataIngestor {
 public:
@@ -165,6 +225,7 @@ public:
     }
 
     void run() {
+        pin_thread_to_core(m_pinned_core);
         connect_redis();
         
         if (m_redis) {
@@ -307,6 +368,7 @@ public:
                 
                 std::cout << "Connecting to server TCP socket..." << std::endl;
                 net::connect(beast::get_lowest_layer(ws), results);
+                configure_low_latency_socket(beast::get_lowest_layer(ws));
                 
                 // Set SNI Hostname (essential for modern secure endpoints)
                 if (!SSL_set_tlsext_host_name(ws.next_layer().native_handle(), ws_host.c_str())) {
@@ -373,6 +435,7 @@ public:
                             
                             std::cout << "Connecting to redirected server TCP socket..." << std::endl;
                             net::connect(beast::get_lowest_layer(ws_redirect), redirect_results);
+                            configure_low_latency_socket(beast::get_lowest_layer(ws_redirect));
                             
                             std::cout << "Performing redirected SSL handshake..." << std::endl;
                             if (!SSL_set_tlsext_host_name(ws_redirect.next_layer().native_handle(), new_host.c_str())) {
@@ -410,6 +473,7 @@ public:
                             m_watchdog_triggered.store(false, std::memory_order_release);
 
                             beast::flat_buffer buffer;
+                            buffer.reserve(65536);
                             for (;;) {
                                 buffer.clear();
                                 ws_redirect.read(buffer);
@@ -439,6 +503,7 @@ public:
                 m_watchdog_triggered.store(false, std::memory_order_release);
 
                 beast::flat_buffer buffer;
+                buffer.reserve(65536);
                 for (;;) {
                     buffer.clear();
                     ws.read(buffer);
@@ -497,6 +562,7 @@ private:
         m_starting_capital = cfg.value("starting_capital", 25000.0);
         m_wal_dir = cfg.value("wal_dir", "/Users/prana/Desktop/open_source/web/data/tick_wal");
         m_wal_writer.init(m_wal_dir);
+        m_pinned_core = cfg.value("pinned_core", 1);
         
         // Read access token from file (bypassed in replay or mock mode)
         m_replay = cfg.value("replay", m_replay);
@@ -859,6 +925,7 @@ private:
     std::string m_mode;
     std::vector<std::string> m_instruments;
     std::string m_token;
+    int m_pinned_core{1};
     
     void run_simulation() {
         // Seed random number generator
@@ -960,6 +1027,7 @@ private:
     }
 
     void run_replay() {
+        pin_thread_to_core(m_pinned_core);
         std::cout << "==================================================" << std::endl;
         std::cout << "   RUNNING IN MARKET REPLAY RECEIVER MODE" << std::endl;
         std::cout << "   Subscribing to Redis channel 'md:stream:all'..." << std::endl;

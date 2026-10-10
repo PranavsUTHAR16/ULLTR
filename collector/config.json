@@ -391,5 +391,6 @@
   "redis_host": "127.0.0.1",
   "redis_port": 6379,
   "redis_unix_socket": "/Users/prana/Desktop/open_source/web/redis.sock",
-  "mock": false
+  "mock": false,
+  "pinned_core": 1
 }
