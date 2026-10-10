@@ -237,8 +237,9 @@ class TickMarketReplayEngine:
         logger.info(f"Seeding base market metadata into Redis via {self.redis_conn_desc}...")
         pipe = self.r.pipeline(transaction=False)
 
-        # 1. Spot symbol pointer
+        # 1. Spot symbol pointer & front expiry
         pipe.set(f"spot:{self.underlying}", self.spot_symbol)
+        pipe.set(f"exp:{self.underlying}:front", self.front_expiry)
 
         # 2. Seed daily bars for RV5 and linear regression slope
         for _, row in self.df_daily.iterrows():

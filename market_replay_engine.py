@@ -346,6 +346,7 @@ class MarketReplayEngine:
 
         # 1. Spot Pointer & Futures
         pipe.set(f"spot:{self.underlying}", self.spot_symbol)
+        pipe.set(f"exp:{self.underlying}:front", self.front_expiry)
         pipe.set("spot:VIX", "NSE_INDEX|India VIX")
         if self.front_futures_symbol:
             pipe.set(f"fut:{self.underlying}:front", self.front_futures_symbol)

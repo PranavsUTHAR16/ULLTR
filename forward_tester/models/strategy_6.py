@@ -58,15 +58,16 @@ class Strategy6Model(BaseTradingModel):
         self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
 
     def _select_closer_expiry(self) -> Tuple[str, str, int]:
-        """Compares SENSEX vs NIFTY front expiries and selects instrument with lower DTE <= 5 days."""
+        """Compares SENSEX vs NIFTY front expiries and selects instrument with lower non-negative DTE."""
         today = getattr(self, "current_date", None) or date.today()
+        today_str = today.strftime("%Y-%m-%d")
         info = {}
         for und in ["SENSEX", "NIFTY"]:
-            exp_str = self.data_client.get_front_expiry(und)
+            exp_str = self.data_client.get_front_expiry(und, as_of_date=today_str)
             if exp_str:
                 exp_date = datetime.strptime(exp_str, "%Y-%m-%d").date()
                 dte = (exp_date - today).days
-                if 0 <= dte <= 5:
+                if dte >= 0:
                     info[und] = {"expiry": exp_str, "dte": dte}
                     
         if not info:

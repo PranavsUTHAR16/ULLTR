@@ -31,12 +31,17 @@ class ForwardTestDataClient:
         """Get current ATM strike for NIFTY or SENSEX."""
         return self.client.get_atm_strike(underlying)
 
-    def get_front_expiry(self, underlying: str) -> str:
+    def get_front_expiry(self, underlying: str, as_of_date: Optional[str] = None) -> str:
         """
         Find the front weekly expiry date for the underlying 
         currently seeded in Redis (returns YYYY-MM-DD).
         """
-        if hasattr(self, "_cached_expiries") and underlying in self._cached_expiries:
+        # Fast path: check explicit front expiry key in Redis (seeded by market replay or live feed)
+        explicit_front = self.client.r.get(f"exp:{underlying.upper()}:front")
+        if explicit_front:
+            return explicit_front
+
+        if not as_of_date and hasattr(self, "_cached_expiries") and underlying in self._cached_expiries:
             exp, expire_time = self._cached_expiries[underlying]
             if time.time() < expire_time:
                 return exp
@@ -59,7 +64,7 @@ class ForwardTestDataClient:
         if not expiries:
             return ""
 
-        today_str = date.today().strftime("%Y-%m-%d")
+        today_str = as_of_date or date.today().strftime("%Y-%m-%d")
         best_exp = ""
         for exp in expiries:
             if exp >= today_str:
@@ -68,7 +73,7 @@ class ForwardTestDataClient:
         if not best_exp and expiries:
             best_exp = expiries[0]
 
-        if best_exp:
+        if best_exp and not as_of_date:
             self._cached_expiries[underlying] = (best_exp, time.time() + 60.0)
         return best_exp
 

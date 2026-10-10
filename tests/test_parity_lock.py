@@ -280,3 +280,29 @@ def test_def_012_model07_20260924_parity():
     assert round(net_pnl, 2) == 282.10, (
         f"DEF-012 VIOLATION: main07.py Net PnL is ₹{net_pnl:.2f} instead of ₹282.10"
     )
+
+
+def test_def_013_strategy6_dte6_expiry_resolution():
+    """
+    DEF-013 LOCK TEST:
+    _select_closer_expiry in strategy_6.py has an arbitrary '0 <= dte <= 5' restriction.
+    On Wednesday 2026-10-07, front expiry is Tuesday 2026-10-13 (DTE=6).
+    strategy_6.py fails to select 2026-10-13 because 6 > 5, returning ('NIFTY', '', 0).
+    FAILS on current code because expiry is empty string.
+    """
+    from forward_tester.models.strategy_6 import Strategy6Model
+    from forward_tester.config import MultiModelConfig
+
+    class MockDataClient:
+        def get_front_expiry(self, und, as_of_date=None):
+            if und == "NIFTY":
+                return "2026-10-13"
+            return ""
+
+    model = Strategy6Model(data_client=MockDataClient(), config=MultiModelConfig())
+    model.current_date = date(2026, 10, 7)
+
+    und, exp, dte = model._select_closer_expiry()
+    assert exp == "2026-10-13" and dte == 6, (
+        f"DEF-013 VIOLATION: Expected ('NIFTY', '2026-10-13', 6), got ('{und}', '{exp}', {dte})"
+    )
