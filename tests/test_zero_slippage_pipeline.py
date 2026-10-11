@@ -180,12 +180,18 @@ def test_model_07_continuous_pnl_tracking():
     assert tot == 2193.75
 
     # Test MultiModelEngine integration
-    engine = MultiModelEngine(dry_run=True)
-    engine.model07 = strategy
-    eng_r, eng_u, eng_tot = engine.calculate_model_pnl("MODEL_07")
-    assert eng_r == 0.0
-    assert eng_u == 2193.75
-    assert eng_tot == 2193.75
+    from unittest.mock import patch
+    from forward_tester.models.strategy_6 import Strategy6Model
+
+    with patch.object(
+        Strategy6Model, "_compute_micro_regime", return_value=("LOW", "EXPANDING")
+    ):
+        engine = MultiModelEngine(dry_run=True)
+        engine.model07 = strategy
+        eng_r, eng_u, eng_tot = engine.calculate_model_pnl("MODEL_07")
+        assert eng_r == 0.0
+        assert eng_u == 2193.75
+        assert eng_tot == 2193.75
 
     # Test dashboard render without errors
     render_model07_dashboard(strategy, current_spot=25015.0)
