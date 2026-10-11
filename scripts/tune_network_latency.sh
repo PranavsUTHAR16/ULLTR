@@ -80,7 +80,7 @@ echo "$LOG_PREFIX Pre-resolving and pinning Upstox AWS Mumbai endpoints in /etc/
 python3 -c "
 import socket
 
-domains = ['api-hft.upstox.com', 'wsfeeder-api.upstox.com', 'api.upstox.com']
+domains = ['api-hft.upstox.com', 'wsfeeder-api.upstox.com', 'api.upstox.com', 'api-sandbox.upstox.com']
 hosts_path = '/etc/hosts'
 try:
     with open(hosts_path, 'r') as f:
