@@ -95,10 +95,13 @@ class Model07Tranche:
     pe_breached: bool = False
     ce_exit_px: float = 0.0
     pe_exit_px: float = 0.0
+    ce_cur_px: float = 0.0
+    pe_cur_px: float = 0.0
     gross_points: float = 0.0
     friction_pts: float = 1.25
     net_points: float = 0.0
     realized_pnl: float = 0.0
+    unrealized_pnl: float = 0.0
     exit_reason: str = "OPEN"
     lots: int = 1
     units: int = 65
@@ -124,6 +127,8 @@ class Model07Tranche:
             "pe_strike": self.pe_strike,
             "ce_entry_px": round(self.ce_entry_px, 2),
             "pe_entry_px": round(self.pe_entry_px, 2),
+            "ce_cur_px": round(self.ce_cur_px if self.ce_cur_px > 0 else (self.ce_exit_px if self.is_closed else self.ce_entry_px), 2),
+            "pe_cur_px": round(self.pe_cur_px if self.pe_cur_px > 0 else (self.pe_exit_px if self.is_closed else self.pe_entry_px), 2),
             "total_entry_prem": round(self.total_entry_prem, 2),
             "running_high": round(self.running_high, 2),
             "running_low": round(self.running_low, 2),
@@ -138,6 +143,8 @@ class Model07Tranche:
             "units": self.units,
             "margin_deployed": round(self.margin_deployed, 2),
             "realized_pnl": round(self.realized_pnl, 2),
+            "unrealized_pnl": round(self.unrealized_pnl, 2),
+            "total_pnl": round(self.realized_pnl if self.is_closed else self.unrealized_pnl, 2),
             "roi_pct": round(self.roi_pct, 2),
             "exit_reason": self.exit_reason,
             "status": "CLOSED" if self.is_closed else "OPEN"
@@ -194,6 +201,12 @@ class Model07Strategy:
         self.closed_tranches: List[Model07Tranche] = []
         self.executed_tranche_indices: Set[int] = set()
 
+        # Real-time telemetry tracking
+        self.last_quotes_lookup: Dict[Tuple[float, str], float] = {}
+        self.last_spot_close: float = 0.0
+        self.last_bar_time: str = ""
+        self.minute_pnl_history: List[Dict[str, Any]] = []
+
     def init_trading_day(
         self,
         trade_date: str,
@@ -229,6 +242,117 @@ class Model07Strategy:
         self.closed_tranches = []
         self.executed_tranche_indices = set()
         self.session_completed = False
+        self.last_quotes_lookup = {}
+        self.last_spot_close = 0.0
+        self.last_bar_time = ""
+        self.minute_pnl_history = []
+
+    def get_realized_and_unrealized_pnl(self) -> Tuple[float, float, float]:
+        """
+        Calculates (realized_pnl, unrealized_pnl, total_pnl) in Rupees for Model 07.
+        Matches the BaseTradingModel contract.
+        """
+        realized = sum(t.realized_pnl for t in self.closed_tranches)
+        unrealized = 0.0
+        if self.active_tranche and not self.active_tranche.is_closed:
+            unrealized = self.active_tranche.unrealized_pnl
+        return round(realized, 2), round(unrealized, 2), round(realized + unrealized, 2)
+
+    @property
+    def active_positions(self) -> List[Any]:
+        """Exposes active strangle legs as standardized ForwardTestPosition objects."""
+        if not self.active_tranche or self.active_tranche.is_closed:
+            return []
+        t = self.active_tranche
+        from forward_tester.position import ForwardTestPosition
+        ce_cur = t.ce_cur_px if t.ce_cur_px > 0 else t.ce_entry_px
+        pe_cur = t.pe_cur_px if t.pe_cur_px > 0 else t.pe_entry_px
+        positions = []
+        if not t.ce_breached:
+            positions.append(ForwardTestPosition(
+                model_id="MODEL_07",
+                underlying="NIFTY",
+                expiry_date=self.expiry_date,
+                symbol=f"NIFTY_{int(t.ce_strike)}_CE",
+                strike=t.ce_strike,
+                option_type="CE",
+                leg_type="SHORT",
+                target_delta=0.0,
+                entry_price=t.ce_entry_px,
+                current_price=ce_cur,
+                lots=self.lots,
+                lot_size=self.lot_size,
+                sl_mult=2.0,
+                sl_price=t.ce_entry_px * 2.0,
+                status="OPEN",
+                pnl=(t.ce_entry_px - ce_cur) * self.units_traded
+            ))
+        if not t.pe_breached:
+            positions.append(ForwardTestPosition(
+                model_id="MODEL_07",
+                underlying="NIFTY",
+                expiry_date=self.expiry_date,
+                symbol=f"NIFTY_{int(t.pe_strike)}_PE",
+                strike=t.pe_strike,
+                option_type="PE",
+                leg_type="SHORT",
+                target_delta=0.0,
+                entry_price=t.pe_entry_px,
+                current_price=pe_cur,
+                lots=self.lots,
+                lot_size=self.lot_size,
+                sl_mult=2.0,
+                sl_price=t.pe_entry_px * 2.0,
+                status="OPEN",
+                pnl=(t.pe_entry_px - pe_cur) * self.units_traded
+            ))
+        return positions
+
+    @property
+    def closed_positions(self) -> List[Any]:
+        """Exposes closed strangle legs from closed tranches as ForwardTestPosition objects."""
+        from forward_tester.position import ForwardTestPosition
+        positions = []
+        for ct in self.closed_tranches:
+            positions.append(ForwardTestPosition(
+                model_id="MODEL_07",
+                underlying="NIFTY",
+                expiry_date=self.expiry_date,
+                symbol=f"NIFTY_{int(ct.ce_strike)}_CE",
+                strike=ct.ce_strike,
+                option_type="CE",
+                leg_type="SHORT",
+                target_delta=0.0,
+                entry_price=ct.ce_entry_px,
+                current_price=ct.ce_exit_px,
+                lots=self.lots,
+                lot_size=self.lot_size,
+                sl_mult=2.0,
+                sl_price=ct.ce_entry_px * 2.0,
+                status="CLOSED",
+                exit_price=ct.ce_exit_px,
+                pnl=(ct.ce_entry_px - ct.ce_exit_px) * self.units_traded
+            ))
+            positions.append(ForwardTestPosition(
+                model_id="MODEL_07",
+                underlying="NIFTY",
+                expiry_date=self.expiry_date,
+                symbol=f"NIFTY_{int(ct.pe_strike)}_PE",
+                strike=ct.pe_strike,
+                option_type="PE",
+                leg_type="SHORT",
+                target_delta=0.0,
+                entry_price=ct.pe_entry_px,
+                current_price=ct.pe_exit_px,
+                lots=self.lots,
+                lot_size=self.lot_size,
+                sl_mult=2.0,
+                sl_price=ct.pe_entry_px * 2.0,
+                status="CLOSED",
+                exit_price=ct.pe_exit_px,
+                pnl=(ct.pe_entry_px - ct.pe_exit_px) * self.units_traded
+            ))
+        return positions
 
     def get_quote_or_fallback(
         self,
@@ -331,11 +455,23 @@ class Model07Strategy:
         if self.is_excluded or self.state == "HALTED":
             return events
 
+        self.last_spot_close = close_px
+        self.last_bar_time = bar_time_str
+        if quotes_lookup:
+            self.last_quotes_lookup.update(quotes_lookup)
+
         # 1. Update running price range for current active tranche
         if self.active_tranche and not self.active_tranche.is_closed:
             t = self.active_tranche
             t.running_high = max(t.running_high, high_px)
             t.running_low = min(t.running_low, low_px)
+
+            # Update live option quotes for current active tranche
+            if quotes_lookup:
+                if (t.ce_strike, "CE") in quotes_lookup:
+                    t.ce_cur_px = quotes_lookup[(t.ce_strike, "CE")]
+                if (t.pe_strike, "PE") in quotes_lookup:
+                    t.pe_cur_px = quotes_lookup[(t.pe_strike, "PE")]
 
             # Check Upside / Downside Breach
             ce_breach_now = t.running_high >= t.ce_strike
@@ -518,6 +654,8 @@ class Model07Strategy:
                     pe_strike=pe_k,
                     ce_entry_px=p_ce_0,
                     pe_entry_px=p_pe_0,
+                    ce_cur_px=p_ce_0,
+                    pe_cur_px=p_pe_0,
                     total_entry_prem=tot_prem,
                     running_high=high_px,
                     running_low=low_px,
@@ -525,6 +663,8 @@ class Model07Strategy:
                     units=self.units_traded,
                     margin_deployed=self.margin_deployed,
                     friction_pts=self.friction_pt,
+                    net_points=-self.friction_pt,
+                    unrealized_pnl=-self.friction_pt * self.units_traded,
                     tranches_covered=[idx]
                 )
 
@@ -545,6 +685,28 @@ class Model07Strategy:
                 })
                 break
 
+        # Update unrealized PnL for holding active tranche
+        if self.active_tranche and not self.active_tranche.is_closed:
+            t = self.active_tranche
+            ce_cur = t.ce_cur_px if t.ce_cur_px > 0 else t.ce_entry_px
+            pe_cur = t.pe_cur_px if t.pe_cur_px > 0 else t.pe_entry_px
+            ce_gain = (t.ce_entry_px - ce_cur) if not t.ce_breached else (t.ce_entry_px - t.ce_exit_px)
+            pe_gain = (t.pe_entry_px - pe_cur) if not t.pe_breached else (t.pe_entry_px - t.pe_exit_px)
+            t.gross_points = ce_gain + pe_gain
+            t.net_points = t.gross_points - self.friction_pt
+            t.unrealized_pnl = t.net_points * self.units_traded
+
+        # Record continuous minute-level PnL trajectory
+        r_pnl, u_pnl, tot_pnl = self.get_realized_and_unrealized_pnl()
+        self.minute_pnl_history.append({
+            "time": bar_time_str,
+            "spot": close_px,
+            "realized_pnl": r_pnl,
+            "unrealized_pnl": u_pnl,
+            "total_pnl": tot_pnl,
+            "active_tranche": self.active_tranche.tranche_id if self.active_tranche else None
+        })
+
         # 3. Session End Check at 14:30
         if bar_time_str >= "14:30" and (len(self.executed_tranche_indices) >= 5 or len(self.closed_tranches) >= 1) and not self.session_completed:
             self.session_completed = True
@@ -559,6 +721,7 @@ class Model07Strategy:
 
     def get_daily_summary(self) -> Dict[str, Any]:
         """Calculates consolidated daily metrics across all closed tranches."""
+        r_pnl, u_pnl, tot_pnl = self.get_realized_and_unrealized_pnl()
         if not self.closed_tranches:
             return {
                 "date": self.current_date,
@@ -570,8 +733,12 @@ class Model07Strategy:
                 "total_friction": 0.0,
                 "net_points": 0.0,
                 "realized_pnl": 0.0,
+                "unrealized_pnl": u_pnl,
+                "total_pnl": tot_pnl,
                 "roi_pct": 0.0,
-                "tranches": []
+                "tranches": [],
+                "active_tranche": self.active_tranche.to_dict() if (self.active_tranche and not self.active_tranche.is_closed) else None,
+                "minute_pnl_history": list(self.minute_pnl_history)
             }
 
         tot_gross_pt = sum(t.gross_points for t in self.closed_tranches)
@@ -603,8 +770,12 @@ class Model07Strategy:
             "total_friction": round(tot_friction, 2),
             "net_points": round(tot_net_pt, 2),
             "realized_pnl": round(tot_pnl_rs, 2),
+            "unrealized_pnl": round(u_pnl, 2),
+            "total_pnl": round(tot_pnl_rs + u_pnl, 2),
             "roi_pct": round(roi_pct, 2),
-            "tranches": [t.to_dict() for t in self.closed_tranches]
+            "tranches": [t.to_dict() for t in self.closed_tranches],
+            "active_tranche": self.active_tranche.to_dict() if (self.active_tranche and not self.active_tranche.is_closed) else None,
+            "minute_pnl_history": list(self.minute_pnl_history)
         }
 
     def format_telegram_eod_summary(self, summary: Dict[str, Any]) -> str:

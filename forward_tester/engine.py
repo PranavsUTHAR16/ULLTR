@@ -35,6 +35,15 @@ class MultiModelEngine:
         # Active Strategy Engine: Strategy 6
         self.strategy6 = Strategy6Model(data_client=self.data_client, config=self.config)
 
+        # Active Strategy Engine: Model 07 (Pure Nifty OTM VRP Harvesting)
+        from forward_tester.models.model_07 import Model07Strategy
+        self.model07 = Model07Strategy(
+            lots=self.config.model_07.lots if hasattr(self.config, "model_07") else 1,
+            margin_per_lot=self.config.model_07.margin_per_lot if hasattr(self.config, "model_07") else 250000.0,
+            otm_offset=self.config.model_07.otm_offset if hasattr(self.config, "model_07") else 100.0,
+            friction_pt=self.config.model_07.friction_pts if hasattr(self.config, "model_07") else 1.25
+        )
+
         self.log_file = os.path.join(os.path.dirname(__file__), "dual_model_trades.csv")
         self.current_date = date.today().strftime("%Y-%m-%d")
 
@@ -43,19 +52,27 @@ class MultiModelEngine:
         self.load_saved_positions()
 
     def init_trading_day(self, trade_date: str):
-        """Initializes registered strategy model for the trading session."""
+        """Initializes registered strategy models for the trading session."""
         self.current_date = trade_date
         self.strategy6.init_trading_day(trade_date)
+        if hasattr(self, "model07") and self.model07:
+            self.model07.init_trading_day(trade_date)
 
     @property
     def active_positions(self) -> List[ForwardTestPosition]:
-        """Aggregates active positions from Strategy 6."""
-        return list(self.strategy6.active_positions)
+        """Aggregates active positions from Strategy 6 and Model 07."""
+        positions = list(self.strategy6.active_positions)
+        if hasattr(self, "model07") and self.model07:
+            positions.extend(self.model07.active_positions)
+        return positions
 
     @property
     def closed_positions(self) -> List[ForwardTestPosition]:
-        """Aggregates closed positions from Strategy 6."""
-        return list(self.strategy6.closed_positions)
+        """Aggregates closed positions from Strategy 6 and Model 07."""
+        positions = list(self.strategy6.closed_positions)
+        if hasattr(self, "model07") and self.model07:
+            positions.extend(self.model07.closed_positions)
+        return positions
 
     def load_saved_positions(self):
         """Loads today's saved trades from CSV to survive daemon restarts."""
@@ -159,8 +176,13 @@ class MultiModelEngine:
         self.send_telegram_eod_broadcast()
 
     def calculate_model_pnl(self, model_id: str = "STRATEGY_6") -> Tuple[float, float, float]:
-        """Calculates (realized_pnl, unrealized_pnl, total_pnl) for Strategy 6."""
-        return self.strategy6.get_realized_and_unrealized_pnl()
+        """Calculates (realized_pnl, unrealized_pnl, total_pnl) for Strategy 6 or Model 07."""
+        if model_id == "STRATEGY_6":
+            return self.strategy6.get_realized_and_unrealized_pnl()
+        elif model_id in ("MODEL_07", "STRATEGY_7"):
+            if hasattr(self, "model07") and self.model07:
+                return self.model07.get_realized_and_unrealized_pnl()
+        return 0.0, 0.0, 0.0
 
     def render_dashboard(self):
         """Renders rich real-time terminal telemetry status dashboard."""
@@ -168,12 +190,20 @@ class MultiModelEngine:
         s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
         s6_lots = self.config.strategy6.total_lots
 
-        print(f"\n🚀 STRATEGY 6 LIVE FORWARD TESTER | {now_str}")
+        m7_real, m7_unreal, m7_tot = self.calculate_model_pnl("MODEL_07")
+        m7_lots = self.config.model_07.lots if hasattr(self.config, "model_07") else 1
+
+        comb_tot = s6_tot + m7_tot
+
+        print(f"\n🚀 MULTI-MODEL LIVE FORWARD TESTER | {now_str}")
         print("=" * 85)
         print(f"Strategy 6: {self.strategy6.underlying} ({self.strategy6.regime[0]}-{self.strategy6.regime[1]}) | DTE: {self.strategy6.dte}")
+        if hasattr(self, "model07") and self.model07:
+            print(f"Model 07  : NIFTY 50 100pt OTM Strangle | DTE: {self.model07.dte} | Expiry: {self.model07.expiry_date}")
         print("-" * 85)
-        print(f"📊 MODEL 1 [STRATEGY_6] ({s6_lots} Lots) : ₹{s6_tot:+,.2f} (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})")
-        print(f"💰 COMBINED TOTAL PORTFOLIO PnL   : ₹{s6_tot:+,.2f} (Max Cap: {s6_lots} Lots)")
+        print(f"📊 MODEL 06 [STRATEGY_6] ({s6_lots} Lots) : ₹{s6_tot:+,.2f} (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})")
+        print(f"📊 MODEL 07 [VRP HARVEST] ({m7_lots} Lots) : ₹{m7_tot:+,.2f} (Realized: ₹{m7_real:+,.2f} | Unrealized: ₹{m7_unreal:+,.2f})")
+        print(f"💰 COMBINED TOTAL PORTFOLIO PnL   : ₹{comb_tot:+,.2f}")
         print("-" * 85)
         print("ACTIVE POSITIONS:")
         if not self.active_positions:

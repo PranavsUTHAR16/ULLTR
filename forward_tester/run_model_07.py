@@ -356,6 +356,117 @@ def print_model07_terminal_scorecard(summary: Dict[str, Any]) -> None:
     print("=" * 125 + "\n")
 
 
+def render_model07_dashboard(strategy: Model07Strategy, current_spot: float = 0.0, now_str: str = ""):
+    """Renders rich real-time terminal telemetry status dashboard for Model 07."""
+    if not now_str:
+        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    r_pnl, u_pnl, tot_pnl = strategy.get_realized_and_unrealized_pnl()
+    lots = strategy.lots
+    units = strategy.units_traded
+    margin = strategy.margin_deployed
+    roi_pct = (tot_pnl / margin * 100.0) if margin > 0 else 0.0
+
+    print(f"\n🚀 MODEL 07 LIVE FORWARD TESTER | {now_str}")
+    print("=" * 85)
+    print(f"Model 07: NIFTY 50 (Pure OTM VRP Harvesting) | DTE: {strategy.dte} | Expiry: {strategy.expiry_date}")
+    print("-" * 85)
+    print(f"📊 MODEL 07 TOTAL PnL ({lots} Lot / {units} Qty) : ₹{tot_pnl:+,.2f} (Realized: ₹{r_pnl:+,.2f} | Unrealized: ₹{u_pnl:+,.2f})")
+    print(f"💰 MARGIN DEPLOYED: ₹{margin:,.2f} | ROI: {roi_pct:+.2f}%")
+    print("-" * 85)
+
+    t = strategy.active_tranche
+    if t and not t.is_closed:
+        label = f"T{'-T'.join(str(x) for x in t.tranches_covered)}" if t.tranches_covered else f"T{t.tranche_id}"
+        spot_val = current_spot if current_spot > 0 else strategy.last_spot_close
+        print(f"ACTIVE TRANCHE: {label} [{t.entry_time} - {t.exit_time}] (ACTIVE)")
+        print(f"  • Spot: {spot_val:,.2f} | Safe Channel: {t.pe_strike:,.2f} (PE SL) ➔ {t.ce_strike:,.2f} (CE SL)")
+        ce_cur = t.ce_cur_px if t.ce_cur_px > 0 else t.ce_entry_px
+        pe_cur = t.pe_cur_px if t.pe_cur_px > 0 else t.pe_entry_px
+        ce_pnl = (t.ce_entry_px - ce_cur) * units if not t.ce_breached else (t.ce_entry_px - t.ce_exit_px) * units
+        pe_pnl = (t.pe_entry_px - pe_cur) * units if not t.pe_breached else (t.pe_entry_px - t.pe_exit_px) * units
+        ce_status = "HOLDING" if not t.ce_breached else f"STOPPED @ ₹{t.ce_exit_px:.2f}"
+        pe_status = "HOLDING" if not t.pe_breached else f"STOPPED @ ₹{t.pe_exit_px:.2f}"
+        print(f"  • CE {t.ce_strike:.0f}: Entry ₹{t.ce_entry_px:.2f} | Cur ₹{ce_cur:.2f} | PnL: ₹{ce_pnl:+,.2f} ({ce_status})")
+        print(f"  • PE {t.pe_strike:.0f}: Entry ₹{t.pe_entry_px:.2f} | Cur ₹{pe_cur:.2f} | PnL: ₹{pe_pnl:+,.2f} ({pe_status})")
+        decay_pts = (t.ce_entry_px + t.pe_entry_px) - (ce_cur + pe_cur)
+        print(f"  • Decay Harvested: {decay_pts:+5.2f} pts | Friction: -{strategy.friction_pt:.2f} pts | Tranche Unrealized: ₹{t.unrealized_pnl:+,.2f}")
+    else:
+        print("ACTIVE TRANCHE: None (Awaiting next scheduled 60-min window)")
+
+    if strategy.closed_tranches:
+        print("-" * 85)
+        print("CLOSED TRANCHES TODAY:")
+        for ct in strategy.closed_tranches:
+            tag = "✅ WIN" if ct.net_points > 0 else "❌ LOSS"
+            clabel = f"T{'-T'.join(str(x) for x in ct.tranches_covered)}" if ct.tranches_covered else f"T{ct.tranche_id}"
+            print(f"  • {tag} {clabel} [{ct.entry_time}-{ct.exit_actual_time or ct.exit_time}]: {ct.net_points:+5.2f} pts | PnL: ₹{ct.realized_pnl:+,.2f} ({ct.exit_reason})")
+    print("=" * 85)
+
+
+def send_telegram_model07_periodic_updates(tg: TelegramNotifier, strategy: Model07Strategy):
+    """Sends periodic real-time MTM and PnL updates to Telegram while positions are open."""
+    t = strategy.active_tranche
+    if not t or t.is_closed:
+        return
+    r_pnl, u_pnl, tot_pnl = strategy.get_realized_and_unrealized_pnl()
+    label = f"T{'-T'.join(str(x) for x in t.tranches_covered)}" if t.tranches_covered else f"T{t.tranche_id}"
+    ce_cur = t.ce_cur_px if t.ce_cur_px > 0 else t.ce_entry_px
+    pe_cur = t.pe_cur_px if t.pe_cur_px > 0 else t.pe_entry_px
+    ce_pnl = (t.ce_entry_px - ce_cur) * strategy.units_traded
+    pe_pnl = (t.pe_entry_px - pe_cur) * strategy.units_traded
+
+    lines = [
+        "📊 <b>MODEL 07 TELEMETRY UPDATE</b>",
+        f"📅 Date: <b>{strategy.current_date}</b> | Time: <b>{datetime.datetime.now().strftime('%H:%M:%S')} IST</b>",
+        f"• Total Net PnL: <b>₹{tot_pnl:+,.2f}</b> (Realized: ₹{r_pnl:+,.2f} | Unrealized: ₹{u_pnl:+,.2f})",
+        f"• Active Tranche: <b>{label} ({t.entry_time} ➔ {t.exit_time} IST)</b>",
+        f"• Spot Range: <b>{t.running_low:.1f} – {t.running_high:.1f}</b> (Safe: {t.pe_strike:.0f} PE ➔ {t.ce_strike:.0f} CE)",
+        "",
+        "<b>OPEN STRANGLE LEGS:</b>",
+        f"  • CE {t.ce_strike:.0f}: Cur ₹{ce_cur:.2f} (Entry ₹{t.ce_entry_px:.2f}) | PnL: <b>₹{ce_pnl:+,.2f}</b>",
+        f"  • PE {t.pe_strike:.0f}: Cur ₹{pe_cur:.2f} (Entry ₹{t.pe_entry_px:.2f}) | PnL: <b>₹{pe_pnl:+,.2f}</b>",
+        f"  • Premium Harvest: <b>{t.net_points:+5.2f} net pts</b> (₹{t.unrealized_pnl:+,.2f})"
+    ]
+    tg.send("\n".join(lines))
+
+
+def publish_model07_state_to_redis(r, strategy: Model07Strategy):
+    """Publishes continuous Model 07 portfolio state and PnL metrics to Redis."""
+    try:
+        r_pnl, u_pnl, tot_pnl = strategy.get_realized_and_unrealized_pnl()
+        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        state_dict = {
+            "model_id": "MODEL_07",
+            "model_name": "Model 07: Pure Nifty OTM VRP Harvesting",
+            "timestamp": now_str,
+            "date": strategy.current_date,
+            "expiry": strategy.expiry_date,
+            "dte": strategy.dte,
+            "spot_px": round(strategy.last_spot_close, 2),
+            "realized_pnl": r_pnl,
+            "unrealized_pnl": u_pnl,
+            "total_pnl": tot_pnl,
+            "lots": strategy.lots,
+            "units": strategy.units_traded,
+            "margin_deployed": strategy.margin_deployed,
+            "roi_pct": round((tot_pnl / strategy.margin_deployed * 100.0) if strategy.margin_deployed > 0 else 0.0, 2),
+            "active_tranche": strategy.active_tranche.to_dict() if (strategy.active_tranche and not strategy.active_tranche.is_closed) else None,
+            "closed_tranches": [ct.to_dict() for ct in strategy.closed_tranches]
+        }
+        payload_json = json.dumps(state_dict)
+        r.set("model07:portfolio:state", payload_json)
+        r.hset("model07:pnl", mapping={
+            "realized_pnl": str(r_pnl),
+            "unrealized_pnl": str(u_pnl),
+            "total_pnl": str(tot_pnl),
+            "updated_at": now_str,
+            "active_tranche": str(strategy.active_tranche.tranche_id) if (strategy.active_tranche and not strategy.active_tranche.is_closed) else "0"
+        })
+        r.publish("model07:events:portfolio", payload_json)
+    except Exception as e:
+        logger.debug("Redis state publish notice: %s", e)
+
+
 # =============================================================================
 # 4. REPLAY SIMULATOR
 # =============================================================================
@@ -668,6 +779,10 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
     except Exception as e:
         logger.warning("Could not subscribe to md:reco:trigger: %s", e)
 
+    last_render_time = 0.0
+    last_telegram_time = time.time()
+    last_redis_pub_time = 0.0
+
     while True:
         try:
             now_dt = datetime.datetime.now()
@@ -756,6 +871,9 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
                         quotes_lookup=quotes_lookup if quotes_lookup else None
                     )
 
+                    # Immediate state publish to Redis upon bar evaluation
+                    publish_model07_state_to_redis(r, strategy)
+
                     for ev in events:
                         logger.info("Live Event [%s]: %s", ev.get("event"), ev.get("message", "")[:60])
                         if ev.get("message"):
@@ -763,11 +881,57 @@ def resolve_front_expiry(r, today_str: str) -> Optional[str]:
 
                     last_processed_ts = cur_ts
 
+            # 3. Sub-second live quote update for open active tranche
+            if strategy.active_tranche and not strategy.active_tranche.is_closed:
+                t = strategy.active_tranche
+                ce_sym = chain_raw.get(f"{int(t.ce_strike)}:CE") if ('chain_raw' in locals() and chain_raw) else None
+                pe_sym = chain_raw.get(f"{int(t.pe_strike)}:PE") if ('chain_raw' in locals() and chain_raw) else None
+                if ce_sym and pe_sym:
+                    try:
+                        pipe_live = r.pipeline(transaction=False)
+                        pipe_live.hmget(f"md:quote:{ce_sym}", ["ltp", "last_price", "bid", "ask"])
+                        pipe_live.hmget(f"md:quote:{pe_sym}", ["ltp", "last_price", "bid", "ask"])
+                        res_live = pipe_live.execute()
+                        if res_live and len(res_live) == 2:
+                            ce_vals, pe_vals = res_live[0], res_live[1]
+                            ce_px = float(ce_vals[0] or ce_vals[1] or 0.0) if ce_vals else 0.0
+                            pe_px = float(pe_vals[0] or pe_vals[1] or 0.0) if pe_vals else 0.0
+                            if ce_px > 0: t.ce_cur_px = ce_px
+                            if pe_px > 0: t.pe_cur_px = pe_px
+                            ce_gain = (t.ce_entry_px - t.ce_cur_px) if not t.ce_breached else (t.ce_entry_px - t.ce_exit_px)
+                            pe_gain = (t.pe_entry_px - t.pe_cur_px) if not t.pe_breached else (t.pe_entry_px - t.pe_exit_px)
+                            t.gross_points = ce_gain + pe_gain
+                            t.net_points = t.gross_points - strategy.friction_pt
+                            t.unrealized_pnl = t.net_points * strategy.units_traded
+                    except Exception:
+                        pass
+
+            # 4. Continuous Terminal Dashboard Rendering (once per second)
+            if time.time() - last_render_time >= 1.0:
+                cur_spot_val = 0.0
+                try:
+                    cur_spot_val = float(r.hget(f"md:quote:{spot_key}", "ltp") or 0.0)
+                except Exception:
+                    pass
+                render_model07_dashboard(strategy, current_spot=cur_spot_val)
+                last_render_time = time.time()
+
+            # 5. Continuous Redis State Publish (once per second)
+            if time.time() - last_redis_pub_time >= 1.0:
+                publish_model07_state_to_redis(r, strategy)
+                last_redis_pub_time = time.time()
+
+            # 6. Periodic Telegram Telemetry Updates while Tranche is Active (every 30 seconds)
+            if strategy.active_tranche and not strategy.active_tranche.is_closed and (time.time() - last_telegram_time >= 30.0):
+                send_telegram_model07_periodic_updates(tg, strategy)
+                last_telegram_time = time.time()
+
             if t_str >= "15:30":
                 logger.info("Market session closed. Saving EOD ledger...")
                 raw_logger.close()
                 summary = strategy.get_daily_summary()
                 trade_logger.save_session_trades(today_str, summary["tranches"], summary)
+                publish_model07_state_to_redis(r, strategy)
                 print_model07_terminal_scorecard(summary)
 
                 # Sleep overnight until next morning 09:15 AM to prevent systemd tight-loop restarts

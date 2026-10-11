@@ -121,3 +121,121 @@ def test_pipelined_quote_retrieval_logic():
     quotes = stream.fetch_option_chain_quotes_pipelined(symbols_map)
     assert quotes[(25100.0, "CE")] == 120.5
     assert quotes[(24900.0, "PE")] == 45.5
+
+
+def test_model_07_continuous_pnl_tracking():
+    """Verifies that Model 07 computes continuous realized and unrealized PnL."""
+    from forward_tester.models.model_07 import Model07Strategy
+    from forward_tester.run_model_07 import render_model07_dashboard, publish_model07_state_to_redis
+    from forward_tester.engine import MultiModelEngine
+
+    strategy = Model07Strategy(lots=1, friction_pt=1.25)
+    strategy.init_trading_day("2026-10-15", expiry_date="2026-10-15")
+
+    # Initial state
+    r, u, tot = strategy.get_realized_and_unrealized_pnl()
+    assert r == 0.0 and u == 0.0 and tot == 0.0
+
+    # 09:30: Enter Tranche 1
+    # Spot = 25000 -> ATM 25000 -> CE 25100 @ 50.0, PE 24900 @ 40.0
+    quotes_entry = {
+        (25100.0, "CE"): 50.0,
+        (24900.0, "PE"): 40.0
+    }
+    events = strategy.on_minute_bar(
+        bar_time_str="09:30",
+        open_px=25000.0,
+        high_px=25005.0,
+        low_px=24995.0,
+        close_px=25000.0,
+        quotes_lookup=quotes_entry
+    )
+    assert strategy.active_tranche is not None
+    # On entry: realized = 0, unrealized = -1.25 * 65 = -81.25
+    r, u, tot = strategy.get_realized_and_unrealized_pnl()
+    assert r == 0.0
+    assert u == -81.25
+    assert tot == -81.25
+    assert len(strategy.active_positions) == 2
+
+    # 09:45: Holding and decaying (CE drops to 30.0, PE drops to 25.0)
+    # Gross points = (50 - 30) + (40 - 25) = 20 + 15 = 35 pts
+    # Net points = 35 - 1.25 = 33.75 pts
+    # Unrealized PnL = 33.75 * 65 = 2193.75
+    quotes_decay = {
+        (25100.0, "CE"): 30.0,
+        (24900.0, "PE"): 25.0
+    }
+    strategy.on_minute_bar(
+        bar_time_str="09:45",
+        open_px=25010.0,
+        high_px=25020.0,
+        low_px=25005.0,
+        close_px=25015.0,
+        quotes_lookup=quotes_decay
+    )
+    r, u, tot = strategy.get_realized_and_unrealized_pnl()
+    assert r == 0.0
+    assert u == 2193.75
+    assert tot == 2193.75
+
+    # Test MultiModelEngine integration
+    engine = MultiModelEngine(dry_run=True)
+    engine.model07 = strategy
+    eng_r, eng_u, eng_tot = engine.calculate_model_pnl("MODEL_07")
+    assert eng_r == 0.0
+    assert eng_u == 2193.75
+    assert eng_tot == 2193.75
+
+    # Test dashboard render without errors
+    render_model07_dashboard(strategy, current_spot=25015.0)
+
+    # Test Redis state publisher with mock
+    mock_redis = MagicMock()
+    publish_model07_state_to_redis(mock_redis, strategy)
+    mock_redis.set.assert_called_once()
+    mock_redis.hset.assert_called_once()
+    mock_redis.publish.assert_called_once()
+
+    # 10:30: Strikes unchanged (ATM=25000) -> Tranche seamlessly rolls forward into T2
+    quotes_roll = {
+        (25100.0, "CE"): 20.0,
+        (24900.0, "PE"): 15.0
+    }
+    strategy.on_minute_bar(
+        bar_time_str="10:30",
+        open_px=25015.0,
+        high_px=25025.0,
+        low_px=25010.0,
+        close_px=25020.0,
+        quotes_lookup=quotes_roll
+    )
+    # Rolled into T2: still active, holding forward without friction
+    assert strategy.active_tranche.exit_time == "11:30"
+    assert strategy.active_tranche.tranches_covered == [1, 2]
+    r, u, tot = strategy.get_realized_and_unrealized_pnl()
+    assert r == 0.0
+    assert u == 3493.75
+    assert tot == 3493.75
+
+    # 11:30: Spot shifts to 25050 -> ATM shifts to 25050 -> Strikes change -> Tranche exits normally
+    quotes_exit = {
+        (25100.0, "CE"): 15.0,
+        (24900.0, "PE"): 10.0
+    }
+    strategy.on_minute_bar(
+        bar_time_str="11:30",
+        open_px=25030.0,
+        high_px=25060.0,
+        low_px=25020.0,
+        close_px=25050.0,
+        quotes_lookup=quotes_exit
+    )
+    # Gross = (50 - 15) + (40 - 10) = 35 + 30 = 65 pts
+    # Net = 65 - 1.25 = 63.75 pts
+    # Realized = 63.75 * 65 = 4143.75
+    r, u, tot = strategy.get_realized_and_unrealized_pnl()
+    assert r == 4143.75
+    assert u == 0.0
+    assert tot == 4143.75
+
