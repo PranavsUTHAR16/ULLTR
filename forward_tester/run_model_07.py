@@ -722,6 +722,27 @@ def run_model07_live(
 
     last_processed_ts = 0
 
+    # ─── Redis State Rehydration: Restore active/closed tranches from previous session ──
+    try:
+        raw_state = r.get("model07:portfolio:state")
+        if raw_state:
+            cached_state = json.loads(raw_state)
+            if cached_state.get("date") == today_str:
+                if cached_state.get("active_tranche"):
+                    strategy.active_tranche = Model07Tranche.from_dict(cached_state["active_tranche"])
+                    logger.info("Rehydrated ACTIVE tranche %s from Redis", strategy.active_tranche.tranche_id)
+                if cached_state.get("closed_tranches"):
+                    strategy.closed_tranches = [Model07Tranche.from_dict(ct) for ct in cached_state["closed_tranches"]]
+                    logger.info("Rehydrated %d closed tranches from Redis", len(strategy.closed_tranches))
+                for ct in strategy.closed_tranches:
+                    for t_idx in (ct.tranches_covered or [ct.tranche_id]):
+                        strategy.executed_tranche_indices.add(t_idx)
+                if strategy.active_tranche:
+                    for t_idx in (strategy.active_tranche.tranches_covered or [strategy.active_tranche.tranche_id]):
+                        strategy.executed_tranche_indices.add(t_idx)
+    except Exception as e:
+        logger.warning("Could not rehydrate Model 07 state from Redis: %s", e)
+
     # ─── Historical catch-up: replay today's closed 1m bars ────────────────────
     # BUG-33 FIX: DO NOT build catchup_quotes from current Redis state. Using
     # today's current LTP for bars from 3 hours ago produces wrong entry prices.
@@ -755,7 +776,8 @@ def run_model07_live(
                     high_px=float(c_data.get("high", 0.0)),
                     low_px=float(c_data.get("low", 0.0)),
                     close_px=float(c_data.get("close", 0.0)),
-                    quotes_lookup=None  # BUG-33: no stale quote injection for history
+                    quotes_lookup=None,  # BUG-33: no stale quote injection for history
+                    is_catchup=True
                 )
                 for ev in events:
                     logger.info("Catchup [%s]: %s", ev.get("event"), ev.get("message", "")[:60])

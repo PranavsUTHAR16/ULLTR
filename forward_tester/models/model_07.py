@@ -150,6 +150,44 @@ class Model07Tranche:
             "status": "CLOSED" if self.is_closed else "OPEN"
         }
 
+    @classmethod
+    def from_dict(cls, d: Dict[str, Any]) -> "Model07Tranche":
+        """Reconstruct Model07Tranche from dictionary for state rehydration."""
+        return cls(
+            tranche_id=int(d["tranche_id"]),
+            date=d.get("date", ""),
+            entry_time=d.get("entry_time", ""),
+            exit_time=d.get("exit_time", ""),
+            spot_entry=float(d.get("spot_entry", 0.0)),
+            atm_strike=float(d.get("atm_strike", 0.0)),
+            ce_strike=float(d.get("ce_strike", 0.0)),
+            pe_strike=float(d.get("pe_strike", 0.0)),
+            ce_entry_px=float(d.get("ce_entry_px", 0.0)),
+            pe_entry_px=float(d.get("pe_entry_px", 0.0)),
+            total_entry_prem=float(d.get("total_entry_prem", 0.0)),
+            running_high=float(d.get("running_high", 0.0)),
+            running_low=float(d.get("running_low", 0.0)),
+            ce_breached=bool(d.get("ce_breached", False)),
+            pe_breached=bool(d.get("pe_breached", False)),
+            ce_exit_px=float(d.get("ce_exit_px", 0.0)),
+            pe_exit_px=float(d.get("pe_exit_px", 0.0)),
+            ce_cur_px=float(d.get("ce_cur_px", 0.0)),
+            pe_cur_px=float(d.get("pe_cur_px", 0.0)),
+            gross_points=float(d.get("gross_points", 0.0)),
+            friction_pts=float(d.get("friction_pts", 1.25)),
+            net_points=float(d.get("net_points", 0.0)),
+            realized_pnl=float(d.get("realized_pnl", 0.0)),
+            unrealized_pnl=float(d.get("unrealized_pnl", 0.0)),
+            exit_reason=d.get("exit_reason", "OPEN"),
+            lots=int(d.get("lots", 1)),
+            units=int(d.get("units", 65)),
+            margin_deployed=float(d.get("margin_deployed", 250000.0)),
+            roi_pct=float(d.get("roi_pct", 0.0)),
+            is_closed=bool(d.get("is_closed", False)),
+            exit_actual_time=d.get("exit_actual_time", ""),
+            tranches_covered=d.get("tranches_covered", [])
+        )
+
 
 class Model07Strategy:
     """
@@ -396,6 +434,8 @@ class Model07Strategy:
         pe_exit = self.get_quote_or_fallback(close_px, t.pe_strike, False, tau_exit, quotes_lookup)
 
         if ce_exit is None or pe_exit is None:
+            if quotes_lookup is None:
+                return
             self.state = "HALTED"
             events.append({
                 "event": "HALTED",
@@ -442,7 +482,8 @@ class Model07Strategy:
         high_px: float,
         low_px: float,
         close_px: float,
-        quotes_lookup: Optional[Dict[Tuple[float, str], float]] = None
+        quotes_lookup: Optional[Dict[Tuple[float, str], float]] = None,
+        is_catchup: bool = False
     ) -> List[Dict[str, Any]]:
         """
         Process a 1-minute bar for Model 07.
@@ -616,6 +657,14 @@ class Model07Strategy:
             if bar_time_str == t_entry and idx not in self.executed_tranche_indices:
                 self.executed_tranche_indices.add(idx)
 
+                # DEF-025: If in historical catch-up without quotes, skip tranche without halting
+                if is_catchup or quotes_lookup is None:
+                    events.append({
+                        "event": "TRANCHE_SKIPPED_CATCHUP",
+                        "message": f"Historical Tranche {idx}/5 at {t_entry} IST skipped during catch-up (no historical quotes)."
+                    })
+                    break
+
                 # Strike Selection: ATM +/- 100pt OTM
                 atm_k = round(close_px / 50.0) * 50.0
                 ce_k = atm_k + self.otm_offset
@@ -626,13 +675,12 @@ class Model07Strategy:
                 p_pe_0 = self.get_quote_or_fallback(close_px, pe_k, False, self.tau_dte, quotes_lookup)
 
                 if p_ce_0 is None or p_pe_0 is None:
-                    self.state = "HALTED"
                     events.append({
-                        "event": "HALTED",
+                        "event": "TRANCHE_ENTRY_FAILED",
                         "message": (
-                            f"🚨 <b>MODEL 07 HALTED</b>\n"
-                            f"• Reason: Missing live market quotes for {ce_k} CE or {pe_k} PE at {bar_time_str} IST.\n"
-                            f"• Action: Refusing synthetic Black-Scholes fallback per Rule 6."
+                            f"🚨 <b>MODEL 07 [TRANCHE {idx}/5 ENTRY ABORTED]</b>\n"
+                            f"• Reason: Missing live market quotes for {ce_k:.0f} CE or {pe_k:.0f} PE at {bar_time_str} IST.\n"
+                            f"• Action: Refusing synthetic Black-Scholes fallback per Rule 6. Tranche {idx} aborted."
                         )
                     })
                     break

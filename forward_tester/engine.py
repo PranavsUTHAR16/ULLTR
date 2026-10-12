@@ -184,17 +184,21 @@ class MultiModelEngine:
         self.log_trade_execution()
         self.send_telegram_eod_broadcast()
 
+    def _get_redis_client(self):
+        """Helper to safely retrieve redis client if available."""
+        if hasattr(self, "data_client"):
+            if hasattr(self.data_client, "client") and hasattr(self.data_client.client, "r"):
+                return self.data_client.client.r
+            elif hasattr(self.data_client, "r"):
+                return self.data_client.r
+        return None
+
     def calculate_model_pnl(self, model_id: str = "STRATEGY_6") -> Tuple[float, float, float]:
         """Calculates (realized_pnl, unrealized_pnl, total_pnl) for Strategy 6 or Model 07."""
-        if model_id == "STRATEGY_6":
+        if model_id in ("STRATEGY_6", "MODEL_06"):
             return self.strategy6.get_realized_and_unrealized_pnl()
         elif model_id in ("MODEL_07", "STRATEGY_7"):
-            redis_client = None
-            if hasattr(self, "data_client"):
-                if hasattr(self.data_client, "client") and hasattr(self.data_client.client, "r"):
-                    redis_client = self.data_client.client.r
-                elif hasattr(self.data_client, "r"):
-                    redis_client = self.data_client.r
+            redis_client = self._get_redis_client()
             if redis_client:
                 try:
                     pnl_hash = redis_client.hgetall("model07:pnl")
@@ -309,22 +313,60 @@ class MultiModelEngine:
             self._send_telegram(msg)
 
     def send_telegram_model_periodic_updates(self):
-        """Sends periodic real-time MTM and PnL updates to Telegram while positions are open."""
-        if not self.active_positions:
+        """Sends periodic real-time MTM and PnL updates to Telegram for all active models."""
+        if not self.active_positions and not self.closed_positions:
             return
 
         s6_real, s6_unreal, s6_tot = self.calculate_model_pnl("STRATEGY_6")
+        s6_lots = self.config.strategy6.total_lots
+
+        m7_real, m7_unreal, m7_tot = self.calculate_model_pnl("MODEL_07")
+        m7_lots = self.config.model_07.lots if hasattr(self.config, "model_07") else 1
+
+        # Fetch detailed Model 07 state from Redis if available
+        m7_state = None
+        redis_client = self._get_redis_client()
+        if redis_client:
+            try:
+                raw_m7 = redis_client.get("model07:portfolio:state")
+                if raw_m7:
+                    m7_state = json.loads(raw_m7)
+            except Exception:
+                pass
+
+        comb_tot = s6_tot + m7_tot
+        now_str = datetime.now().strftime('%H:%M:%S')
+
         lines = [
-            f"📊 <b>STRATEGY 6 TELEMETRY UPDATE</b>",
-            f"📅 Date: <b>{self.current_date}</b> | Time: <b>{datetime.now().strftime('%H:%M:%S')} IST</b>",
+            f"🚀 <b>ULLTR LIVE MULTI-MODEL TELEMETRY</b>",
+            f"📅 Date: <b>{self.current_date}</b> | Time: <b>{now_str} IST</b>",
+            f"💰 <b>TOTAL PORTFOLIO PnL: ₹{comb_tot:+,.2f}</b>",
+            "─────────────────────────────",
+            f"🔹 <b>MODEL 06 [STRATEGY 6] ({s6_lots} Lots)</b>",
             f"• Net PnL: <b>₹{s6_tot:+,.2f}</b> (Realized: ₹{s6_real:+,.2f} | Unrealized: ₹{s6_unreal:+,.2f})",
-            "",
-            "<b>OPEN LEGS:</b>"
+            "<b>Open Legs:</b>"
         ]
-        for p in self.active_positions:
-            lines.append(
-                f"  • {p.underlying} {p.strike} {p.option_type}: Cur ₹{p.current_price:.2f} (Entry ₹{p.entry_price:.2f}) | PnL: <b>₹{p.pnl:+,.2f}</b>"
-            )
+        if self.active_positions:
+            for p in self.active_positions:
+                lines.append(
+                    f"  • {p.underlying} {p.strike:.0f} {p.option_type}: Cur ₹{p.current_price:.2f} (Entry ₹{p.entry_price:.2f}) | PnL: <b>₹{p.pnl:+,.2f}</b>"
+                )
+        else:
+            lines.append("  • (No active positions)")
+
+        lines.append("─────────────────────────────")
+        lines.append(f"🔹 <b>MODEL 07 [VRP HARVEST] ({m7_lots} Lots)</b>")
+        lines.append(f"• Net PnL: <b>₹{m7_tot:+,.2f}</b> (Realized: ₹{m7_real:+,.2f} | Unrealized: ₹{m7_unreal:+,.2f})")
+        if m7_state and m7_state.get("active_tranche"):
+            at = m7_state["active_tranche"]
+            lbl = at.get("tranche_label", f"T{at.get('tranche_id', 1)}")
+            lines.append(f"• Active Tranche: <b>{lbl}</b> ({at.get('entry_time')} ➔ {at.get('exit_time')} IST)")
+            lines.append(f"  - Sold CE: {float(at.get('ce_strike', 0)):.0f} CE @ ₹{float(at.get('ce_entry_px', 0)):.2f} (Cur: ₹{float(at.get('ce_cur_px', 0)):.2f})")
+            lines.append(f"  - Sold PE: {float(at.get('pe_strike', 0)):.0f} PE @ ₹{float(at.get('pe_entry_px', 0)):.2f} (Cur: ₹{float(at.get('pe_cur_px', 0)):.2f})")
+            lines.append(f"  - Tranche MTM: <b>{float(at.get('net_points', 0)):+5.2f} pts</b> (₹{float(at.get('unrealized_pnl', 0)):+,.2f})")
+        else:
+            lines.append(f"• Active Tranche: <i>None (Standby for next scheduled 60-min window)</i>")
+
         self._send_telegram("\n".join(lines))
 
     def send_telegram_periodic_heartbeat(self):

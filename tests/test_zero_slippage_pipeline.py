@@ -21,6 +21,7 @@ from forward_tester.streaming_engine import HighPrecisionClock, RedisEventPushSt
 from forward_tester.broker_gateway import UpstoxBrokerGateway
 from forward_tester.config import MultiModelConfig
 from forward_tester.models.strategy_6 import Strategy6Model
+from forward_tester.models.model_07 import Model07Strategy, Model07Tranche
 
 
 def test_high_precision_clock_drift():
@@ -244,4 +245,83 @@ def test_model_07_continuous_pnl_tracking():
     assert r == 4143.75
     assert u == 0.0
     assert tot == 4143.75
+
+
+def test_def_025_model07_catchup_no_halt():
+    """DEF-025: Replaying historical bars without quotes must NOT halt strategy."""
+    strategy = Model07Strategy(lots=1, allow_theoretical_fallback=False)
+    strategy.init_trading_day("2026-10-12", "2026-10-13")
+
+    # Replay 09:30 and 10:30 bars during catchup (quotes_lookup=None, is_catchup=True)
+    events_0930 = strategy.on_minute_bar(
+        bar_time_str="09:30",
+        open_px=22400.0,
+        high_px=22410.0,
+        low_px=22390.0,
+        close_px=22405.0,
+        quotes_lookup=None,
+        is_catchup=True
+    )
+    assert strategy.state == "ACTIVE"
+    assert 1 in strategy.executed_tranche_indices
+    assert any(e.get("event") == "TRANCHE_SKIPPED_CATCHUP" for e in events_0930)
+
+    events_1030 = strategy.on_minute_bar(
+        bar_time_str="10:30",
+        open_px=22420.0,
+        high_px=22430.0,
+        low_px=22415.0,
+        close_px=22425.0,
+        quotes_lookup=None,
+        is_catchup=True
+    )
+    assert strategy.state == "ACTIVE"
+    assert 2 in strategy.executed_tranche_indices
+    assert any(e.get("event") == "TRANCHE_SKIPPED_CATCHUP" for e in events_1030)
+
+    # Now at 11:30 live bar arrives with quotes -> must successfully enter Tranche 3!
+    quotes_1130 = {
+        (22500.0, "CE"): 35.0,
+        (22300.0, "PE"): 40.0
+    }
+    events_1130 = strategy.on_minute_bar(
+        bar_time_str="11:30",
+        open_px=22420.0,
+        high_px=22430.0,
+        low_px=22415.0,
+        close_px=22425.0,
+        quotes_lookup=quotes_1130,
+        is_catchup=False
+    )
+    assert strategy.state == "ACTIVE"
+    assert strategy.active_tranche is not None
+    assert strategy.active_tranche.tranche_id == 3
+    assert any(e.get("event") == "TRANCHE_ENTERED" for e in events_1130)
+
+
+def test_model07_tranche_from_dict_rehydration():
+    """Verify Model07Tranche rehydrates losslessly from dictionary."""
+    orig = Model07Tranche(
+        tranche_id=3,
+        date="2026-10-12",
+        entry_time="11:30",
+        exit_time="12:30",
+        spot_entry=22450.0,
+        atm_strike=22450.0,
+        ce_strike=22550.0,
+        pe_strike=22350.0,
+        ce_entry_px=45.0,
+        pe_entry_px=50.0,
+        total_entry_prem=95.0,
+        running_high=22460.0,
+        running_low=22440.0,
+        tranches_covered=[3]
+    )
+    d = orig.to_dict()
+    rehydrated = Model07Tranche.from_dict(d)
+    assert rehydrated.tranche_id == 3
+    assert rehydrated.ce_strike == 22550.0
+    assert rehydrated.pe_strike == 22350.0
+    assert rehydrated.total_entry_prem == 95.0
+
 
