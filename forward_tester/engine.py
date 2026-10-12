@@ -180,6 +180,13 @@ class MultiModelEngine:
         if model_id == "STRATEGY_6":
             return self.strategy6.get_realized_and_unrealized_pnl()
         elif model_id in ("MODEL_07", "STRATEGY_7"):
+            if hasattr(self, "data_client") and hasattr(self.data_client, "r") and self.data_client.r:
+                try:
+                    pnl_hash = self.data_client.r.hgetall("model07:pnl")
+                    if pnl_hash:
+                        return float(pnl_hash.get("realized_pnl", 0.0)), float(pnl_hash.get("unrealized_pnl", 0.0)), float(pnl_hash.get("total_pnl", 0.0))
+                except Exception:
+                    pass
             if hasattr(self, "model07") and self.model07:
                 return self.model07.get_realized_and_unrealized_pnl()
         return 0.0, 0.0, 0.0
