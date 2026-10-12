@@ -603,6 +603,28 @@ def run_model07_replay(
 # =============================================================================
 # 5. LIVE STREAMING FORWARD TESTER
 # =============================================================================
+def resolve_front_expiry(r, today_str: str) -> Optional[str]:
+    """
+    Dynamically resolves front weekly expiry from Redis.
+    Guarantees no false fallback to today_str on non-expiry days.
+    """
+    front_exp = r.get("exp:NIFTY:front")
+    if front_exp and front_exp >= today_str:
+        return front_exp
+
+    chain_keys = [k for k in r.keys("chain:NIFTY:*") if ":meta" not in k]
+    valid_chains = sorted([k.split(":")[-1] for k in chain_keys if k.split(":")[-1] >= today_str])
+    if valid_chains:
+        resolved = valid_chains[0]
+        try:
+            r.set("exp:NIFTY:front", resolved)
+        except Exception:
+            pass
+        return resolved
+
+    return None
+
+
 def run_model07_live(
     lots: int = 1,
     margin_per_lot: float = 250000.0,
@@ -652,28 +674,6 @@ def run_model07_live(
         time.sleep(sleep_sec)
         # Update today_str after waking up
         today_str = datetime.date.today().strftime("%Y-%m-%d")
-
-def resolve_front_expiry(r, today_str: str) -> Optional[str]:
-    """
-    Dynamically resolves front weekly expiry from Redis.
-    Guarantees no false fallback to today_str on non-expiry days.
-    """
-    front_exp = r.get("exp:NIFTY:front")
-    if front_exp and front_exp >= today_str:
-        return front_exp
-
-    chain_keys = [k for k in r.keys("chain:NIFTY:*") if ":meta" not in k]
-    valid_chains = sorted([k.split(":")[-1] for k in chain_keys if k.split(":")[-1] >= today_str])
-    if valid_chains:
-        resolved = valid_chains[0]
-        try:
-            r.set("exp:NIFTY:front", resolved)
-        except Exception:
-            pass
-        return resolved
-
-    return None
-
 
     # Front Expiry resolution
     front_exp = resolve_front_expiry(r, today_str)

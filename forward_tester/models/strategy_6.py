@@ -2,11 +2,14 @@
 import os
 import sys
 import time
+import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime, date
 from typing import Dict, List, Optional, Any, Tuple
 from scipy.stats import linregress
+
+logger = logging.getLogger("Strategy6")
 
 from forward_tester.models.base_model import BaseTradingModel
 from forward_tester.position import ForwardTestPosition
@@ -107,6 +110,50 @@ class Strategy6Model(BaseTradingModel):
 
         daily_bars.sort(key=lambda x: x[0])
         closes = [x[1] for x in daily_bars]
+
+        if len(closes) < 10 and not type(self.data_client).__name__.startswith("Empty"):
+            # Rehydrate daily bars from ClickHouse Cloud into Redis
+            try:
+                import clickhouse_connect
+                ch_client = clickhouse_connect.get_client(
+                    host="uwmxpy364g.ap-south-1.aws.clickhouse.cloud",
+                    port=8443,
+                    user="default",
+                    password="WqJbsqU5_Odq4",
+                    secure=True
+                )
+                q = f"""
+                SELECT 
+                    toString(toDate(timestamp)) AS dt,
+                    argMax(ltp, timestamp) AS close,
+                    sum(volume) AS volume
+                FROM market_ticks
+                WHERE symbol = '{spot_sym}'
+                GROUP BY dt
+                ORDER BY dt DESC
+                LIMIT 20
+                """
+                rows = ch_client.query(q).result_rows
+                if rows:
+                    r_obj = getattr(self.data_client.client, "r", None)
+                    if r_obj and hasattr(r_obj, "pipeline"):
+                        pipe = r_obj.pipeline()
+                        for row in rows:
+                            d_str = str(row[0])
+                            k = f"md:candle:{spot_sym}:1d:{d_str}"
+                            pipe.hset(k, mapping={"close": str(row[1]), "volume": str(row[2])})
+                            daily_bars.append((d_str, float(row[1])))
+                        pipe.execute()
+                    else:
+                        for row in rows:
+                            d_str = str(row[0])
+                            daily_bars.append((d_str, float(row[1])))
+                    # Deduplicate and sort
+                    daily_dict = {d: px for d, px in daily_bars}
+                    daily_bars = sorted(daily_dict.items(), key=lambda x: x[0])
+                    closes = [x[1] for x in daily_bars]
+            except Exception as exc:
+                logger.warning("Failed to rehydrate daily closes from ClickHouse: %s", exc)
 
         if len(closes) < 10:
             raise ValueError(
