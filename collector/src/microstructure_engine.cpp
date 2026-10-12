@@ -160,7 +160,7 @@ void MicrostructureEngine::process_tick(
     double buy_d = buy_v * ltp;
     double sell_d = sell_v * ltp;
 
-    // 2b. Quote Boundary Rule (100% Exact Match for ModelPOC CVD)
+    // 2b. Quote Boundary Rule for Trade Classification
     double qb_sign = 0.0;
     if (bid > 0.0 && ask > 0.0) {
         if (ltp >= ask) qb_sign = 1.0;
@@ -198,7 +198,7 @@ void MicrostructureEngine::process_tick(
         }
 
         // 09:15 IST = 33,300 seconds from midnight IST (+19800s offset from UTC)
-        // Matches ModelPOCV2 backtest profile accumulation starting at 09:15:00 open
+        // Profile accumulation starting at 09:15:00 open
         int64_t ist_sec_of_day = (ts_sec + 19800) % 86400;
         if (ist_sec_of_day >= 33300 && inc_vol > 0) {
             int64_t bin_idx = static_cast<int64_t>(std::round(ltp / 5.0));
@@ -230,7 +230,7 @@ void MicrostructureEngine::process_tick(
     m.dpoc = (state.max_poc_bin > 0) ? (state.max_poc_bin * 5.0) : (std::round(ltp / 5.0) * 5.0);
     m.updated_at_ms = now_ms;
 
-    // Calculate 15-minute Quote Boundary CVD (Matches ModelPOC backtest)
+    // Calculate 15-minute Quote Boundary CVD
     double cvd_15m = 0.0;
     int64_t cutoff_15m = minute_ts - (CVD_WINDOW_MINS * 60);
     for (size_t i = 0; i < VWAP_WINDOW_MINS; ++i) {

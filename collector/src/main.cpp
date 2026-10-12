@@ -31,8 +31,6 @@
 #include "MarketDataFeedV3.pb.h"
 #include "candle_manager.hpp"
 #include "microstructure_engine.hpp"
-#include "strategy_engine.hpp"
-#include "fifo_pool.hpp"
 #include "tick_wal_writer.hpp"
 
 namespace beast = boost::beast;
@@ -119,7 +117,7 @@ inline void configure_low_latency_socket(tcp::socket& sock) {
 class MarketDataIngestor {
 public:
     MarketDataIngestor(const std::string& config_path, bool is_replay = false) 
-        : m_reconnect_attempts(0), m_redis(nullptr), m_mock(false), m_replay(is_replay), m_last_reconnect_time_ms(0), m_last_portfolio_publish_ms(0),
+        : m_reconnect_attempts(0), m_redis(nullptr), m_mock(false), m_replay(is_replay), m_last_reconnect_time_ms(0),
           m_last_msg_time_ms(0), m_is_connected(false), m_watchdog_triggered(false), m_stop_watchdog(false), m_active_socket(nullptr),
           m_ticks_processed_window(0), m_last_stats_log_ms(0) {
         std::cout << "==========================================================" << std::endl;
@@ -292,54 +290,7 @@ public:
             }
             m_candle_mgr->init_active_candles(m_redis);
             m_microstructure_mgr = std::make_unique<MicrostructureEngine>();
-            m_fifo_pool = std::make_unique<FIFOPool>(m_starting_capital);
-            m_fifo_pool->restore_state(m_redis);
-            m_strategy_engine = std::make_unique<StrategyEngine>(*m_fifo_pool);
-            m_strategy_engine->init_front_expiry(m_redis);
-            m_strategy_engine->set_trade_callback([](const std::string& ev, const UnifiedPosition& pos, const std::string& msg) {
-                std::cout << "⚡ [C++ StrategyEngine] " << ev << " | Model: " << pos.model_name
-                          << " | " << pos.symbol << " (" << pos.lots << " Lots) | PnL: Rs " << pos.realized_pnl
-                          << " | Reason: " << msg << std::endl;
-            });
 
-            // ─── CRITICAL: Replay today's candles from Redis in LIVE mode ─────────────
-            m_strategy_engine->rehydrate_from_redis(m_redis);
-
-
-            m_candle_mgr->set_bar_close_callback([this](const std::string& symbol, const std::string& tf, const Candle& closed_bar) {
-                if (tf == "1m" && m_strategy_engine && m_microstructure_mgr && m_redis) {
-                    if (m_front_futures_symbol.empty()) {
-                        redisReply* r_fut = (redisReply*)redisCommand(m_redis, "GET fut:NIFTY:front");
-                        if (r_fut) {
-                            if (r_fut->type == REDIS_REPLY_STRING && r_fut->str) {
-                                m_front_futures_symbol = r_fut->str;
-                            }
-                            freeReplyObject(r_fut);
-                        }
-                    }
-
-                    if (!m_front_futures_symbol.empty() && symbol == m_front_futures_symbol) {
-                        MicrostructureMetrics metrics;
-                        if (m_microstructure_mgr->get_metrics(symbol, metrics)) {
-                            Candle1M bar;
-                            bar.minute_ts = closed_bar.timestamp;
-                            bar.open = closed_bar.open;
-                            bar.high = closed_bar.high;
-                            bar.low = closed_bar.low;
-                            bar.close = closed_bar.close;
-                            bar.volume = closed_bar.volume;
-
-                            Candle1M prev_bar = m_last_1m_bars[symbol];
-                            if (prev_bar.minute_ts == 0) {
-                                prev_bar = bar;
-                            }
-
-                            m_strategy_engine->on_1m_bar(m_redis, symbol, bar, prev_bar, metrics);
-                            m_last_1m_bars[symbol] = bar;
-                        }
-                    }
-                }
-            });
         }
         while (m_reconnect_attempts < m_max_reconnect_attempts) {
             try {
@@ -577,7 +528,6 @@ private:
         m_target = cfg.value("target", "/v3/feed/market-data-feed");
         m_mode = cfg.value("mode", "full");
         m_instruments = cfg["instruments"].get<std::vector<std::string>>();
-        m_starting_capital = cfg.value("starting_capital", 25000.0);
         m_wal_dir = cfg.value("wal_dir", "/Users/prana/Desktop/open_source/web/data/tick_wal");
         m_wal_writer.init(m_wal_dir);
         m_pinned_core = cfg.value("pinned_core", 1);
@@ -888,37 +838,13 @@ private:
 
             if (m_redis && m_microstructure_mgr) {
                 m_microstructure_mgr->process_tick(m_redis, rec.symbol, rec.ltp, rec.bid[0], rec.ask[0], static_cast<int64_t>(rec.volume), rec.oi, rec.ts_exchange);
-
-                if (m_strategy_engine) {
-                    if (m_front_futures_symbol.empty() && m_redis) {
-                        redisReply* r_fut = (redisReply*)redisCommand(m_redis, "GET fut:NIFTY:front");
-                        if (r_fut) {
-                            if (r_fut->type == REDIS_REPLY_STRING && r_fut->str) {
-                                m_front_futures_symbol = r_fut->str;
-                            }
-                            freeReplyObject(r_fut);
-                        }
-                    }
-                    if (!m_front_futures_symbol.empty() && rec.symbol == m_front_futures_symbol) {
-                        MicrostructureMetrics metrics;
-                        if (m_microstructure_mgr->get_metrics(rec.symbol, metrics)) {
-                            m_strategy_engine->on_tick(m_redis, rec.symbol, rec.ltp, rec.bid[0], rec.ask[0], rec.ts_exchange, metrics);
-                        }
-                    }
-                }
             }
 
             m_ticks_processed_window++;
         }
 
-        // Periodic 10-second portfolio telemetry publish to Redis
-        int64_t now_epoch_ms = now_ms;
-        if (m_strategy_engine && m_redis && (now_epoch_ms - m_last_portfolio_publish_ms >= 10000)) {
-            m_last_portfolio_publish_ms = now_epoch_ms;
-            m_strategy_engine->publish_portfolio_state(m_redis);
-        }
-
         // Rate-limited throughput telemetry (every 5 seconds)
+        int64_t now_epoch_ms = now_ms;
         if (now_epoch_ms - m_last_stats_log_ms >= 5000) {
             double rate = (m_ticks_processed_window * 1000.0) / std::max<int64_t>(1, (now_epoch_ms - m_last_stats_log_ms));
             std::cout << "📊 [C++ Ingestor] Pipeline Throughput: " << std::fixed << std::setprecision(1) << rate 
@@ -1009,41 +935,6 @@ private:
         }
     }
 
-    void print_replay_scorecard() {
-        if (!m_fifo_pool) return;
-        std::cout << "\n=================================================================================" << std::endl;
-        std::cout << "📊 C++ FORWARD TESTER REPLAY PERFORMANCE SCORECARD" << std::endl;
-        std::cout << "=================================================================================" << std::endl;
-        std::cout << "Active Positions Remaining : " << m_fifo_pool->active_positions.size() << std::endl;
-        std::cout << "Total Closed Trades        : " << m_fifo_pool->closed_positions.size() << std::endl;
-
-        double total_pnl = 0.0;
-        int wins = 0;
-        int losses = 0;
-
-        for (const auto& pos : m_fifo_pool->closed_positions) {
-            double pts = pos.get_points();
-            double pnl = pts * (pos.lots * 65);
-            total_pnl += pnl;
-            if (pts > 0) wins++; else losses++;
-
-            std::cout << "  • [" << std::setw(18) << pos.model_name << "] " 
-                      << std::setw(5) << pos.entry_time << " -> " << std::setw(5) << pos.exit_time << " | "
-                      << pos.strike << " " << option_type_to_string(pos.option_type) 
-                      << " (" << pos.lots << " lots) | Entry Ask: Rs " << std::fixed << std::setprecision(2) << pos.entry_option_price
-                      << " -> Exit Bid: Rs " << pos.exit_option_price
-                      << " | Net: " << std::showpos << pts << std::noshowpos << " pts (Rs " << std::showpos << pnl << std::noshowpos << ")"
-                      << " | Reason: " << pos.exit_reason << std::endl;
-        }
-
-        std::cout << "---------------------------------------------------------------------------------" << std::endl;
-        std::cout << "Win / Loss Record           : " << wins << " Wins / " << losses << " Losses (" 
-                  << (m_fifo_pool->closed_positions.empty() ? 0.0 : (wins * 100.0 / m_fifo_pool->closed_positions.size())) << "%)" << std::endl;
-        std::cout << "Realized Equity PnL         : Rs " << std::showpos << total_pnl << std::noshowpos << std::endl;
-        std::cout << "Pool Free Cash              : Rs " << m_fifo_pool->get_free_cash() << std::endl;
-        std::cout << "=================================================================================" << std::endl;
-    }
-
     void run_replay() {
         pin_thread_to_core(m_pinned_core);
         std::cout << "==================================================" << std::endl;
@@ -1070,65 +961,7 @@ private:
             m_candle_mgr->add_instrument(m_front_futures_symbol);
         }
         m_candle_mgr->add_instrument("NSE_INDEX|Nifty 50");
-        // In replay receiver mode, start candle manager clean without restoring stale candles
-        // m_candle_mgr->init_active_candles(m_redis);
-
         m_microstructure_mgr = std::make_unique<MicrostructureEngine>();
-        m_fifo_pool = std::make_unique<FIFOPool>(m_starting_capital);
-        m_strategy_engine = std::make_unique<StrategyEngine>(*m_fifo_pool);
-        m_strategy_engine->enable_model_poc_v2 = true;
-        m_strategy_engine->enable_model_spatial_box = true;
-        m_strategy_engine->enable_model_dalton_va = true;
-        m_strategy_engine->enable_model_tpo_poc = false;
-
-        m_strategy_engine->set_trade_callback([](const std::string& ev, const UnifiedPosition& pos, const std::string& msg) {
-            std::cout << "⚡ [C++ StrategyEngine] " << ev << " | Model: " << pos.model_name
-                      << " | " << pos.symbol << " (" << pos.lots << " Lots) | Entry: Rs " << pos.entry_option_price
-                      << " -> Exit: Rs " << pos.exit_option_price
-                      << " | Pts: " << pos.get_points()
-                      << " | PnL: Rs " << pos.realized_pnl
-                      << " | Reason: " << msg << std::endl;
-        });
-
-        // ─── CRITICAL: Replay today's candles from Redis to rebuild Initial Balance,
-        //   TPO masks, POC baseline, and Dalton probes. Without this, any restart
-        //   during the session produces a corrupted IB → wrong VAH/VAL → false trades.
-        m_strategy_engine->rehydrate_from_redis(m_redis);
-
-        m_candle_mgr->set_bar_close_callback([this](const std::string& symbol, const std::string& tf, const Candle& closed_bar) {
-            if (tf == "1m" && m_strategy_engine && m_microstructure_mgr && m_redis) {
-                if (m_front_futures_symbol.empty()) {
-                    redisReply* r_fut = (redisReply*)redisCommand(m_redis, "GET fut:NIFTY:front");
-                    if (r_fut) {
-                        if (r_fut->type == REDIS_REPLY_STRING && r_fut->str) {
-                            m_front_futures_symbol = r_fut->str;
-                        }
-                        freeReplyObject(r_fut);
-                    }
-                }
-
-                if (!m_front_futures_symbol.empty() && symbol == m_front_futures_symbol) {
-                    MicrostructureMetrics metrics;
-                    if (m_microstructure_mgr->get_metrics(symbol, metrics)) {
-                        Candle1M bar;
-                        bar.minute_ts = closed_bar.timestamp;
-                        bar.open = closed_bar.open;
-                        bar.high = closed_bar.high;
-                        bar.low = closed_bar.low;
-                        bar.close = closed_bar.close;
-                        bar.volume = closed_bar.volume;
-
-                        Candle1M prev_bar = m_last_1m_bars[symbol];
-                        if (prev_bar.minute_ts == 0) {
-                            prev_bar = bar;
-                        }
-                        m_last_1m_bars[symbol] = bar;
-
-                        m_strategy_engine->on_1m_bar(m_redis, symbol, bar, prev_bar, metrics);
-                    }
-                }
-            }
-        });
 
         // Dedicated subscriber hiredis context
         redisContext* sub_redis = nullptr;
@@ -1177,27 +1010,6 @@ private:
                             m_candle_mgr->process_tick_candle(m_redis, symbol, p_val, v_val, ts_val);
                             m_microstructure_mgr->process_tick(m_redis, symbol, p_val, b_val, a_val, v_val, oi_val, ts_val);
 
-                            if (m_strategy_engine) {
-                                if (m_front_futures_symbol.empty() && m_redis) {
-                                    redisReply* r_fut = (redisReply*)redisCommand(m_redis, "GET fut:NIFTY:front");
-                                    if (r_fut) {
-                                        if (r_fut->type == REDIS_REPLY_STRING && r_fut->str) {
-                                            m_front_futures_symbol = r_fut->str;
-                                            m_candle_mgr->add_instrument(m_front_futures_symbol);
-                                            std::cout << "🎯 [Replay Receiver] Front Future Symbol Resolved: " << m_front_futures_symbol << std::endl;
-                                        }
-                                        freeReplyObject(r_fut);
-                                    }
-                                    m_strategy_engine->init_front_expiry(m_redis);
-                                }
-                                if (!m_front_futures_symbol.empty() && symbol == m_front_futures_symbol) {
-                                    MicrostructureMetrics metrics;
-                                    if (m_microstructure_mgr->get_metrics(symbol, metrics)) {
-                                        m_strategy_engine->on_tick(m_redis, symbol, p_val, b_val, a_val, ts_val, metrics);
-                                    }
-                                }
-                            }
-
                             tick_count++;
                             if (tick_count % 10000 == 0) {
                                 std::cout << "⏳ Processed " << tick_count << " ticks from Redis stream..." << std::endl;
@@ -1210,7 +1022,7 @@ private:
         }
 
         redisFree(sub_redis);
-        print_replay_scorecard();
+        std::cout << "Replay completed. Processed " << tick_count << " ticks." << std::endl;
     }
     
     void watchdog_worker() {
@@ -1281,15 +1093,10 @@ private:
     // Redis context
     redisContext* m_redis;
     
-    // Strategy Engine & Portfolio Management
+    // Market Data Management
     std::unique_ptr<CandleManager> m_candle_mgr;
     std::unique_ptr<MicrostructureEngine> m_microstructure_mgr;
-    std::unique_ptr<FIFOPool> m_fifo_pool;
-    std::unique_ptr<StrategyEngine> m_strategy_engine;
-    double m_starting_capital = 25000.0;
     std::string m_front_futures_symbol;
-    std::unordered_map<std::string, Candle1M> m_last_1m_bars;
-    int64_t m_last_portfolio_publish_ms;
 
     // P0/P1: Local Write-Ahead Log (WAL) Spooler & Telemetry
     std::string m_wal_dir;

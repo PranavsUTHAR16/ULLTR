@@ -14,7 +14,7 @@ struct MinuteBucket {
     double sell_vol = 0.0;
     double buy_dollar = 0.0;
     double sell_dollar = 0.0;
-    double qb_delta = 0.0; // Quote Boundary delta for ModelPOC
+    double qb_delta = 0.0; // Quote Boundary delta (at-ask vs at-bid)
     double close_oi = 0.0;
     double close_price = 0.0;
 };
