@@ -96,7 +96,18 @@ class MultiModelEngine:
                 opt_type = str(row["option_type"])
                 spec = self.config.index_specs.get(und, {"lot_size": 65})
                 lot_size = int(row.get("lot_size", spec["lot_size"]))
-                sym = str(row["symbol"]) if "symbol" in row and pd.notnull(row["symbol"]) else f"{und}_{stk}_{opt_type}"
+                sym = str(row["symbol"]) if "symbol" in row and pd.notnull(row["symbol"]) else ""
+                if not (sym.startswith("NSE_FO|") or sym.startswith("BSE_FO|")):
+                    try:
+                        if hasattr(self, "data_client") and hasattr(self.data_client, "r") and self.data_client.r:
+                            chain_raw = self.data_client.r.hgetall(f"chain:{und.upper()}:{exp}")
+                            cand = chain_raw.get(f"{int(stk)}:{opt_type}") or chain_raw.get(f"{stk}:{opt_type}")
+                            if cand:
+                                sym = cand
+                    except Exception:
+                        pass
+                if not sym:
+                    sym = f"{und}_{stk}_{opt_type}"
 
                 pos = ForwardTestPosition(
                     model_id=model_id,
