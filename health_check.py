@@ -298,10 +298,10 @@ class ULLTRHealthChecker:
 
             # Serious connection/broker keywords
             disconnect_triggers = ["WebSocket closed", "WebSocket disconnected", "Connection closed", "socket.timeout", "disconnected"]
-            error_triggers = ["Fatal error", "login failed", "Unauthorized", "401", "CRITICAL", "Traceback", "429", "Rate Limit"]
+            error_triggers = ["Fatal error", "login failed", "Unauthorized", " 401 ", "HTTP 401", "401 Unauthorized", "CRITICAL", "Traceback", " 429 ", "HTTP 429", "Rate Limit"]
 
             for line in new_lines:
-                if "[Tick]" in line or "LTP:" in line:
+                if "[Tick]" in line or "LTP:" in line or "[C++ Ingestor]" in line or "Pipeline Throughput" in line:
                     continue
                 # 1. Connection Drop Alert
                 if any(trig in line for trig in disconnect_triggers):
