@@ -99,11 +99,9 @@ class MultiModelEngine:
                 sym = str(row["symbol"]) if "symbol" in row and pd.notnull(row["symbol"]) else ""
                 if not (sym.startswith("NSE_FO|") or sym.startswith("BSE_FO|")):
                     try:
-                        if hasattr(self, "data_client") and hasattr(self.data_client, "r") and self.data_client.r:
-                            chain_raw = self.data_client.r.hgetall(f"chain:{und.upper()}:{exp}")
-                            cand = chain_raw.get(f"{int(stk)}:{opt_type}") or chain_raw.get(f"{stk}:{opt_type}")
-                            if cand:
-                                sym = cand
+                        chain = self.data_client.get_option_chain(und, exp)
+                        if stk in chain and opt_type in chain[stk]:
+                            sym = chain[stk][opt_type]
                     except Exception:
                         pass
                 if not sym:
@@ -191,9 +189,15 @@ class MultiModelEngine:
         if model_id == "STRATEGY_6":
             return self.strategy6.get_realized_and_unrealized_pnl()
         elif model_id in ("MODEL_07", "STRATEGY_7"):
-            if hasattr(self, "data_client") and hasattr(self.data_client, "r") and self.data_client.r:
+            redis_client = None
+            if hasattr(self, "data_client"):
+                if hasattr(self.data_client, "client") and hasattr(self.data_client.client, "r"):
+                    redis_client = self.data_client.client.r
+                elif hasattr(self.data_client, "r"):
+                    redis_client = self.data_client.r
+            if redis_client:
                 try:
-                    pnl_hash = self.data_client.r.hgetall("model07:pnl")
+                    pnl_hash = redis_client.hgetall("model07:pnl")
                     if pnl_hash:
                         return float(pnl_hash.get("realized_pnl", 0.0)), float(pnl_hash.get("unrealized_pnl", 0.0)), float(pnl_hash.get("total_pnl", 0.0))
                 except Exception:
