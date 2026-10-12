@@ -38,6 +38,9 @@ class Strategy6Model(BaseTradingModel):
         self.expiry: str = ""
         self.dte: int = 0
         self.regime: Tuple[str, str] = ("Medium", "Falling")
+        self.p_lots: int = 15
+        self.s_lots: int = 5
+        self.sl_mult: float = 2.0
         self.morning_active: bool = False
         self.max_abs_ret: float = 0.0
         self.entry_executed: bool = False
@@ -64,6 +67,13 @@ class Strategy6Model(BaseTradingModel):
         
         # 3. Detect 09:15-09:17 jump signal
         self.morning_active, self.max_abs_ret = self._detect_morning_jump(self.underlying)
+        
+        # 4. Initialize default lots from regime
+        alloc_lr = getattr(self.config, "alloc_lr", {}) if hasattr(self, "config") else {}
+        lot_alloc = alloc_lr.get(self.regime, (15, 5, 2.00))
+        self.p_lots = int(lot_alloc[0])
+        self.s_lots = int(lot_alloc[1])
+        self.sl_mult = float(lot_alloc[2])
 
     def _select_closer_expiry(self) -> Tuple[str, str, int]:
         """Compares SENSEX vs NIFTY front expiries and selects instrument with lower non-negative DTE."""
@@ -261,6 +271,10 @@ class Strategy6Model(BaseTradingModel):
                     p_lots, s_lots, sl_mult = 15, 5, 2.00
             elif self.regime in self.config.morning_defend_keys:
                 p_lots, s_lots, sl_mult = 5, 15, 1.75
+
+        self.p_lots = p_lots
+        self.s_lots = s_lots
+        self.sl_mult = sl_mult
 
         spot_px = self.data_client.get_spot_price(self.underlying)
         if spot_px <= 0:
